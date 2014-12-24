@@ -21,10 +21,13 @@ print_hi('Tom')
 Check out the [Jekyll docs][jekyll] for more info on how to get the most out of Jekyll. File all bugs/feature requests at [Jekyll’s GitHub repo][jekyll-gh]. If you have questions, you can ask them on [Jekyll’s dedicated Help repository][jekyll-help].
 
 ----------
+
 从WordPress迁移过来（使用插件），感觉还是不错的。否则想到备份原来的MySQL我就打退堂鼓了。
+轻量级的东西一直是我的最爱。
 
 1. 目录的问题。如果所有的文章都放在_posts下面，图片也放在那里么？这样可能会造成混乱。
 2. 翻页。试了下官方的方法，还没有成功。
+3. 同步Evernote。用MarkDown还要用“马克飞象”的插件，似乎很繁琐。后来我觉得Evernote还是适合“及时”的编辑，MarkDown这种要反复修改的就没有必要放到Evernote里面了。
 
 [jekyll]:      http://jekyllrb.com
 [jekyll-gh]:   https://github.com/jekyll/jekyll
