@@ -9,7 +9,9 @@ date:   2014-12-30 14:40:00
 主板自带AR8171网卡，应该不太弱，可惜在Linux下似乎是太新的原因，WOL支持的不大好。
 这板子价格399￥，后来还发现支持vt-d，实在物美价廉，当然也缺少Aspeed这种专业的远程管理的IPMI功能。至于能用多久。。。坏了就仍吧。
 后来一步到位买了块Intel i350 4口千兆网卡，这个在虚拟机环境下支持的很好。taoba价大概在400$。
-[<img src="http://fkpwolf.net/images/2015/i350.jpg"/>]
+
+[<img src="http://fkpwolf.net/images/2015/i350.jpg" width="225px"/>][1]
+
 如果硬盘休眠，整机待机功耗20W，很低了，所以我后来也就没有折腾WOL了，24h待机。
 
 ##主机（hypervisor）
@@ -32,8 +34,12 @@ QEMU命令行不会（太长了），直接virt manager搞起。安装系统比�
 壮哉我淘宝山寨货，不比intel原装差啊！
 
 ##访问
-因为用了PCI-E穿透的网卡，访问直接通过DHCP得到的IP即可。图形界面推荐用Spice，这个和VNC类似，但是Cool点，因为没用过。
+因为用了PCI-E穿透的网卡，访问直接通过DHCP得到的IP即可。图形界面默认用Spice，这个和VNC类似，但是Cool点，因为没用过。
 这个Spice和IPMI有点像，比如可以用键盘操作GRUB。VNC好像是操作系统的一个服务，也就是说必须完全进入到系统后才能连接。
+Spice有多种平台客户端，支持比较好的只有Windows上面的Remote View，其他的比如OS X和Android都很粗糙。
+连接guest的时候注意ip要填**host**的，然后用端口号来区分不同的guest。这样来guest就没有必要有外网（host网段）的ip，管理更灵活。
 
 virt manager很方便，但是这个图形工具现在还只能在Linux上面运行，这时候可以ssh到host上面后命令行来管理。
 比如`virsh list --all`列出所有vm，`virsh start opensuse-vm`会启动这个vm。
+
+[1]:http://fkpwolf.net/images/2015/i350.jpg
