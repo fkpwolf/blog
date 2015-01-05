@@ -10,7 +10,7 @@ date:   2014-12-30 14:40:00
 这板子价格399￥，后来还发现支持vt-d，实在物美价廉，当然也缺少Aspeed这种专业的远程管理的IPMI功能。至于能用多久。。。坏了就仍吧。
 后来一步到位买了块Intel i350 4口千兆网卡，这个在虚拟机环境下支持的很好。taoba价大概在400$。
 
-[<img src="http://fkpwolf.net/images/2015/i350.jpg" width="225px"/>][1]
+[<img src="http://fkpwolf.net/images/2015/i350.jpg" width="300px"/>][1]
 
 如果硬盘休眠，整机待机功耗20W，很低了，所以我后来也就没有折腾WOL了，24h待机。
 
