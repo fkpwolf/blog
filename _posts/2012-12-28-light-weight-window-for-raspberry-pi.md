@@ -18,6 +18,9 @@ categories:
 
 [新版的][4]直接运行apt-get install weston就可以，然后运行weston-launch既可，不需要设置环境变量。
 
+现在RPi有更为成熟的wayland port：Maynard，因为现在VideoCore号称是ARM里面唯一开源GPU，所以动画效果运行起来也是很流畅。
+不知道Ubuntu下面wayland的竞争者Mir能不能移植到RPi上面。
+
  [1]: http://www.raspberrypi.org/phpBB3/viewtopic.php?p=201360#p201360
  [2]: http://wayland.freedesktop.org/raspberrypi.html
  [3]: http://wayland.freedesktop.org/clutter.html
