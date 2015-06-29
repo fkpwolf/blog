@@ -28,3 +28,4 @@ Repetier Host能够把3D模型切成打印机的一个个指令。除了分层�
 ##后面
 打印了一个banana pi的盒子，拿在手里把玩，确实感觉神奇。宅男自己在家里不用taobao也能做出能够用的东西。
 
+[1]:http://fkpwolf.net/images/2015/3dprinter.jpg
