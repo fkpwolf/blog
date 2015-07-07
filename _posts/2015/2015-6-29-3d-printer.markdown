@@ -26,7 +26,15 @@ Repetier Host能够把3D模型切成打印机的一个个指令。除了分层�
 
 ##3D建模
 
+##蓝牙连接
+按照这里的来http://reprap.org/wiki/Melzi#Connect_via_Bluetooth。蓝牙模块买taobao上面叫“HC-06”的那种，CSR芯片。
+先在PC上面配置好，然后找个常用的开发板比如bpi，蓝牙模块连接bpi，PC匹配蓝牙模块，测试两者串口是否能正常工作。最后再连接到Melzi板子上去。
+不过调试起来有些兼容性问题，我用黑苹果的蓝牙，Windows下面，打印每隔一段时间会停顿，console有“resend...checksum error”的错误提示。
+换成Intel AC7260就很稳定了。可能是黑苹果有些驱动或者5G信号干扰的问题。
+[<img src="http://fkpwolf.net/images/2015/Melzi-bluetooth.jpg" width="300px"/>][2]
+
 ##后面
 打印了一个banana pi的盒子，拿在手里把玩，确实感觉神奇。宅男自己在家里不用taobao也能做出能够用的东西。
 
 [1]:http://fkpwolf.net/images/2015/3dprinter.jpg
+[2]:http://fkpwolf.net/images/2015/Melzi-bluetooth.jpg
