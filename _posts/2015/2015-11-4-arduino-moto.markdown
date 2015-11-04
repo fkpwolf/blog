@@ -5,9 +5,9 @@ date:   2015-10-26 16:27:00
 ---
 
 ##缘起
+儿子一直想搞个小车.
 
-
-[<img src="http://fkpwolf.net/images/2015/3dprinter.jpg" width="300px"/>][1]
+[<img src="http://fkpwolf.net/images/2015/arduino-moto.jpg" width="300px"/>][1]
 
 ##安装
 安装很简单.
