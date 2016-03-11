@@ -1,3 +1,14 @@
+---
+title: FPGA 123
+author: Fan Fan
+layout: post
+permalink: /2016/3/1/fpga-123/
+aktt_notify_twitter:
+  - no
+categories:
+  - FPGA
+---
+
 "FPGA设计中的约束文件有3类：用户设计文件（.UCF文件）、网表约束文件（.NCF文件）以及物理约束文件（.PCF文件），可以完成时序约束、管脚约束以及区域约束。3类约束文件的关系为：用户在设计输入阶段编写UCF文件，然后UCF文件和设计综合后生成NCF文件，最后再经过实现后生成PCF 文件。"
 .ucf 定义了外部的资源，比如
 ```
