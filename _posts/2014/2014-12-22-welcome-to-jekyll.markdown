@@ -30,6 +30,8 @@ Check out the [Jekyll docs][jekyll] for more info on how to get the most out of 
 2. 翻页。试了下官方的方法，还没有成功。不过首页只是文章title的列表，加载很快。
 3. 同步Evernote。用MarkDown还要用“马克飞象”的插件，似乎很繁琐。后来我觉得Evernote还是适合“及时”的编辑，MarkDown这种要反复修改的就没有必要放到Evernote里面了。
 
+最近（2016.3.11）发现还可以直接用Github Page，不用发到自己的VPS上面。
+如果发现/css/main.css找不到的情况，要配置baseurl，参考[这里](https://byparker.com/blog/2014/clearing-up-confusion-around-baseurl/)。
 [jekyll]:      http://jekyllrb.com
 [jekyll-gh]:   https://github.com/jekyll/jekyll
 [jekyll-help]: https://github.com/jekyll/jekyll-help
