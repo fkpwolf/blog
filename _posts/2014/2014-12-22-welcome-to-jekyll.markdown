@@ -42,6 +42,8 @@ $ git push -u origin gh-pages
 ### 编辑
 Github自己也有编辑器了，也支持MarkDown。感觉git已经被玩坏。我用app.classeur.io，可以直接更新到Github上面。不过界面更加小清新，也让人有写作的欲望。
 
+这种新旧技术结合起来用，即便classeur.io不稳定，也没有关系，因为数据都是保存在Github上面。
+
 
 [jekyll]:      http://jekyllrb.com
 [jekyll-gh]:   https://github.com/jekyll/jekyll
