@@ -39,7 +39,7 @@ $ git remote add origin git@github.com:username/myrepo.git
 $ git push -u origin gh-pages
 ```
 
-可能要先删除远程的gh-pages分支。每次修改master后需要pull merge到gh-pages分支上，这个有点多此一举。这样做是把pull request当做一个『正式发布』的命令？
+可能要先删除远程的gh-pages分支。每次修改master后需要pull merge到gh-pages分支上，这个有点多此一举。这样做是把pull request当做一个『正式发布』的命令？如果要同步这两个branch，可以参考[这里](http://stackoverflow.com/questions/5807459/github-mirroring-gh-pages-to-master)。
 
 ### 编辑
 Github自己也有编辑器了，也支持MarkDown。感觉git已经被玩坏。我用app.classeur.io，可以直接更新到Github上面。不过界面更加小清新，也让人有写作的欲望。
