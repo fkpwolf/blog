@@ -2,5 +2,4 @@ url: http://fkpwolf.net
 name: 'Fan&#039;s blog'
 description: '执迷不悟'
 paginate: 20
-redcarpet:
-    extensions: ["no_intra_emphasis", "tables", "autolink", "strikethrough", "with_toc_data"]
+markdown: redcarpet
