@@ -11,13 +11,13 @@ categories:
 最近学习Haskell，我看的是[Yet Another Haskell Tutorial][1]，看到CPS，发现这本书写的很难懂，不知所云。后来看了wikibooks上面的[文章][2]，明白了一些。[这里][3]是一个总结，也还不错。
 
 CPS到底是个啥？拿例子看比较容易。比较如下代码：  
-`add (square x) (square y)`  
+  add (square x) (square y)
 和CAS style的：  
-` pythagoras'cps x y k =<br />
-square'cps x $ \x'squared -><br />
-square'cps y $ \y'squared -><br />
-add'cps x'squared y'squared $ \sum'of'squares -><br />
-k sum'of'squares`
+  pythagoras'cps x y k =
+  square'cps x $ \x'squared ->
+  square'cps y $ \y'squared ->
+  add'cps x'squared y'squared $ \sum'of'squares ->
+  k sum'of'squares
 
 CPS有点像倒置过来的写法，而前者则是普通的堆栈的写法。那这样CPS有什么有优点呢？
 
