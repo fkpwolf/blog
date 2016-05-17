@@ -32,12 +32,14 @@ Check out the [Jekyll docs][jekyll] for more info on how to get the most out of 
 
 最近（2016.3.11）发现还可以直接用Github Page，不用发到自己的VPS上面。
 如果发现/css/main.css找不到的情况，要配置baseurl，参考[这里](https://byparker.com/blog/2014/clearing-up-confusion-around-baseurl/)。Github Page需要只看gh-pages分支里面的东西，所以要先把master倒到gh-pages里面去。用[这个](http://www.stephaniehicks.com/githubPages_tutorial/pages/githubpages-jekyll.html)：
+
 ```
 $ git branch -m master gh-pages 
 $ git remote add origin git@github.com:username/myrepo.git
 $ git push -u origin gh-pages
 ```
-可能要先删除远程的gh-pages分支。每次修改master后需要pull merge到gh-pages分支上，这个有点多此一举。这样做是把pull request当做一个『正式发布』的命令？
+
+可能要先删除远程的gh-pages分支。每次修改master后需要pull merge到gh-pages分支上，这个有点多此一举。这样做是把pull request当做一个『正式发布』的命令？如果要同步这两个branch，可以参考[这里](http://stackoverflow.com/questions/5807459/github-mirroring-gh-pages-to-master)。
 
 ### 编辑
 Github自己也有编辑器了，也支持MarkDown。感觉git已经被玩坏。我用app.classeur.io，可以直接更新到Github上面。不过界面更加小清新，也让人有写作的欲望。
