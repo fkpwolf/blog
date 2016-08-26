@@ -24,4 +24,4 @@ QPI是一种点对点互联结构 https://zh.wikipedia.org/wiki/%E5%BF%AB%E9%80%
 Ref http://www.doit.com.cn/article/2013-03-25/3408752.shtml 就拿双英特尔至强E5 LGA2011平台为例，PCIe扩展槽直接连接到一个CPU。
 超微X10DRL-i, 注意E-ATX主板
 
-[<img src="images/2016/1AA68EF2-EE94-41AD-8717-A70B69F6934D.png"/>]
+[<img src="/images/2016/1AA68EF2-EE94-41AD-8717-A70B69F6934D.png"/>]
