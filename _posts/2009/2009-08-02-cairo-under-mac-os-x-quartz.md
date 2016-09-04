@@ -22,3 +22,5 @@ surface =  cairo_quartz_surface_create_for_cg_context(context, width, height);<
 4) run &#8220;make&#8221; within project directory.
 
 <img class="alignnone size-full wp-image-388" title="cairo" src="http://fkpwolf.net/WordPress/wp-content/uploads/2009/08/cairo.png" alt="cairo" width="253" height="243" />
+
+The counterpart of Google on vector graphic library is Skia. It is also can built on Mac OS:https://skia.org/user/quick/macos.
