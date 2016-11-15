@@ -1,21 +1,27 @@
 ---
 layout: post
-title:  "APU堪用否?"
+title:  "APU堪用否？"
 date:   2015-10-26 16:27:00
 ---
 
-##缘起
+## 缘起
 想在卧室里面玩玩游戏。 APU出了这么多年了，HAS, GNN...这些名词噱头很多。但是网络上一般对AMD嘲讽很多，所谓『农企』、『i3默全秒』。
 
-##安装
+## 安装
 我搞了两台机器，一台APU A10 7800，一台Athlon x840。都是白菜价。x840甚至只要200多点。
 主板：A88 ITX太贵，m-atx就便宜了很多。
-高频内存
+高频内存：如果用APU的话就上把，毕竟这个是APU的亮点。
 
-视频
+## 散热
+这APU发热比较大，特别是游戏的时候。如果用普通的下压那种，容易搞的整个机箱都很烫。搞个侧吹的微塔散热就很容易压制了。
 
-散热：这APU发热比较大，特别是游戏的时候。如果用普通的下压那种，容易搞的整个机箱都很烫。搞个侧吹的微塔散热就很容易压制了。
+## 虚拟化
+之所以搞了个Athlon是因为不仅CPU便宜，而且A88的主板BIOS里面都有IOMMU开关，这样就能用PCI-E passthrough了。但是我发现只有华硕的可以不接显示器启动，asrock FM2A88M Pro3+必须接一个显卡。
 
-之所以搞了个Athlon是因为我发现A88的主板都支持pci-e passthrough，很容易搞虚拟化。
+## 问题
+有时候板载的eth0会自己关掉，连上TTL看到有这样信息：
 
-...
+    [503386.687406] AMD-Vi: Event logged [IO_PAGE_FAULT device=04:00.0 domain=0x001d address=0x0000000000003000 flags=0x0050]
+    [504193.617255] r8169 0000:04:00.0 eth0: link down
+
+自己重新`ifup eth0`又可以恢复。https://github.com/HSAFoundation/HSA-Drivers-Linux-AMD/issues/4 https://bugzilla.redhat.com/show_bug.cgi?id=889749 这里看来是r8169网卡驱动的问题了：当数据陡然变大时（比如samba拷贝）会挂掉。看来是我错怪 AMD 了，我原来以为是这机器兼容性不行。
