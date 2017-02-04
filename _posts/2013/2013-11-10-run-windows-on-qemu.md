@@ -28,6 +28,8 @@ ACTION==&#8221;add&#8221;, SUBSYSTEM==&#8221;usb&#8221;,ATTR{idVendor}==&#8221;2
 
 5）clipboard还有samba现在还没有办法使用。
 
+6) 如果要给 windows 分配 4 个核，在 virt-manager 默认是给了4 个 socket，但一般 windows 已经限制了最大处理器插槽，可能服务器的会放开，所以这里要设置 CPU 的 Topology，最多给两个 sockets。
+
 qemu-system-x86_64 &#8211;enable-kvm qemu-img -m 4096 -usbdevice tablet  -usbdevice host:2207:300a -smp 2 -cpu host
 
 [<img class="alignnone size-large wp-image-1480" title="Untitled" src="http://fkpwolf.net/WordPress/wp-content/uploads/2013/11/Untitled-1024x920.png" alt="" width="580" height="521" />][2]
