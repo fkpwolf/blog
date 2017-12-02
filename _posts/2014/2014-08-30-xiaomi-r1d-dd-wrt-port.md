@@ -2,7 +2,7 @@
 title: 发布小米路由硬盘版最新DD-WRT固件
 author: Fan Fan
 layout: post
-permalink: /2014/08/30/%e5%8f%91%e5%b8%83%e5%b0%8f%e7%b1%b3%e8%b7%af%e7%94%b1%e7%a1%ac%e7%9b%98%e7%89%88%e6%9c%80%e6%96%b0dd-wrt%e5%9b%ba%e4%bb%b6/
+permalink: /2014/08/30/xiaomi-r1d-dd-wrt-port/
 categories:
   - 电子制作
 ---
