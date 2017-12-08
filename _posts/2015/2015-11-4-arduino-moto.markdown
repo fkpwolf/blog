@@ -7,7 +7,7 @@ date:   2015-10-26 16:27:00
 ## 缘起
 儿子一直想搞个小车.
 
-[<img src="http://fkpwolf.net/images/2015/arduino-moto.jpg" width="300px"/>][1]
+<img src="http://fkpwolf.net/images/2015/arduino-moto.jpg" width="300px"/>
 
 ## 各个部件
 - ESP8266 WiFi 模块
