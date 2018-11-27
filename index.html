@@ -29,7 +29,7 @@ quiet: true
     {% if paginator.previous_page == 1 %}
     <a href="/"><前页</a>
     {% else %}
-    <a href="/page{{paginator.previous_page}}">&lt;前页</a>
+    <a href="/page{{paginator.previous_page}}">&lt; 前页</a>
     {% endif %}
   {% else %}
     <span class="previous disabled">&lt;前页</span>
@@ -52,7 +52,7 @@ quiet: true
   {% if paginator.next_page %}
     <a class="next" href="/page{{paginator.next_page}}">后页&gt;</a>
   {% else %}
-    <span class="next disabled" >后页&gt;</span>
+    <span class="next disabled" >后页 &gt;</span>
   {% endif %}
-  (共{{ paginator.total_posts }}篇)
+  (共 {{ paginator.total_posts }} 篇)
 </div>

@@ -2,6 +2,9 @@ url: http://fkpwolf.net
 name: 'Fan&#039;s blog'
 title: 'Fan&#039;s blog'
 description: '执迷不悟'
+twitter_username: 'yanchanglu'
+github_username: 'fkpwolf'
+email: 'fkpwolf at gmail.com'
 paginate: 20
 markdown: kramdown
 github: [metadata]

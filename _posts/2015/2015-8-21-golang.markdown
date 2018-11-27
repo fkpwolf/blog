@@ -1,0 +1,123 @@
+---
+layout: post
+title:  "GoLang"
+date:   2015-8-21 16:27:00
+---
+### 概述
+* Get started https://golang.org/doc/install https://zh.wikipedia.org/wiki/Go
+* 《Go入门指南》 https://zengweigang.gitbooks.io/core-go/content/
+* Go is a general-purpose language designed with systems programming in mind. It is strongly typed and garbage-collected and has explicit support for concurrent programming.  https://golang.org/ref/spec
+* https://github.com/astaxie/build-web-application-with-golang/blob/master/zh/preface.md 中文，提供了很多例子
+* https://github.com/Unknwon/the-way-to-go_ZH_CN Go入门指南，中文翻译
+
+### 开发环境
+`go get github.com/dmacvicar/terraform-provider-libvirt` 可以直接获取代码，并保持目录，并且编译
+
+Oop，其不支持一般的对象继承，但是支持method和interface，奇怪的选择。OOP 已有多年没有用。
+
+https://blog.golang.org/go-maps-in-action
+字符串替换，有个重量级的 text/template，有没有 JavaScript 轻量级的 `You $name is` 这种。
+
+`strings.split(el, "\n”)` 没有字符串的操作，这不是面向对象了，连 JavaScript 的字符串都有 method。查看数组长度为 len(myArray)，好难看。
+ 
+`go install hello.go`(or `go build hello.go`) will generate a big file(~2MB). would be a standalone/distributable program. Use `otool -L hello`. No dependency. So “No more C”?(https://golang.org/doc/go1.5#c).
+
+为什么要使用 Go 语言？Go 语言的优势在哪里？ https://www.zhihu.com/question/21409296
+
+### goroutine 
+https://www.zhihu.com/question/20862617/answer/36191625 这里解释的很白话。大概意思是这个东西比线程更轻量级，一个线程可以运行多个goroutine，当某个routine运行调用函数/IO操作时，会被调度出来让其他的运行。这样一个线程里面的goroutine其实是顺序执行的，这个是CPS（communicating sequential process）的含义？
+轻量级是轻了，但是如何解决并发访问一个资源的问题？
+Go语言提供的是另一种通信模型，即以消息机制而非共享内存作为通信方式。（Java即为共享内存） 
+Go语言提供的消息通信机制被称为channel，接下来我们将详细介绍channel。现在，让我们用Go语言社区的那句著名的口号来结束这一小节：“不要通过共享内存来通信，而应该通过通信来共享内存。”
+[Stream：我们为何要从Python转到Go语言？](https://mp.weixin.qq.com/s?__biz=MzIzNjUxMzk2NQ==&mid=2247489167&idx=1&sn=fee611706a830a2a696809929ebfa1cf&chksm=e8d7e94ddfa0605b718312f48499289aae2e9e38afa9352e354b68d6d401a6135a2e28e6a6b2&scene=27#wechat_redirect)
+”Goroutine之间通过channel进行通信，channel的使用方法与goroutine一样简单。Channel拥有类型，可以通过直观的箭头语法轻松实现goroutine之间的数据传递。”
+"单个程序拥有数千个goroutine也并不罕见。比如，net/http软件包中的服务器程序针对每个HTTP请求都会创建一个goroutine。"
+"使用“net/http”仅需几行代码即可实现HTTP服务器，并且还支持http/2、TLS和websocket。”
+为什么能有上百万个Goroutines，却只能有上千个Java线程？http://www.infoq.com/cn/articles/a-million-go-routines-but-only-1000-java-threads
+
+defer达到和Java finally一样的效果，用来控制资源的open/close，但是避免了try...catch...finally的这种冗长的代码结构。
+
+支持闭包么？https://gobyexample.com/closures https://gobyexample.com/collection-functions 有点迷糊，原来 Go 不是函数式语言。map/reduce 的操作建议用 for-loop 代替。
+
+为什么 Docker 里面大量用 Go ？http://www.slideshare.net/jpetazzo/docker-and-go-why-did-we-decide-to-write-docker-in-go 没有很多依赖（除了libc），这给开发和部署很大的便利。而且方便调用底层，异步原语，标准库，strong duck typing(不是强类型的么？)，跨平台支持。
+
+http://stackoverflow.com/questions/6328679/in-golang-does-it-make-sense-to-write-non-blocking-code 如何写像Node.js那样的异步IO
+
+golang 与 duck typing http://zqpythonic.qiniucdn.com/data/20120904000006/index.html 折中的做法
+* 类型 T 不需要显式地声明它实现了接口 I。只要类型 T 实现了所有接口 I 规定的函数，它就自动地实现了接口 I。 这样就像动态语言一样省了很多代码，少了许多限制。
+* 在把 duck 或者 person 传递给 greeting 前，需要显式或者隐式地把它们转换为接口 I 的接口变量 i。这样就可以和其它静态类型语言一样，在编译时检查参数的合法性。
+
+You can run go get -v -d ./... from a directory of your project to download all go-gettable dependencies. -v will add verbose log.
+
+来自 https://gobyexample.com/atomic-counters 的原子操作的例子（这个网站能根据代码和里面的注释自动生成文档），做了修改：
+```
+package main
+import "fmt"
+import "time"
+import "sync/atomic"
+func main() {
+    var ops uint64
+    for i := 0; i < 500; i++ {
+        go func() {
+            //for {
+                //atomic.AddUint64(&ops, 1) // 结果总是 500
+                ops = ops + 1 // 这会导致结果不一致
+                time.Sleep(time.Millisecond)
+            //}
+        }()
+    }
+    time.Sleep(time.Second)
+    opsFinal := atomic.LoadUint64(&ops)
+    fmt.Println("ops:", opsFinal)
+}
+```
+func (apiHandler *APIHandler) handleGetDeploymentContainersUpdate (request *restful.Request, response *restful.Response) 
+apiHandler 表示这个是个接口函数？给人错觉为返回值。
+```
+    for index := range deployment.Spec.Template.Spec.Containers {
+        deployment.Spec.Template.Spec.Containers[index].Image = "zzzz:1.13"
+        //log.Printf("will update container %s", container.Name)
+        //container.Image = "wwwww:1.2"
+    }
+```
+如果把 Container 在 for 里面提取出来再修改，则数组还是老的值。为什么？
+
+https://github.com/urfave/negroni/blob/master/translations/README_zh_CN.md 在 Go 语言里，Negroni 是一个很地道的 Web 中间件，它是一个具备微型、非嵌入式、鼓励使用原生 net/http 库特征的中间件。monocular 用的这个。
+
+append(sliceA, 4) 这样的代码会导致编译错误 『append() evaluated but not used』，应该使用 a = append(a, x)。很好的提示，如果在自己的代码中获取这种警告呢？
+https://stackoverflow.com/questions/51649213/golang-how-to-get-error-evaluated-but-not-used/ 我的问题
+
+依赖管理 godep(k8s dashboard use), glide(jaeger)
+
+### Context
+Etcd util client MemberAdd 时的代码有些意思：
+```
+    ctx, cancel := context.WithTimeout(context.Background(), constants.DefaultRequestTimeout)
+    resp, err := etcdcli.MemberAdd(ctx, []string{newMember.PeerURL()})
+    cancel()
+```
+标准的 http.Client 也可以设置 timeout，为什么要用 context 这么复杂的？提高灵活性吧。cancel() 是 block 的么？A [CancelFunc](https://golang.org/pkg/context/#CancelFunc) tells an operation to abandon its work. A CancelFunc does not wait for the work to stop. 这个不 block 的话 MemberAdd 就是 block 的了，那为什么要手工调用呢？[这里说](http://www.01happy.com/golang-context-reading/)『golang 中的创建一个新的 goroutine , 并不会返回像c语言类似的pid，所有我们不能从外部杀死某个goroutine，所有我就得让它自己结束，之前我们用 channel ＋ select 的方式，来解决这个问题』就是为了快点释放 goroutine？https://blog.golang.org/context 这里官方例子，不大懂。对于一个 REST 服务，接受到请求，然后会调用其他服务或者数据库，这是一个调用链，比如浏览器->A->B-> Get http://google.com，这个 context 可以一直传下去，一则可以放入 value 比如用户 id 这些共享数据而不用频繁的作为方法参数来传递，再则可以通过 context 对整个调用链进行控制，比如 timeout，如果浏览器设置为 3 秒，context.WithTimeout(context.Background(), 3) ，当 3 秒到了，context 会自动调用 context.cancel，这样当 B 开始发送异步调用请求后，进入 select ，其中检查ctx.Done() 状态，Done returns a channel that is closed when this Context is canceled or times out. 
+```
+func httpDo(ctx context.Context, req *http.Request, f func(*http.Response, error) error) error {
+    // Run the HTTP request in a goroutine and pass the response to f.
+    tr := &http.Transport{}
+    client := &http.Client{Transport: tr}
+    c := make(chan error, 1)
+    go func() { c <- f(client.Do(req)) }()
+    select {
+    case <-ctx.Done():
+        tr.CancelRequest(req)
+        <-c // Wait for f to return.
+        return ctx.Err()
+    case err := <-c:
+        return err
+    }
+}
+```
+这里的 select （并非 switch）因为没有 default，所以是 block 的，直到某个case需要处理。但是每个 case 的检查不是 block 的，否则就失去意义了。更多看 [Go Channel](https://colobu.com/2016/04/14/Golang-Channels/) 详解。
+[Go by Example: Non-Blocking Channel Operations](https://gobyexample.com/non-blocking-channel-operations) 这个里面如果我删除 default，运行会直接退出：fatal error: all goroutines are asleep - deadlock!
+如果已经 done 就取消请求并返回数据（都取消了返回啥呢？）。B 要自己处理当 context.Done 的逻辑，如果不处理则 context timeout 就没人尊重了。
+
+### Web 开发框架
+* https://gin-gonic.github.io/gin/
+* https://github.com/go-martini/martini/blob/master/translations/README_zh_cn.md
