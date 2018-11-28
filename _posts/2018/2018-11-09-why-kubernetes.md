@@ -22,3 +22,4 @@ Distribution, Eventual Consistency, Operational Complexity，这些问题要如�
 PaaS 平台的好处也就是这些了，一般是对运维可能好处更多，但是现在 Infractaure as Code，有了 Operator，开发人员也可以快速的创建和管理集群。
 
 这是 why，对于 how - 如何有效利用，见[一般开发者的 Kubernetes 使用指南]({{ site.baseurl }}{% post_url 2018/2018-09-01-kuberntes-for-dev %})
+
