@@ -5,13 +5,13 @@ date:   2018-11-28 14:20:33
 typora-root-url: ../../../blog
 ---
 
- 总文档 https://docs.openstack.org/kolla-ansible/latest/user/quickstart.html 
+总文档 https://docs.openstack.org/kolla-ansible/latest/user/quickstart.html 
 
-* fatal: [localhost]: FAILED! => {"changed": false, "failed": true, "msg": "Unknown error message: Tag 4.0.1 not found in repository docker.io/kolla/ubuntu-binary-kolla-toolbox"}.修改里面的openstack-version，从auto改为4.0.0。这是因为4.0.1没有push到docker hubs上面？
-* deploy后，打开dashboard可以，但是static file都返回404。cleanup-containers & tools/cleanup-host under /usr/local/share/kolla-ansible/tools/, and try again. cleanup-host will remove networks. And then reboot.
-* fatal: [localhost]: FAILED! => {"failed": true, "msg": "The conditional check ''{{ hostvars[item['item']]['ansible_' + hostvars[item['item']]['api_interface']]['ipv4']['address'] }}' not in '{{ item.stdout }}'' failed. The error was: Invalid conditional detected: EOL while scanning string literal (<unknown>, line 1)\n\nThe error appears to have been in '/usr/local/share/kolla-ansible/ansible/roles/rabbitmq/tasks/precheck.yml': line 54, column 3, but may\nbe elsewhere in the file depending on the exact syntax problem.\n\nThe offending line appears to be:\n\n\n- fail: msg=\"Hostname has to resolve to IP address of api_interface\"\n ^ here\n"} --- 我看安装程序已经设置hostname的ip为api_interface的ip。
-* Docker will not be able to stop the nova_libvirt container with those running.----自己create的nova instance默认是用libvirt（因为我的host机器不是vm），shutdown后就可以运行cleanup-containers了。
-* Cannot uninstall 'PyYAML'. It is a distutils installed project and thus we cannot accurately determine which files belong to it which would lead to only a partial uninstall. — pip install pip==8.1.2
+* fatal: [localhost]: FAILED! => {"changed": false, "failed": true, "msg": "Unknown error message: Tag 4.0.1 not found in repository docker.io/kolla/ubuntu-binary-kolla-toolbox"}. → 修改里面的openstack-version，从auto改为4.0.0。这是因为4.0.1没有push到docker hubs上面？
+* deploy后，打开dashboard可以，但是static file都返回404。→ cleanup-containers & tools/cleanup-host under /usr/local/share/kolla-ansible/tools/, and try again. cleanup-host will remove networks. And then reboot.
+* `fatal: [localhost]: FAILED! => {"failed": true, "msg": "The conditional check ''{{ hostvars[item['item']]['ansible_' + hostvars[item['item']]['api_interface']]['ipv4']['address'] }}' not in '{{ item.stdout }}'' failed. The error was: Invalid conditional detected: EOL while scanning string literal (<unknown>, line 1)\n\nThe error appears to have been in '/usr/local/share/kolla-ansible/ansible/roles/rabbitmq/tasks/precheck.yml': line 54, column 3, but may\nbe elsewhere in the file depending on the exact syntax problem.\n\nThe offending line appears to be:\n\n\n- fail: msg=\"Hostname has to resolve to IP address of api_interface\"\n ^ here\n"}` → 我看安装程序已经设置hostname的ip为api_interface的ip。
+* Docker will not be able to stop the nova_libvirt container with those running. → 自己create的nova instance默认是用libvirt（因为我的host机器不是vm），shutdown后就可以运行cleanup-containers了。
+* Cannot uninstall 'PyYAML'. It is a distutils installed project and thus we cannot accurately determine which files belong to it which would lead to only a partial uninstall. → pip install pip==8.1.2
 
 CentOS 7.3 多节点Kolla安装 http://www.chenshake.com/kolla-centos-over-more-than-7-3-node-installation/
 
@@ -29,11 +29,14 @@ Vm ssh 免密码登录必须要在 root 用户下才能进，密钥在root用户
 今天又重新装了遍，安装好后，发现horizon没有装（现在默认不装了？），修改global.yaml，enable后重新deploy，居然也没有错，然后可以访问horizon。
 可以额外添加的服务 https://github.com/openstack/kolla-ansible/blob/master/README.rst#openstack-services 注释里面的值就是默认值。比如默认打开了 horizon, heat。但是我看没有 heat 这个命令，仿照 openstackclient 安装方法 pip install python-heatclient，但是运行时报警：WARNING (shell) "heat stack-list" is deprecated, please use "openstack stack list” instead。
 
+init-runonce 会创建很多初始化的资源，比如网络路由、cirros 磁盘镜像、虚机类型，但是只能运行一次。
+
 ### magnum
 
 既然已经有了：enable_horizon_magnum & enable_magnum，打开设置，kolla-ansible deploy。是很方便，就是似乎每次添加一个组件都挺耗时。
 刷新后界面上已经有了新的菜单项 container Infra，但是会出错误消息：Error: Unable to retrieve the cluster templates. Error: Unable to retrieve the stats.
-客户端用命令行安装 `pip install -U python-magnumclient`，这个是想当然猜出来的。`magnum cluster-list` 报错：
+客户端用命令行安装 `pip install -U python-magnumclient`，这个是想当然猜出来的（现在已经用 `openstack coe` 来代替 magnum 命令了。）。`magnum cluster-list` 报错：
+
 ```
 ERROR: 'NoneType' object has no attribute 'replace' (HTTP 500) (Request-ID: req-6c01fbcf-f883-41e3-a7f9-cecf92c7cf34)
 ```
@@ -53,8 +56,9 @@ ERROR: Unable to establish connection to http://192.168.51.254:9511/v1/clusters:
 ```
 Service cinder is not available for resource type Magnum::Optional::Cinder::Volume, reason: cinder volumev3 endpoint is not in service catalog.
 ```
-这个 cinder 是必须的么？开启 enable_cinder，重新 deploy，这个不需要任何 backend？先这样再说。
+这个 Cinder 是必须的么？开启 enable_cinder，重新 deploy，这个不需要任何 backend？先这样再说。
 创建集群还是出错，这次用 cli 查看，因为 ui 又连不上。
+
 ```
 magnum cluster-show fantest
 Resource CREATE failed: resources[0]: resources.kube_masters.Property error: resources.docker_volume.properties.volume_type: Error validating value '': The VolumeType () could not be found.
@@ -64,21 +68,49 @@ Resource CREATE failed: resources[0]: resources.kube_masters.Property error: res
 
 下面 Ceph 配置好后，回到这里。现在可以在界面创建一个 volume，但是创建 k8s 集群时依然同样错误。[这里](https://ask.openstack.org/en/question/110729/magnum-cluster-create-k8s-cluster-error-resourcefailure/)说缺少一个`default_docker_volume_type` 字段，`docker exec -it magnum_conductor` 进去后直接修改，然后 restart container，后来发现 restart 后值丢失，原来要修改 `/etc/kolla/magnum-*` 下面的对应文件，我猜容器是用 mount 目录的方式来访问配置，这种操作如果放在 k8s 下面做就简单方便很多。这个值原始定义在 `/usr/share/kolla-ansible/ansible/roles/magnum/defaults/main.yml` 中。
 
-现在开始漫长的创建 k8s 集群了。
+现在开始漫长的创建 k8s 集群了。然后居然就可以了，一个 master，两个 minion，没有出现任何错误。看来已经颇为稳定了。
+
+尝试创建一个带 load balance 功能的 k8s 集群，失败报错：
+
+```
+ERROR: ResourceTypeUnavailable: : resources.api_lb<file:///var/lib/kolla/venv/lib/python2.7/site-packages/magnum/drivers/common/templates/lb.yaml>: : HEAT-E99001 Service neutron is not available for resource type Magnum::Optional::Neutron::LBaaS::LoadBalancer, reason: Required extension lbaasv2 in neutron service is not available.
+```
+
+好吧，在 kolla 中打开 `enable_neutron_lbaas`，重新部署。这每次修改 `/etc/kolla/globals.yml` 都没有记录，到最后也不知道自己做了哪些修改。
+
+这次重新部署 UI 还是出现浏览器 Angular JavaScript 错误：
+```
+Error: [$injector:nomod] Module 'horizon.app' is not available! You either misspelled the module name or forgot to load it. If registering a module ensure that you specify the dependencies as the second argument.
+```
+这个问题太常见，每次都在添加一个新的 horizon 模块/plugin之后发生，清空再重新部署好了。按理说 `kolla/centos-source-horizon:queens` 是 binary 的，不会重新构建啊。主 JS 为 `http://192.168.51.147/static/dashboard/js/3bf910c7ae4c.js`，记下看看这个是否会变。bash 到 horizon 容器中，发现几个 js 文件都是刚刚才产生出来的。暂时不知道办法，清除后重新部署，漫长等待后终于成功。
+
+后来发现创建集群模板那里的 Master LB(--master-lb-enabled) 其实是多 master 的 load balance，和 k8s 里面的 Service LoadBalance  不同。进入 master 节点，查看 /etc/kubernetes 各个配置，都没有`--cloud-provider=openstack`。[cloud_provider_enabled](https://docs.openstack.org/magnum/latest/user/#cloud-provider-enabled) 这个默认不是为 true 么？但是似乎是 Rocky 才有的新功能。我在 magnum-conductor 容器里面查看 configure-kubernetes-master.sh 文件，里面没有考虑到新的标志位。
+```
+if [ -n "$TRUST_ID" ]; then
+    KUBE_API_ARGS="$KUBE_API_ARGS --cloud-config=/etc/kubernetes/kube_openstack__
+config --cloud-provider=openstack"
+fi
+```
+
 
 ### Ceph
 
-感觉相关依赖没有做好，后面加 ceph，前面创建好的 cinder 容器没有重建，容器里面的配置都没有修改，这怎么能行呢？清除 kolla 然后重建集群。登录到后发现 cinder-api 下面还是没有 /etc/ceph/ceph.conf 文件，后来发现 cinder-volume 下面有，但是 ceph status 无法登录。ceph-mgr 容器运行 ceph osd pool ls 返回四个已经创建好的 pool：images, volumes, backups, vms. 但是 ceph -s 返回 0 kB used, 0 kB / 0 kB avail。日。https://docs.openstack.org/kolla-ansible/latest/reference/storage/ceph-guide.html 这里有详细配置，原来这个需要给硬盘加标签，然后 kolla 会把这个硬盘分配给 ceph。我只运行：
-​    parted /dev/sdb -s -- mklabel gpt mkpart KOLLA_CEPH_OSD_BOOTSTRAP 1 -1
-这个命令，其他的都不懂干啥用，还说可能至少要 3 个节点，我 all-in-one 怎么弄？不管它。这个地方文档搞的有些复杂，还是 ceph 本来就难配置？
+感觉相关依赖没有做好，后面加 ceph，前面创建好的 cinder 容器没有重建，容器里面的配置都没有修改，这怎么能行呢？清除后重建集群。登录到后发现 cinder-api 下面还是没有 /etc/ceph/ceph.conf 文件，cinder-volume 下面有，但是 ceph status 无法登录。ceph-mgr 容器运行 `ceph osd pool ls` 返回四个已经创建好的 pool：images, volumes, backups, vms. 但是 ceph -s 返回 0 kB used, 0 kB / 0 kB avail。日。
+
+https://docs.openstack.org/kolla-ansible/latest/reference/storage/ceph-guide.html 这里有详细配置，原来这个需要给硬盘加标签，然后 kolla 会把这个硬盘分配给 ceph。我只运行：
+
+    parted /dev/sdb -s -- mklabel gpt mkpart KOLLA_CEPH_OSD_BOOTSTRAP 1 -1
+
+其他的都不懂干啥用，还说可能至少要 3 个节点，我 all-in-one 怎么弄？不管它。这个地方文档搞的有些复杂，还是 ceph 本来就难配置？
 还是不行，`cinder service-list` 显示 cinder-volume  ms1@rbd-1 是 down 的状态。但是我看 kolla/centos-source-cinder-volume:rocky 这个容器已经起来啊，这个 ms1 是宿主机 hostname，后面 @rbd-1是啥？现在问题是几种方法都没有在 docker ps 中看到 ceph-osd/ceph-rbd 之类的容器。
-再次细看文档：all-in-one 情况下，需要设置 osd pool default size = 1，但是没有 /etc/kolla/config/ceph.conf 这个文件，修改 /usr/share/kolla-ansible/ansible/roles/ceph/templates/ceph.conf.j2，重新 deploy 后已经能看到 /etc/kolla/ceph-osd/ceph.conf 里面有我加的配置。但是看上去还是不行。容量还是为 0 ，/dev/sdb 似乎根本没有考虑进去。
+再次细看文档：all-in-one 情况下，需要设置 `osd pool default size = 1`，但是没有 /etc/kolla/config/ceph.conf 这个文件，修改 `/usr/share/kolla-ansible/ansible/roles/ceph/templates/ceph.conf.j2`，重新 deploy 后已经能看到 /etc/kolla/ceph-osd/ceph.conf 里面有我加的配置。但是看上去还是不行。容量还是为 0 ，/dev/sdb 似乎根本没有考虑进去。
 换成 Queens 版本，因为这个没有 Bluestore，也不知道是不是这个原因。再不行得看 ansible 代码了。
 http://docs.ceph.com/docs/master/start/quick-ceph-deploy/ 这里创建 rbd 都是直接命令行，没有放到配置里面。
 不行，/usr/share/kolla-ansible/ansible/roles/ceph/tasks/start_osds.yml 创建 osd 的脚本，但是如何知道运行结果呢？kolla-ansible 运行只输出到屏幕，没有地方看全部日志，可能我没找到。启用 verbose，使用命令 
-   kolla-ansible ...  - v | tee log。
-果然发现：
 
+    kolla-ansible ...  - v | tee log
+
+果然发现：
 ```
 TASK [ceph : Looking up disks to bootstrap for Ceph OSDs]  *********
 ok: [localhost] => {"changed": false, "cmd": ["docker", "exec", "-t", "kolla_toolbox", "sudo", "-E", "ansible", "localhost", "-m", "find_disks", "-a", "partition_name=KOLLA_CEPH_OSD_BOOTSTRAP_BS match_mode='prefix' use_udev=True"], "delta": "0:00:01.454122", "end": "2018-11-27 21:46:51.368490", "failed_when_result": false, "rc": 0, "start": "2018-11-27 21:46:49.914368", "stderr": "", "stderr_lines": [], "stdout": "localhost | SUCCESS => {\r\n    \"changed\": false, \r\n    \"disks\": \"[]\"\r\n}", "stdout_lines": ["localhost | SUCCESS => {", "    \"changed\": false, ", "    \"disks\": \"[]\"", "}"]}
@@ -95,7 +127,7 @@ localhost | FAILED! => {
     "msg": "UnicodeDecodeError('ascii', '\\xe6\\x96\\xb0\\xe5\\x8a\\xa0\\xe5\\x8d\\xb7', 0, 1, 'ordinal not in range(128)')"
 }
 ```
-有对应磁盘反而报错，奇怪。下载 find_disk.py，本地运行，发现磁盘有个 LABEL 『新加卷』，导致出错。parted /dev/sdb 这个命令默认就会产生这个 label。折腾各种命令来修改 label，最后发现这个『新加卷』是原来的 Windows 磁盘，parted 并不会删除旧有分区。mkfs.ext4 格式化之。现在 OK 了！
+有对应磁盘反而报错，似乎是字符集的问题，问题是这个看不懂。下载 [find_disk.py](https://github.com/openstack/kolla/blob/master/docker/kolla-toolbox/find_disks.py)，稍作修改，本地运行，发现磁盘有个 LABEL **新加卷**，导致出错。`parted /dev/sdb` 这个命令默认就会产生这个 label。折腾各种命令来修改 label，最后发现这个『新加卷』是原来的 Windows 磁盘，parted 并不会删除旧有分区。mkfs.ext4 格式化之。现在 OK 了！
 检查最后成功状态：
 
 ```
@@ -108,11 +140,9 @@ sdb      8:16   0 238.5G  0 disk
 sdb1 下面都是散放的文件，这个就是 filestore 的意思？
 现在可以看到有个 kolla/centos-source-ceph-osd:queens 容器在运行。
 
-[Kolla集成外接ceph存储](https://blog.csdn.net/dylloveyou/article/details/79114741)  集成到我原来创建好的 rook ceph 上去？滑稽。
+安装好后，磁盘 label KOLLA_CEPH_OSD_BOOTSTRAP 会被去掉，所以清空再次部署时需要自己加上。
 
-现在已经用 `openstack coe` 来代替 magnum 命令了。
-
-init-runonce 会创建很多初始化的资源，比如网络路由、cirros 磁盘镜像、虚机类型，但是只能运行一次。
+[Kolla集成外接ceph存储](https://blog.csdn.net/dylloveyou/article/details/79114741)  集成到我原来创建好的 Rook Ceph 上去？滑稽。
 
 ### 虚拟机一直是 scheduling 状态
 
@@ -135,8 +165,11 @@ Docker ps 有返回 kolla/centos-binary-horizon:queens，这里才知道安装�
 还有虚机运行的磁盘文件是直接放在宿主机上面：-drive file=/var/lib/nova/instances/78687529-9333-429f-a184-9a13c725fcca/disk,format=qcow2，如果使用了 ceph，会放到 ceph 上面？
 
 ### Think
-*  部署是简单了，但是PASS服务再怎么加？或者有个kubenetes那种快速部署应用也可以啊。
+* Ansible 是幂等的，也就是说反复部署不会对功能造成影响，这个是理想情况。
+* Docker 对宿主机的网络和设备全面接管，和独立运行的程序没啥差别。用容器部署比直接程序更简便么？可能隔离性更好，不需要安装包，对宿主机操作系统影响不大。另外：其配置（/etc/kolla/）和运行时（容器）是隔离开的，符合 12 法则应用理论。
 * Docker 用的不错。那用了 docker 还用 openstack vm 干啥呢？技术变化太快，总的来说：OpenStack plays the role of the overall data center management. KVM as the multi-tenant compute resource management, and Docker containers as the application deployment package.
-* 用 Docker，出了错只能直接监控，显然用 k8s 更好些，但牵涉到网络、存储这个问题就更复杂了。
+* 直接用 Docker，出了错只能直接操作 Docker 调试，显然用 k8s 更好些，但牵涉到网络、存储这个问题就更复杂了。
+* 漫长的部署居然没有写日志的地方，我只找到使用管道 `tee` 的方法。
+* kolla 部署了大量镜像，这些镜像有缓存么？`docker images ls` 没有看到任何镜像。
 
 

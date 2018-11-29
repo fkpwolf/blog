@@ -7,16 +7,66 @@ date:   2015-10-26 16:27:00
 ## 缘起
 想在卧室里面玩玩游戏。 APU出了这么多年了，HAS, GNN...这些名词噱头很多。但是网络上一般对AMD嘲讽很多，所谓『农企』、『i3默全秒』。
 
+AMD加速处理器 [wiki](https://zh.wikipedia.org/wiki/AMD%E5%8A%A0%E9%80%9F%E5%A4%84%E7%90%86%E5%99%A8) page 
+
+<https://en.wikipedia.org/wiki/List_of_AMD_accelerated_processing_unit_microprocessors> 
+
+革命性的 AMD Mantle <http://www.amd.com/zh-cn/innovations/software-technologies/mantle>
+
 ## 安装
 我搞了两台机器，一台APU A10 7800，一台Athlon x840。都是白菜价。x840甚至只要200多点。
 主板：A88 ITX太贵，m-atx就便宜了很多。
 高频内存：如果用APU的话就上把，毕竟这个是APU的亮点。
 
+a88 主板 未知PCI设备 驱动. Use PCI-Z and find it is IOMMU.
+
+FM2A88M Pro3+ [asrock page](http://www.asrock.com/mb/AMD/FM2A88M%20Pro3+/). 
+
+<https://www.asus.com/Motherboards/A88XMPLUS/> asrock的必须接上显卡才能开机，太搞了。换成asus的可以headless。
+
 ## 散热
 这APU发热比较大，特别是游戏的时候。如果用普通的下压那种，容易搞的整个机箱都很烫。搞个侧吹的微塔散热就很容易压制了。
 
+自己买的无牌机箱似乎散热效果不佳。只有在侧板打开的时候才能降到36度，加了前置的风扇也没用。
+
+MATX机箱有银欣的PS07，风道好，但是因为有硬盘位，depth有40cm。安钛克的p180也是类似情况。乔思伯RM2外观好，不过也是下压的。其实乔思伯有专注MATX机箱，比如我给弟配置时买的C3。不过似乎U3更好。[官网](http://www.jonsbo.com/products_17_3.html)。<http://www.chiphell.com/article-7693-3.html>　不适合安装独立显卡，所以很适合ＡＰＵ。接下来，是否水冷是最佳选择？
+
 ## 虚拟化
 之所以搞了个Athlon是因为不仅CPU便宜，而且A88的主板BIOS里面都有IOMMU开关，这样就能用PCI-E passthrough了。但是我发现只有华硕的可以不接显示器启动，asrock FM2A88M Pro3+必须接一个显卡。
+
+kvm pci device not assignable. Check /var/log/syslog(which is configured at /etc/libvirt/libvirtd.conf). It say libvirtd[1900]: Failed to open config space file '/sys/bus/pci/devices/0000:00:00.0/config': Permission denied.  Can't find way. Run "virt-manager" with root. Then error "please ensure all devices within the iommu_group are bound to their vfio bus driver" "Device 'vfio-pci' could not be initialized". <http://vfio.blogspot.com/2014/08/vfiovga-faq.html> Try many way and fix by changing to pci-x16 slot. Maybe the pci-x1 was shared with other pci-e device. If I change to i350 4*1Gb net, I have to add all 4 pci-e device to vm guest.  
+
+Then get error "igb 0000:02:00.0: Detected Tx Unit Hang". OK after I change to i350 pci-e*4 device. But still get this issue when I visit luci console web page.
+
+<http://www.linux-kvm.org/page/How_to_assign_devices_with_VT-d_in_KVM>
+
+Change to old Xeon Linux kernel version, work! Also I found have to use 3.13 kernel. 3.19 kernel has reported "tx unit hang" error. 
+
+Use 3.13 kernel, not need add any parameter to kernel CMD linux.
+
+Other cheaper CPU like Athlon II X4 840 290￥ SHOULD support  AMD-Vi also. YES.
+
+X4 840 is 28nm, TDP 65 W.
+
+<http://www.amd.com/en-us/products/processors/desktop/athlon-cpu>
+
+[cpu-world](http://www.cpu-world.com/CPUs/Bulldozer/AMD-Athlon%20X4%20840%20-%20AD840XYBI44JA.html)(AMD site tell nothing) tell it support "AMD-V / AMD Virtualization technology”.
+
+Does other AMD CPU Onboard <http://www.asrock.com/mb/index.asp?s=AMD%20CPU> support AMD-Vi? 
+
+<http://www.asrock.com/mb/AMD/QC5000M/> this use "AMD FT3 Kabini A4-5000 Quad-Core APU”. Looks it also support AMD-v?
+
+<ftp://asrock.cn/manual/QC5000M-ITXPH.pdf> say 
+
+SVM 
+
+When this option is set to [Enabled], a VMM (Virtual Machine Architecture) can 
+
+utilize the additional hardware capabilities provided by AMD-V. he default value is 
+
+[Enabled]. Coniguration options: [Enabled] and [Disabled]. 
+
+There is no IOMMU entry.
 
 ## 问题
 有时候板载的eth0会自己关掉，连上TTL看到有这样信息：
@@ -25,3 +75,87 @@ date:   2015-10-26 16:27:00
     [504193.617255] r8169 0000:04:00.0 eth0: link down
 
 自己重新`ifup eth0`又可以恢复。https://github.com/HSAFoundation/HSA-Drivers-Linux-AMD/issues/4 https://bugzilla.redhat.com/show_bug.cgi?id=889749 这里看来是r8169网卡驱动的问题了：当数据陡然变大时（比如samba拷贝）会挂掉。看来是我错怪 AMD 了，我原来以为是这机器兼容性不行。
+
+## Ryzen
+
+Ryzen R5 2600 
+
+万紫千红 4Gx2, R15 1255，同样内存 i5 8400 929。 
+
+Ryzen R5 2600 运行老机器上面的 linux 启动超慢 
+```
+[fan@i5fedora ~]$ systemd-analyze 
+Startup finished in 2.005s (kernel) + 2.296s (initrd) + 2min 32.117s (userspace) = 2min 36.419s 
+graphical.target reached after 2min 7.963s in userspace 
+[fan@i5fedora ~]$ systemd-analyze critical-chain 
+The time after the unit is active or started is printed after the "@" character. 
+The time the unit takes to start is printed after the "+" character. 
+graphical.target @2min 7.963s 
+└─multi-user.target @2min 7.963s 
+└─docker.service @2min 4.974s +1.041s 
+└─docker-containerd.service @2min 4.589s 
+└─network.target @2min 4.580s 
+└─wpa_supplicant.service @2min 7.098s +20ms 
+└─dbus.service @2min 3.725s 
+└─basic.target @2min 3.713s 
+└─sockets.target @2min 3.713s 
+└─dbus.socket @2min 3.713s 
+└─sysinit.target @2min 3.704s 
+└─sys-fs-fuse-connections.mount @2min 27.201s +7ms 
+└─systemd-journald.socket 
+└─system.slice 
+└─-.slice 
+
+sudo systemctl disable wpa_supplicant 
+sudo systemctl disable sys-fs-fuse-connections.mount 
+[fan@i5fedora ~]$ systemd-analyze blame 
+2min 523ms lvm2-monitor.service 
+2min 405ms systemd-udev-settle.service 
+25.063s bolt.service 
+3.782s NetworkManager-wait-online.service 
+3.195s plymouth-quit-wait.service 
+1.190s dracut-initqueue.service 
+747ms akmods.service 
+sudo systemctl disable lvm2-monitor 
+```
+
+禁用了一堆服务还是很慢，这些服务都是相互依赖，难以找出根源。据说 new kernel (4.17+) and graphic drivers are STRONGLY recommended。 
+
+sudo systemctl mask systemd-udev-settle.service 
+
+这个才是关键，但是这个和上面的 lvm2  有关系。 
+
+这个问题修好然后是无法重启的问题： 
+
+journalctl -b -1 | tail 
+
+Hardware watchdog 'SP5100 TCO timer', version 0 
+
+kernel: watchdog: watchdog0: watchdog did not stop! 
+
+似乎是个已知问题 <https://wiki.gentoo.org/wiki/Ryzen> 
+
+进入 text mode方法：在 gurb 里面加上single，比如： 
+
+linux /vmlinuz-2.6.32-5 root=/dev/mapper/debian-root ro single 
+
+然后重启，发现其实最后卡在这里很久： 
+
+systemd-udevd[450]: seq 2689 '/devices/system/cpu/cpu10' killed 
+
+好多主板都有这个问题，[这里](http://forum.asrock.com/forum_posts.asp?TID=9179&title=new-asrock-x470-taichi-uefi-150)，[这里](https://www.phoronix.com/forums/forum/hardware/motherboards-chipsets/1037792-asrock-bios-breaks-linux)，似乎和bios有关，他们更严重，直接整个机器 freeze 了。 
+
+按照这里添加grub的reboot=pci选项 <http://michalorman.com/2013/10/fix-ubuntu-freeze-during-restart/>，还是没有用。 
+
+<https://bugzilla.redhat.com/show_bug.cgi?id=1608242>  一模一样的BUG，据说是bios的问题，kernel也有 work around。按照其方法修改了systemd-udev-settle.service timeout（禁用服务不大好），启用稍慢点，但是重启还是很慢。 
+
+<https://www.reddit.com/r/Amd/comments/6vbe6w/threadripper_broken_on_linux_for_pci_passthrough/>
+
+Intel/英特尔 545s 256G，但是如果用 usb 硬盘即便接在ryzen gen2 口上速度才 50MB，慢的出奇。硬盘盒还是主板原因？ 
+
+Turn to Ubuntu 18.04 4.15 kernel，USB live，重启正常，SR-IOV 正常，Ubuntu 的还是兼容性更好些。但是 pci passthrough 一样问题。 
+
+In Ubuntu, I ran `kvm-ok` and get error:  kvm: disabled by bios. But I have turn on IOMMU. After Google, I have to go to BIOS `M.I.T -> Advanced CPU Core Settings` to turn on SVM. Not sure if Fedora will work too after this way. SVM means ` AMD Secure Virtual Machine`.  
+
+<https://forums.unraid.net/topic/59893-iommu-grouping-issues-for-gpu-even-with-acs-override-enabled/> Here same issue but it success at last. 看了下，好多 pci 都在一个 group 里面，感觉还不如老的 Opteron 设备，或许 Ryzen 本来就不是为服务器准备的。 
+
