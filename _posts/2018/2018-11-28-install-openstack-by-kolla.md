@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Install OpenStack by Kolla Ansible"
+title:  "Install OpenStack by Kolla Ansible and get LoadBalancer IP"
 date:   2018-11-28 14:20:33
 typora-root-url: ../../../blog
 ---
@@ -91,7 +91,11 @@ if [ -n "$TRUST_ID" ]; then
 config --cloud-provider=openstack"
 fi
 ```
+这个 shell 脚本其实是由 magnum 传给 heat，在 fedora atomic 上面运行。从 magnum [源代码](https://github.com/openstack/magnum)看，这个 trust_id 贯穿整个流程，为空为什么在创建集群的时候就报错？[troubleshooting](https://docs.openstack.org/magnum/pike/admin/troubleshooting-guide.html#trustee-for-cluster) 这里有讲到 Trustee for cluster 的问题，折腾几次，发现要修改 `/etc/kolla/magnum-*/magnum.conf ` 里面的  **cluster_user_trust** 为 True。不知道这个为什么要默认设置为 false。为了固化配置，修改 /etc/kolla/globals.yml，加上 `enable_cluster_user_trust: "yes"`。
 
+然后 k8s 里面的 LoadBalancer 类型的 service 就能拿到 external IP了。
+
+OpenStack 到此一游。
 
 ### Ceph
 
@@ -143,6 +147,14 @@ sdb1 下面都是散放的文件，这个就是 filestore 的意思？
 安装好后，磁盘 label KOLLA_CEPH_OSD_BOOTSTRAP 会被去掉，所以清空再次部署时需要自己加上。
 
 [Kolla集成外接ceph存储](https://blog.csdn.net/dylloveyou/article/details/79114741)  集成到我原来创建好的 Rook Ceph 上去？滑稽。
+
+### log
+
+[Central Logging](https://docs.openstack.org/kolla-ansible/latest/reference/logging-and-monitoring/central-logging-guide.html) 原来已经有这个东西。kolla ansible 的部署日志没法记录吧，那时候日志服务还没好。
+
+Kibana 没法起来：`/usr/local/bin/kolla_start: line 18: /usr/share/kibana/bin/kibana: No such file or directory` 这什么鬼，好吧，binary 镜像没法自己改吧。自己下载 Kibana 本地运行个，毕竟只是个 UI 端，还好 Elasticsearch 能工作。修改配置让其后端连接 kolla 创建好的 Elasticsearch。启动出现错误：`Status changed from yellow to red - This version of Kibana requires Elasticsearch v6.5.1 on all nodes. I found the following incompatible nodes in your cluster: v2.4.6 @ 192.168.51.147:9200 (192.168.51.147)` 版本不兼容啊，查看其[兼容性 matrix](https://www.elastic.co/support/matrix#matrix_compatibility), 下载对应 4.6.4 版本。
+
+现在 Kibana 里面是可以看到一堆 log 了，但是对于 magnum，只有 magnum-api，没有 magnum-conductor。后来发现要在 magum.conf 里面设置 debug=True。
 
 ### 虚拟机一直是 scheduling 状态
 
