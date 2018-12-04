@@ -2,6 +2,7 @@
 layout: post
 title:  "CDAP Get Started"
 date:   2016-11-24 14:20:33
+typora-root-url: ../../../blog
 ---
 
 产品特点：动态扩展，动态部署，实时监控，对开发人员友好（比如分 standalone 模式和分布式模式），REST 设计完整。

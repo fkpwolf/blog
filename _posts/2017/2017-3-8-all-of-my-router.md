@@ -2,6 +2,7 @@
 layout: post
 title:  "折腾过的几个路由汇总"
 date:   2017-3-8 14:20:33
+typora-root-url: ../../../blog
 ---
 
 ### 腾达 tenda AC15
@@ -36,7 +37,7 @@ Creating 8 MTD partitions on "bcmsflash":
 
 this commit(<https://github.com/fkpwolf/dd-wrt/commit/38ddf9cd23ee42e207d4d2f74d9b5cc8f27f11c0>) add support for c8. 但是还是没有看到哪里用了4.4的核心。移动硬盘还是会重启。 
 
-![tenda-ac15](../../images/2017/tenda-ac15.png)
+![tenda-ac15](/images/2017/tenda-ac15.png)
 
 ### 腾达 AC9
 
@@ -60,7 +61,7 @@ cfe web直接上传asus trx固件，The file transferred is not a valid firmware
 
 白线：RX，绿线：TX
 
-![tenda-ac9](../../images/2017/tenda-ac9.jpg)
+![tenda-ac9](/images/2017/tenda-ac9.jpg)
 
 ### WDR7500 v3
 
@@ -118,7 +119,7 @@ Restart WAN can go to normal speed(5ms). Sometimes I didn't find the error but s
 
 最近发现小米手机无法自动连接这个路由，试试 lede 的 [archer-c7-v2-squashfs-factory.bin](http://downloads.lede-project.org/releases/17.01.3/targets/ar71xx/generic/lede-17.01.3-ar71xx-generic-archer-c7-v2-squashfs-factory.bin)，刷后感觉和openwrt一样啊，就软件新版本会新点。 
 
-![WDR7500](../../images/2017/WDR7500.png)
+![WDR7500](/images/2017/WDR7500.png)
 
 ### MAC1200R 
 
@@ -322,7 +323,7 @@ It is an [existing](https://forum.openwrt.org/viewtopic.php?id=48224) issue. I r
 
 wifi is slow. Looks I have enable "HT mode" to "40MHz 2nd channel above". But then 2.5G can't use this setting otherwise it can't startup. For macbook pro osx 5G & close distance, it show "450" Mbps. Desktop show 270Mbps(300M with Realtek 8812AU). Macbook at sleep room show 162M TOO!!! 
 
-![MW4530R](../../images/2017/MW4530R.jpg)
+![MW4530R](/images/2017/MW4530R.jpg)
 
 ### WNDR4500 
 
@@ -472,7 +473,7 @@ config switch_vlan
 ```
 USB. Add a USB wifi usb, no message. Then install 'usbutils' and run 'lsusb'. Got 'unable to initialize libusb: -99'. Then I installed 'kmod-usb-ohci' & 'kmod-usb-uhci' and 'kmod-usb2' and then can find the usb adapter.  Run 'wifi defect' as this topic <https://wiki.openwrt.org/doc/uci/wireless#regenerate_configuration> then router brick!!!  can't connect again. Attach TTL. Try to write un-dead uboot from here <https://github.com/noblepepper/ralink_sdk/releases> . Stock uboot can't be interrupted when booting. In openwrt ssh, mtd -r write uboot.img uboot. Say can't write uboot partition. Then change to fw by the same site of uboot. Can write uboot. But then I found it need GPIO0 HIGH 3 sec then release(LOW). My device is HIGH default. Server ip is 10.10.10.123. 
 
-![RT5350](../../images/2017/RT5350.jpg)
+![RT5350](/images/2017/RT5350.jpg)
 
 ### WHR-HP-G300N 
 
@@ -596,7 +597,7 @@ to use PPTP, I have been able to establish the connection using 128-bit only for
 
 <http://bbs.mydigit.cn/read.php?tid=315437> 拆解 
 
-![WNR3500](../../images/2017/WNR3500.png)
+![WNR3500](/images/2017/WNR3500.png)
 
 Have to flash DD before Tomato. Check this <http://www.dd-wrt.com/phpBB2/viewtopic.php?p=721643> Only dd-wrt.v24-14896_NEWD-2_K2.6_mini-WNR3500v2.chk work. Least version will not. If router semi-brick, use tftp to put a chk file to router. After flash tomato, need 30-30-30. 
 

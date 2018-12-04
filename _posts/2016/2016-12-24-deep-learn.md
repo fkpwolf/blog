@@ -1,7 +1,8 @@
 ---
 layout: post
 title:  "深度学习"
-date:   2017-12-24 14:20:33
+date:   2016-12-24 14:20:33
+typora-root-url: ../../../blog
 ---
 
 机器学习(Machine Learning)&深度学习(Deep Learning)资料(Chapter 1) <https://github.com/ty4z2008/Qix/blob/master/dl.md>  
@@ -130,13 +131,13 @@ I tensorflow/core/common_runtime/gpu/gpu_device.cc:975] Creating TensorFlow devi
 
 Spark上的深度学习框架再添新兵：Yahoo开源TensorFlowOnSpark <http://www.infoq.com/cn/news/2017/02/Spark-Yahoo-TensorFlowOnSpark> 这里 Spark 并不控制 GPU，只是通过 gRPC 和 TF GPU 通信。 
 
-![spark-ai](../../images/2016/spark-ai.png)
+![spark-ai](/images/2016/spark-ai.png)
 
 <http://www.infoq.com/cn/news/2017/06/Google-TensorFlow-API> Google发布新的TensorFlow物体检测API，这个挺好，能在手机上面运行，不用云访问。 
 
 <https://www.tensorflow.org/serving/docker> 这个很简单，在 ubuntu image 上面安装 bazel 开发环境，然后用 python grpcio 库和 tensorflow 通信。 
 
-![tf-arch](../../images/2016/tf-arch.png)
+![tf-arch](/images/2016/tf-arch.png)
 
 PaddlePaddle
 
@@ -148,23 +149,23 @@ PaddlePaddle
 
 谷歌最新语义图像分割模型DeepLab-v3+现已开源 <https://www.cnbeta.com/articles/soft/707419.htm> 
 
-![ai-face](../../images/2016/ai-face.png)
+![ai-face](/images/2016/ai-face.png)
 
 CNNs通过逐层累加调整实现分类。它首先检测到边缘，然后是形状，然后是实际的识别对象。CNN的实现方式极具创新，然而在这一过程中却有一项重要的信息丢失了——特征之间的空间关系。<https://www.oschina.net/news/92998/hinton-open-source-capsule-networks> 
 
 <https://machineui.co/>
 
-![ai-ui](../../images/2016/ai-ui.png)
+![ai-ui](/images/2016/ai-ui.png)
 
 机器学习难以直面“房间里的大象”<https://hot.cnbeta.com/articles/funny/771857>  
 
 在计算机视觉领域，人工智能系统会尝试识别和分类对象。在这项研究中，研究人员向计算机视觉系统展示了一幅客厅的场景，系统正确的识别了椅子、人和书架上的书。研究人员随后向场景中引入了异常对象：一只大象的图像。然后 AI 系统疯了，它忘记了已经识别的对象，将椅子识别为沙发，将大象识别为椅子，其它此前已经识别的对象都视而不见了。论文合作者  Amir Rosenfeld 称，研究显示了目前的对象识别系统是多么的脆弱。研究人员仍然在尝试理解为什么计算机视觉系统如此容易犯错。他们猜测是 AI 缺乏人类那种从容处理海量信息的能力。        
 
-![learn-from-exp](../../images/2016/learn-from-exp.jpg)
+![learn-from-exp](/images/2016/learn-from-exp.jpg)
 
 把大象认识成椅子，原因是什么？很简单：原来训练的图片都没有家具和大象在一起的，大多为家具和人、电视在一起。如果将物体从背景里面剥离出来，比如只包含大象，或者只包含家具，则识别率会大大提高。也就是是说这些训练数据过拟合，图片过于相识，导致沙发和椅子产生了关联性。而人因为观察角度和实际的触觉感觉，已经对沙发产生了比二位图片更为全面的信息。 
 
-[再复杂的 GUI 也能搞定！西安交通大学提出前端设计图自动转代码的全新方法](https://www.infoq.cn/article/CaBmj-kX3XcYv9qBv02a)  ![ai-generate-ui](../../images/2016/ai-generate-ui.png)
+[再复杂的 GUI 也能搞定！西安交通大学提出前端设计图自动转代码的全新方法](https://www.infoq.cn/article/CaBmj-kX3XcYv9qBv02a)  ![ai-generate-ui](/images/2016/ai-generate-ui.png)
 
 ### 机器学习算法
 
