@@ -7,6 +7,8 @@ typora-root-url: ../../../blog
 
 总文档 https://docs.openstack.org/kolla-ansible/latest/user/quickstart.html 
 
+### 安装
+
 * fatal: [localhost]: FAILED! => {"changed": false, "failed": true, "msg": "Unknown error message: Tag 4.0.1 not found in repository docker.io/kolla/ubuntu-binary-kolla-toolbox"}. → 修改里面的openstack-version，从auto改为4.0.0。这是因为4.0.1没有push到docker hubs上面？
 * deploy后，打开dashboard可以，但是static file都返回404。→ cleanup-containers & tools/cleanup-host under /usr/local/share/kolla-ansible/tools/, and try again. cleanup-host will remove networks. And then reboot.
 * `fatal: [localhost]: FAILED! => {"failed": true, "msg": "The conditional check ''{{ hostvars[item['item']]['ansible_' + hostvars[item['item']]['api_interface']]['ipv4']['address'] }}' not in '{{ item.stdout }}'' failed. The error was: Invalid conditional detected: EOL while scanning string literal (<unknown>, line 1)\n\nThe error appears to have been in '/usr/local/share/kolla-ansible/ansible/roles/rabbitmq/tasks/precheck.yml': line 54, column 3, but may\nbe elsewhere in the file depending on the exact syntax problem.\n\nThe offending line appears to be:\n\n\n- fail: msg=\"Hostname has to resolve to IP address of api_interface\"\n ^ here\n"}` → 我看安装程序已经设置hostname的ip为api_interface的ip。
@@ -71,11 +73,9 @@ Resource CREATE failed: resources[0]: resources.kube_masters.Property error: res
 现在开始漫长的创建 k8s 集群了。然后居然就可以了，一个 master，两个 minion，没有出现任何错误。看来已经颇为稳定了。
 
 尝试创建一个带 load balance 功能的 k8s 集群，失败报错：
-
 ```
 ERROR: ResourceTypeUnavailable: : resources.api_lb<file:///var/lib/kolla/venv/lib/python2.7/site-packages/magnum/drivers/common/templates/lb.yaml>: : HEAT-E99001 Service neutron is not available for resource type Magnum::Optional::Neutron::LBaaS::LoadBalancer, reason: Required extension lbaasv2 in neutron service is not available.
 ```
-
 好吧，在 kolla 中打开 `enable_neutron_lbaas`，重新部署。这每次修改 `/etc/kolla/globals.yml` 都没有记录，到最后也不知道自己做了哪些修改。
 
 这次重新部署 UI 还是出现浏览器 Angular JavaScript 错误：
@@ -93,21 +93,19 @@ fi
 ```
 这个 shell 脚本其实是由 magnum 传给 heat，在 fedora atomic 上面运行。从 magnum [源代码](https://github.com/openstack/magnum)看，这个 trust_id 贯穿整个流程，为空为什么在创建集群的时候就报错？[troubleshooting](https://docs.openstack.org/magnum/pike/admin/troubleshooting-guide.html#trustee-for-cluster) 这里有讲到 Trustee for cluster 的问题，折腾几次，发现要修改 `/etc/kolla/magnum-*/magnum.conf ` 里面的  **cluster_user_trust** 为 True。不知道这个为什么要默认设置为 false。为了固化配置，修改 /etc/kolla/globals.yml，加上 `enable_cluster_user_trust: "yes"`。
 
-然后 k8s 里面的 LoadBalancer 类型的 service 就能拿到 external IP了。
+然后 k8s 里面的 LoadBalancer 类型的 service 就能拿到 external IP了。也试了下 Cinder StorageClass，没问题。有了 cloud provider 确实比自己配置方便。
 
 OpenStack 到此一游。
 
 ### Ceph
 
-感觉相关依赖没有做好，后面加 ceph，前面创建好的 cinder 容器没有重建，容器里面的配置都没有修改，这怎么能行呢？清除后重建集群。登录到后发现 cinder-api 下面还是没有 /etc/ceph/ceph.conf 文件，cinder-volume 下面有，但是 ceph status 无法登录。ceph-mgr 容器运行 `ceph osd pool ls` 返回四个已经创建好的 pool：images, volumes, backups, vms. 但是 ceph -s 返回 0 kB used, 0 kB / 0 kB avail。日。
+感觉相关依赖没有做好，后面加 Ceph，前面创建好的 Cinder 容器没有重建，容器里面的配置都没有修改，这怎么能行呢？清除后重建集群。登录到后发现 cinder-api 下面还是没有 /etc/ceph/ceph.conf 文件，cinder-volume 有，ceph status 无法登录。ceph-mgr 容器运行 `ceph osd pool ls` 返回四个已经创建好的 pool：images, volumes, backups, vms。ceph -s 返回 0 kB used, 0 kB / 0 kB avail。日。
 
-https://docs.openstack.org/kolla-ansible/latest/reference/storage/ceph-guide.html 这里有详细配置，原来这个需要给硬盘加标签，然后 kolla 会把这个硬盘分配给 ceph。我只运行：
+https://docs.openstack.org/kolla-ansible/latest/reference/storage/ceph-guide.html 这里有详细配置，原来这个需要给硬盘加标签，然后 kolla 才会把这个硬盘分配给 Ceph。我只运行：
 
     parted /dev/sdb -s -- mklabel gpt mkpart KOLLA_CEPH_OSD_BOOTSTRAP 1 -1
 
-其他的都不懂干啥用，还说可能至少要 3 个节点，我 all-in-one 怎么弄？不管它。这个地方文档搞的有些复杂，还是 ceph 本来就难配置？
-还是不行，`cinder service-list` 显示 cinder-volume  ms1@rbd-1 是 down 的状态。但是我看 kolla/centos-source-cinder-volume:rocky 这个容器已经起来啊，这个 ms1 是宿主机 hostname，后面 @rbd-1是啥？现在问题是几种方法都没有在 docker ps 中看到 ceph-osd/ceph-rbd 之类的容器。
-再次细看文档：all-in-one 情况下，需要设置 `osd pool default size = 1`，但是没有 /etc/kolla/config/ceph.conf 这个文件，修改 `/usr/share/kolla-ansible/ansible/roles/ceph/templates/ceph.conf.j2`，重新 deploy 后已经能看到 /etc/kolla/ceph-osd/ceph.conf 里面有我加的配置。但是看上去还是不行。容量还是为 0 ，/dev/sdb 似乎根本没有考虑进去。
+还是不行，`cinder service-list` 显示 cinder-volume  ms1@rbd-1 是 down 的状态。但是我看 kolla/centos-source-cinder-volume:rocky 这个容器已经起来。现在问题是几种方法都没有在 docker ps 中看到 ceph-osd/ceph-rbd 容器。再次细看文档：all-in-one 情况下，需要设置 `osd pool default size = 1`，但是没有 /etc/kolla/config/ceph.conf 这个文件，修改 `/usr/share/kolla-ansible/ansible/roles/ceph/templates/ceph.conf.j2`，重新 deploy 后已经能看到 /etc/kolla/ceph-osd/ceph.conf 里面有我加的配置。但是还是不行，容量还是为 0 ，/dev/sdb 根本没有考虑进去。
 换成 Queens 版本，因为这个没有 Bluestore，也不知道是不是这个原因。再不行得看 ansible 代码了。
 http://docs.ceph.com/docs/master/start/quick-ceph-deploy/ 这里创建 rbd 都是直接命令行，没有放到配置里面。
 不行，/usr/share/kolla-ansible/ansible/roles/ceph/tasks/start_osds.yml 创建 osd 的脚本，但是如何知道运行结果呢？kolla-ansible 运行只输出到屏幕，没有地方看全部日志，可能我没找到。启用 verbose，使用命令 
@@ -120,9 +118,9 @@ TASK [ceph : Looking up disks to bootstrap for Ceph OSDs]  *********
 ok: [localhost] => {"changed": false, "cmd": ["docker", "exec", "-t", "kolla_toolbox", "sudo", "-E", "ansible", "localhost", "-m", "find_disks", "-a", "partition_name=KOLLA_CEPH_OSD_BOOTSTRAP_BS match_mode='prefix' use_udev=True"], "delta": "0:00:01.454122", "end": "2018-11-27 21:46:51.368490", "failed_when_result": false, "rc": 0, "start": "2018-11-27 21:46:49.914368", "stderr": "", "stderr_lines": [], "stdout": "localhost | SUCCESS => {\r\n    \"changed\": false, \r\n    \"disks\": \"[]\"\r\n}", "stdout_lines": ["localhost | SUCCESS => {", "    \"changed\": false, ", "    \"disks\": \"[]\"", "}"]}
 ```
 返回空数组，这是没有找到合适的磁盘了？**KOLLA_CEPH_OSD_BOOTSTRAP_BS** 为什么是这个？这个是 bluestore，应该是 KOLLA_CEPH_OSD_BOOTSTRAP。这个分区名字是在 /usr/share/kolla-ansible/ansible/roles/ceph/defaults/main.yml 中决定的，接着由 ceph_osd_store_type 决定，在 /usr/share/kolla-ansible/ansible/group_vars/all.yml 这个默认是 bluestore。好的，我在 /etc/kolla/globals.yml 加上 ceph_osd_store_type: “filestore"。重新发布，现在发现错误了，手工在 kolla-toolbox container 里面运行：
-```
-ansible localhost -m find_disks -a "partition_name=KOLLA_CEPH_OSD_BOOTSTRAP match_mode='prefix' use_udev=True”
-```
+
+    ansible localhost -m find_disks -a "partition_name=KOLLA_CEPH_OSD_BOOTSTRAP match_mode='prefix' use_udev=True”
+
 返回错误：
 ```
 localhost | FAILED! => {
@@ -131,8 +129,7 @@ localhost | FAILED! => {
     "msg": "UnicodeDecodeError('ascii', '\\xe6\\x96\\xb0\\xe5\\x8a\\xa0\\xe5\\x8d\\xb7', 0, 1, 'ordinal not in range(128)')"
 }
 ```
-有对应磁盘反而报错，似乎是字符集的问题，问题是这个看不懂。下载 [find_disk.py](https://github.com/openstack/kolla/blob/master/docker/kolla-toolbox/find_disks.py)，稍作修改，本地运行，发现磁盘有个 LABEL **新加卷**，导致出错。`parted /dev/sdb` 这个命令默认就会产生这个 label。折腾各种命令来修改 label，最后发现这个『新加卷』是原来的 Windows 磁盘，parted 并不会删除旧有分区。mkfs.ext4 格式化之。现在 OK 了！
-检查最后成功状态：
+有对应磁盘反而报错，似乎是字符集的问题，问题是这个看不懂。下载 [find_disk.py](https://github.com/openstack/kolla/blob/master/docker/kolla-toolbox/find_disks.py)，稍作修改，本地运行，发现磁盘有个 LABEL **新加卷**，导致出错。`parted /dev/sdb` 这个命令默认就会产生这个 label。折腾各种命令来修改 label，最后发现这个『新加卷』是原来的 Windows 磁盘，parted 并不会删除旧有分区。mkfs.ext4 格式化之，现在 OK 了！检查最后成功状态：
 
 ```
 [root@ms1 fan]# lsblk /dev/sdb
@@ -141,12 +138,11 @@ sdb      8:16   0 238.5G  0 disk
 ├─sdb1   8:17   0 233.5G  0 part /var/lib/ceph/osd/6fce7aad-0b42-4a0e-bdca-8bb7c9ed7135
 └─sdb2   8:18   0     5G  0 part 
 ```
-sdb1 下面都是散放的文件，这个就是 filestore 的意思？
-现在可以看到有个 kolla/centos-source-ceph-osd:queens 容器在运行。
+sdb1 下面都是散放的文件，这个就是 filestore 的意思？现在可以看到有个 kolla/centos-source-ceph-osd:queens 容器在运行。
 
-安装好后，磁盘 label KOLLA_CEPH_OSD_BOOTSTRAP 会被去掉，所以清空再次部署时需要自己加上。
+安装好后，磁盘 label KOLLA_CEPH_OSD_BOOTSTRAP 会被去掉，所以每次清空再次部署时需要自己加上。
 
-[Kolla集成外接ceph存储](https://blog.csdn.net/dylloveyou/article/details/79114741)  集成到我原来创建好的 Rook Ceph 上去？滑稽。
+[Kolla集成外接ceph存储](https://blog.csdn.net/dylloveyou/article/details/79114741) 集成到我原来创建好的 Rook Ceph 上去？滑稽。
 
 ### log
 
