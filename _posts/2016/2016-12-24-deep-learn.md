@@ -165,3 +165,34 @@ CNNs通过逐层累加调整实现分类。它首先检测到边缘，然后是�
 把大象认识成椅子，原因是什么？很简单：原来训练的图片都没有家具和大象在一起的，大多为家具和人、电视在一起。如果将物体从背景里面剥离出来，比如只包含大象，或者只包含家具，则识别率会大大提高。也就是是说这些训练数据过拟合，图片过于相识，导致沙发和椅子产生了关联性。而人因为观察角度和实际的触觉感觉，已经对沙发产生了比二位图片更为全面的信息。 
 
 [再复杂的 GUI 也能搞定！西安交通大学提出前端设计图自动转代码的全新方法](https://www.infoq.cn/article/CaBmj-kX3XcYv9qBv02a)  ![ai-generate-ui](../../images/2016/ai-generate-ui.png)
+
+### 机器学习算法
+
+蒙特卡罗方法入门  <http://www.ruanyifeng.com/blog/2015/07/monte-carlo-method.html>  
+
+如何识别图像边缘？<http://www.ruanyifeng.com/blog/2016/07/edge-recognition.html>  
+
+理解矩阵乘法 <http://www.ruanyifeng.com/blog/2015/09/matrix-multiplication.html>  
+
+朴素贝叶斯分类器的应用 <http://www.ruanyifeng.com/blog/2013/12/naive_bayes_classifier.html>  
+
+泊松分布和指数分布：10分钟教程 <http://www.ruanyifeng.com/blog/2015/06/poisson-distribution.html> 
+
+神经网络入门 <http://www.ruanyifeng.com/blog/2017/07/neural-network.html> 
+
+正态分布为什么常见？<http://www.ruanyifeng.com/blog/2017/08/normal-distribution.html> 
+
+[推荐算法不够精准？让知识图谱来解决](https://mp.weixin.qq.com/s?__biz=MzAwMTA3MzM4Nw==&mid=501960087&idx=1&sn=25354e027f3099a593e91f2258f3c07f#rd)  
+
+聚类属于无监督学习，以往的回归、朴素贝叶斯、SVM等都是有类别标签y的，也就是说样例中已经给出了样例的分类。 
+
+k均值聚类(K-means) <http://www.cnblogs.com/leoo2sk/archive/2010/09/20/k-means.html> 这个有个例子，把几个队伍分成一流二流三流，相同的聚合在一块。和分类不同的是他们没有事先训练好的数据。 
+
+<http://www.cnblogs.com/jerrylead/archive/2011/04/06/2006910.html>
+
+CDAP 举的例子是把计算一堆点的中心点。 
+
+语义分析的一些方法(一) [link](http://www.flickering.cn/ads/2015/02/%E8%AF%AD%E4%B9%89%E5%88%86%E6%9E%90%E7%9A%84%E4%B8%80%E4%BA%9B%E6%96%B9%E6%B3%95%E4%B8%80/)  
+
+API 网上算法，按调用付钱，提供了很多例子 <https://algorithmia.com/> 
+
