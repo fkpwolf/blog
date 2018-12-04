@@ -240,7 +240,7 @@ ip_vs
 ```
 但是有的节点 kube-proxy 启动出现一堆错误： 
 ```
-Failed to make sure ip set: &{{KUBE-NODE-PORT-LOCAL-TCP bitmap:port inet 1024 65536 0-65535 Kubernetes nodeport TCP port with externalTrafficPolicy=local} map[] 0xc420596440} exist, error: error creating ipset KUBE-NODE-PORT-LOCAL-TCP, error: exit status 2 
+Failed to make sure ip set: KUBE-NODE-PORT-LOCAL-TCP bitmap:port inet 1024 65536 0-65535 Kubernetes nodeport TCP port with externalTrafficPolicy=local map[] 0xc420596440 exist, error: error creating ipset KUBE-NODE-PORT-LOCAL-TCP, error: exit status 2 
 ```
 ipset 不支持 comment 语法，这个问题不是说 1.11.1 [已经解决了](https://sealyun.com/post/k8s-ipvs/)么？k8s.gcr.io/kube-proxy-amd64:v1.11.2 要换成这个最新稳定版本，直接修改 kubectl edit pod kube-proxy-xxx（这 POD 的参数定义在哪里？/etc/kubernetes/ 下面没有）。这个 ipvs 如果工作不正常，连 weave 也不正常。现在 ipvsadm -ln 会返回一堆东西。 
 ```
