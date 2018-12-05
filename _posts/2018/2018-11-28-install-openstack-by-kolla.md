@@ -172,6 +172,26 @@ Docker ps 有返回 kolla/centos-binary-horizon:queens，这里才知道安装�
 
 还有虚机运行的磁盘文件是直接放在宿主机上面：-drive file=/var/lib/nova/instances/78687529-9333-429f-a184-9a13c725fcca/disk,format=qcow2，如果使用了 ceph，会放到 ceph 上面？
 
+### 部署到 Neutron 时候挂起
+
+一次成功部署后，重启机器，主端口连接不上。清空重新部署，运行到 Running Neutron bootstrap container，ssh 网络断开，console 登录查看最后日志为：
+
+```
+TASK [neutron : Running Neutron bootstrap container] ******************************************************************************************************
+changed: [localhost -> localhost] => {"changed": true, "result": false}
+
+TASK [neutron : Running Neutron lbaas bootstrap container] ************************************************************************************************
+fatal: [localhost -> localhost]: FAILED! => {"changed": true, "msg": "'Traceback (most recent call last):\\n  File \"/tmp/ansible_kolla_docker_payload_e0UJ1B/__main__.py\", line 874, in main\\n    result = bool(getattr(dw, module.params.get(\\'action\\'))())\\n  File \"/tmp/ansible_kolla_docker_payload_e0UJ1B/__main__.py\", line 666, in start_container\\n    self.pull_image()\\n  File \"/tmp/ansible_kolla_docker_payload_e0UJ1B/__main__.py\", line 507, in pull_image\\n    repository=image, tag=tag, stream=True\\n  File \"/usr/lib/python2.7/site-packages/docker/api/image.py\", line 400, in pull\\n    self._raise_for_status(response)\\n  File \"/usr/lib/python2.7/site-packages/docker/api/client.py\", line 248, in _raise_for_status\\n    raise create_api_error_from_http_exception(e)\\n  File \"/usr/lib/python2.7/site-packages/docker/errors.py\", line 31, in create_api_error_from_http_exception\\n    raise cls(e, response=response, explanation=explanation)\\nAPIError: 500 Server Error: Internal Server Error (\"Get https://registry-1.docker.io/v2/: net/http: request canceled while waiting for connection (Client.Timeout exceeded while awaiting headers)\")\\n'"}
+
+NO MORE HOSTS LEFT ****************************************************************************************************************************************
+	to retry, use: --limit @/usr/share/kolla-ansible/ansible/site.retry
+
+PLAY RECAP ************************************************************************************************************************************************
+localhost                  : ok=311  changed=175  unreachable=0    failed=1 
+```
+
+禁用掉 lbaas 也没用。因为是在部署 neutron，所以应该是网络配置出现问题导致后面没法拉镜像。尴尬。为什么不先下载所有镜像然后开始部署？干净 centos 部署没有问题，几次之后就会出现这个问题。有 iptables 之类的残留？
+
 ### Think
 * Ansible 是幂等的，也就是说反复部署不会对功能造成影响，这个是理想情况。
 * Docker 对宿主机的网络和设备全面接管，和独立运行的程序没啥差别。用容器部署比直接程序更简便么？可能隔离性更好，不需要安装包，对宿主机操作系统影响不大。另外：其配置（/etc/kolla/）和运行时（容器）是隔离开的，符合 12 法则应用理论。

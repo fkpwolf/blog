@@ -179,7 +179,7 @@ Warning  FailedCreatePodSandBox  6m               kubelet, odroid    Failed crea
 Warning  FailedSync              6s (x4 over 6m)  kubelet, odroid    Error syncing pod 
 Normal   SandboxChanged          5s (x4 over 6m)  kubelet, odroid    Pod sandbox changed, it will be killed and re-created. 
 ```
-回过头来看这个其实是因为 dashboard deployment 里面指定用 amd64 image，换成 arm 即可。
+回过头来看这个其实是因为 dashboard deployment 里面指定用 amd64 image，换成 arm 即可。现在 (k8s 1.13.0) 搭建集群很成熟了，主要问题是很多镜像都没有 arm 版本。
 
 1.8.4 还要 disbale swap，特么的。(vm 的 swap 是关闭的，直接就可以用)然后在 amd64上面又试了下，还是各种问题。我需要全新的机器来么？还是 kubeadm 不太稳定？ 
 
