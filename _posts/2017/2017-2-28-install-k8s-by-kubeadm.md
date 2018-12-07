@@ -2,6 +2,9 @@
 layout: post
 title:  "Install Kubernetes by kubeadm"
 date:   2017-2-28 14:20:33
+categories:
+  - cloud
+  - install
 typora-root-url: ../../../blog
 ---
 ### 安装
@@ -357,3 +360,9 @@ openssl x509 -noout -text -in /var/lib/kubelet/pki/kubelet-client-current.pem
 这个有效期有一年，这么长！到期会自动 renew 续签，这种有了 token 后都是自动的，安全性比只用 token 要高么？ 
 
 [使用 kubeadm 搭建 multi-master k8s 集群总结](https://lingxiankong.github.io/2018-06-22-multi-master-k8s.html), 有提供 Ansible。 
+
+证书过期的问题：
+```
+2018/12/07 10:57:09 Error while initializing connection to Kubernetes apiserver. This most likely means that the cluster is misconfigured (e.g., it has invalid apiserver certificates or service accounts configuration) or the --apiserver-host param points to a server that does not exist. Reason: Get https://192.168.1.140:6443/version: x509: certificate has expired or is not yet valid
+```
+奇怪的是集群内部的 dashboard 正常运行，in-cluster 访问 api server 不校验证书？这个问题有个 [kubeadm issue](https://github.com/kubernetes/kubeadm/issues/581) 解决，就是太麻烦了。可以试试 [这个 stackoverflow](https://stackoverflow.com/questions/46360361/invalid-x509-certificate-for-kubernetes-master) 的方法。

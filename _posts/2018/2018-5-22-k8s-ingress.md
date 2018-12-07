@@ -2,6 +2,9 @@
 layout: post
 title:  "Kubernetes Ingress"
 date:   2018-5-22 14:20:33
+categories:
+  - cloud
+  - network
 typora-root-url: ../../../blog
 ---
 ### 介绍和配置
@@ -279,4 +282,39 @@ Nginx 很快，Lua 就快么？[Top ten things about openresty](http://www.stati
 [Kubernetes 中使用 API Gateway 替代 Ingress](https://blog.joway.io/ops/kubernetes-gateway/)，介绍了其他的些 ingress 
 
 <https://github.com/Netflix/zuul/wiki/Getting-Started-2.0> Netflix正式开源其API网关Zuul 2. Java project. 
+
+### External IP / Load Balance
+如果 k8s 集群运行在 OpenStack 下面，
+```
+[fedora@kong-s4cfqkyjsyu2-master-0 ~]$ kubectl get service -n kube-system
+NAME                   TYPE           CLUSTER-IP       EXTERNAL-IP     PORT(S)                  AGE
+heapster               ClusterIP      10.254.67.110    <none>          80/TCP                   1h
+kube-dns               ClusterIP      10.254.0.10      <none>          53/UDP,53/TCP,9153/TCP   1h
+kubernetes-dashboard   LoadBalancer   10.254.199.103   192.168.51.64   443:31567/TCP            1h
+```
+可以看到能获取外部 IP，如果运行在没有外部云环境情况下（比如 kubeadm 搭建的集群），EXTERNAL-IP 这栏就显示 `<pending>`。这个 IP 是 OpenStack 的一个浮动 IP，和节点的内网 IP、浮动 IP 都不同。如果 k8s 集群创建时启用了 Master LB，Openstack 也会创建 API 和 etcd 这两个 load balance。一个 load balance 维护了EXTERNAL-IP、端口和后端主机列表的关系。
+
+![k8s-ingress-lb](/images/2018/k8s-ingress-lb.png)
+listener 代表上面的关系，pool 则表示后端主机列表，端口就是上面 dashboard service 的内部端口。奇怪的是这个 pool 有两台主机，其实 dashboard pod 只有一个实例，可能是因为这个是 default pool。进入其中某个节点：
+```
+[fedora@kong-s4cfqkyjsyu2-minion-1 ~]$ sudo netstat -tulpn
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name    
+tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      985/sshd            
+tcp        0      0 127.0.0.1:10248         0.0.0.0:*               LISTEN      2409/kubelet        
+tcp        0      0 127.0.0.1:10249         0.0.0.0:*               LISTEN      2240/kube-proxy     
+tcp        0      0 10.0.0.3:10250          0.0.0.0:*               LISTEN      2409/kubelet        
+tcp6       0      0 :::22                   :::*                    LISTEN      985/sshd            
+tcp6       0      0 :::31567                :::*                    LISTEN      2240/kube-proxy     
+tcp6       0      0 :::10256                :::*                    LISTEN      2240/kube-proxy     
+udp        0      0 127.0.0.1:323           0.0.0.0:*                           767/chronyd         
+udp        0      0 0.0.0.0:68              0.0.0.0:*                           813/dhclient        
+udp        0      0 10.0.0.3:8285           0.0.0.0:*                           1944/flanneld       
+udp6       0      0 ::1:323                 :::*                                767/chronyd         
+```
+kube-proxy 在这两个节点都有开放 31567 这个端口，不管这个节点上是否有提供服务。Nginx ingress 似乎比这个智能，其直接转发给真正的 pod。
+
+如果 dashboard 伸缩为两个，运行在两台不同主机上面，load balance 也就需要动态变更后端主机列表了。所以从这里看其运行模式和 ingress 是一样的。这些关系是谁动态维护的？可能是 k8s 向 cloud provider 申请的，cloud provider 则使用 OpenStack API 直接操作其资源。
+
+如果性能要求最高，应该是 Service 直接定义成负载均衡模式，而不用 Nginx Ingress-》Service 模式，但是一般负载均衡器都是要付钱的，所以还是用一个总的 LoadBalance Ingress 或者一个总的 LoadBalance Service（比如 Contour）。有点废话，ingress 也是 service。
 

@@ -3,6 +3,9 @@ layout: post
 title:  "Install OpenStack by Kolla Ansible and get LoadBalancer IP"
 date:   2018-11-28 14:20:33
 typora-root-url: ../../../blog
+categories:
+  - cloud
+  - setup
 ---
 
 总文档 https://docs.openstack.org/kolla-ansible/latest/user/quickstart.html 
@@ -68,7 +71,7 @@ Resource CREATE failed: resources[0]: resources.kube_masters.Property error: res
 修改模板 `magnum cluster-template-update fedora add volume_driver=cinder`，还是一样。我在界面创建卷的时候也看到 No Volume type。`openstack volume type list` 也为空。
 好吧，enable_ceph，重新 deploy，没看到啥变化，只是多了两个 ceph 容器。手工创建一个 volume type，然后创建一个该 type 的 volume，失败。看来部署 Cehp 没有那么简单。
 
-下面 Ceph 配置好后，回到这里。现在可以在界面创建一个 volume，但是创建 k8s 集群时依然同样错误。[这里](https://ask.openstack.org/en/question/110729/magnum-cluster-create-k8s-cluster-error-resourcefailure/)说缺少一个`default_docker_volume_type` 字段，`docker exec -it magnum_conductor` 进去后直接修改，然后 restart container，后来发现 restart 后值丢失，原来要修改 `/etc/kolla/magnum-*` 下面的对应文件，我猜容器是用 mount 目录的方式来访问配置，这种操作如果放在 k8s 下面做就简单方便很多。这个值原始定义在 `/usr/share/kolla-ansible/ansible/roles/magnum/defaults/main.yml` 中。
+下面 Ceph 配置好后，回到这里。现在可以在界面创建一个 volume，但是创建 k8s 集群时依然同样错误。[这里](https://ask.openstack.org/en/question/110729/magnum-cluster-create-k8s-cluster-error-resourcefailure/)说缺少一个`default_docker_volume_type` 字段，`docker exec -it magnum_conductor` 进去后直接修改，然后 restart container，后来发现 restart 后值丢失，原来要修改 `/etc/kolla/magnum-*` 下面的对应文件，我猜容器是用 mount /etc 目录的方式来访问配置，这种操作如果放在 k8s 下面做就简单方便很多。这个值原始定义在 `/usr/share/kolla-ansible/ansible/roles/magnum/defaults/main.yml` 中。这个 volume type 没有绑定特定的 volume backend，可能被当做为默认类型。
 
 现在开始漫长的创建 k8s 集群了。然后居然就可以了，一个 master，两个 minion，没有出现任何错误。看来已经颇为稳定了。
 
@@ -93,7 +96,7 @@ fi
 ```
 这个 shell 脚本其实是由 magnum 传给 heat，在 fedora atomic 上面运行。从 magnum [源代码](https://github.com/openstack/magnum)看，这个 trust_id 贯穿整个流程，为空为什么在创建集群的时候就报错？[troubleshooting](https://docs.openstack.org/magnum/pike/admin/troubleshooting-guide.html#trustee-for-cluster) 这里有讲到 Trustee for cluster 的问题，折腾几次，发现要修改 `/etc/kolla/magnum-*/magnum.conf ` 里面的  **cluster_user_trust** 为 True。不知道这个为什么要默认设置为 false。为了固化配置，修改 /etc/kolla/globals.yml，加上 `enable_cluster_user_trust: "yes"`。
 
-然后 k8s 里面的 LoadBalancer 类型的 service 就能拿到 external IP了。也试了下 Cinder StorageClass，没问题。有了 cloud provider 确实比自己配置方便。
+然后把集群里面已经装好的 dashboard service 改为 LoadBalancer 类型的，稍等片刻就能拿到 external IP 了。也试了下 Cinder StorageClass，简单的声明，没有 IP 配置之类，测试成功。有了 cloud provider 获取外部资源确实方便。
 
 OpenStack 到此一游。
 
@@ -117,11 +120,11 @@ http://docs.ceph.com/docs/master/start/quick-ceph-deploy/ 这里创建 rbd 都�
 TASK [ceph : Looking up disks to bootstrap for Ceph OSDs]  *********
 ok: [localhost] => {"changed": false, "cmd": ["docker", "exec", "-t", "kolla_toolbox", "sudo", "-E", "ansible", "localhost", "-m", "find_disks", "-a", "partition_name=KOLLA_CEPH_OSD_BOOTSTRAP_BS match_mode='prefix' use_udev=True"], "delta": "0:00:01.454122", "end": "2018-11-27 21:46:51.368490", "failed_when_result": false, "rc": 0, "start": "2018-11-27 21:46:49.914368", "stderr": "", "stderr_lines": [], "stdout": "localhost | SUCCESS => {\r\n    \"changed\": false, \r\n    \"disks\": \"[]\"\r\n}", "stdout_lines": ["localhost | SUCCESS => {", "    \"changed\": false, ", "    \"disks\": \"[]\"", "}"]}
 ```
-返回空数组，这是没有找到合适的磁盘了？**KOLLA_CEPH_OSD_BOOTSTRAP_BS** 为什么是这个？这个是 bluestore，应该是 KOLLA_CEPH_OSD_BOOTSTRAP。这个分区名字是在 /usr/share/kolla-ansible/ansible/roles/ceph/defaults/main.yml 中决定的，接着由 ceph_osd_store_type 决定，在 /usr/share/kolla-ansible/ansible/group_vars/all.yml 这个默认是 bluestore。好的，我在 /etc/kolla/globals.yml 加上 ceph_osd_store_type: “filestore"。重新发布，现在发现错误了，手工在 kolla-toolbox container 里面运行：
+返回空数组，这是没有找到合适的磁盘了？**KOLLA_CEPH_OSD_BOOTSTRAP_BS** 为什么是这个？这个是 bluestore，应该是 KOLLA_CEPH_OSD_BOOTSTRAP。这个分区名字是在 /usr/share/kolla-ansible/ansible/roles/ceph/defaults/main.yml 中决定的，接着由 ceph_osd_store_type 决定，在 /usr/share/kolla-ansible/ansible/group_vars/all.yml 这个默认是 bluestore。好的，我在 /etc/kolla/globals.yml 加上 ceph_osd_store_type: “filestore"。重新发布，现在会停在出错的地方，错误很隐晦，手工在 kolla-toolbox container 里面运行：
 
     ansible localhost -m find_disks -a "partition_name=KOLLA_CEPH_OSD_BOOTSTRAP match_mode='prefix' use_udev=True”
 
-返回错误：
+重现错误：
 ```
 localhost | FAILED! => {
     "changed": false, 
@@ -129,8 +132,7 @@ localhost | FAILED! => {
     "msg": "UnicodeDecodeError('ascii', '\\xe6\\x96\\xb0\\xe5\\x8a\\xa0\\xe5\\x8d\\xb7', 0, 1, 'ordinal not in range(128)')"
 }
 ```
-有对应磁盘反而报错，似乎是字符集的问题，问题是这个看不懂。下载 [find_disk.py](https://github.com/openstack/kolla/blob/master/docker/kolla-toolbox/find_disks.py)，稍作修改，本地运行，发现磁盘有个 LABEL **新加卷**，导致出错。`parted /dev/sdb` 这个命令默认就会产生这个 label。折腾各种命令来修改 label，最后发现这个『新加卷』是原来的 Windows 磁盘，parted 并不会删除旧有分区。mkfs.ext4 格式化之，现在 OK 了！检查最后成功状态：
-
+有对应磁盘反而报错，似乎是字符集的问题，问题是这个看不懂。下载源码 [find_disk.py](https://github.com/openstack/kolla/blob/master/docker/kolla-toolbox/find_disks.py)，稍作修改，本地运行，发现磁盘有个 LABEL **新加卷**，导致出错。`parted /dev/sdb` 这个命令默认就会产生这个 label。折腾各种命令来修改 label，最后发现这个『新加卷』是原来的 Windows 磁盘，parted 并不会删除旧有分区。mkfs.ext4 格式化之，现在 OK 了！检查最后成功状态：
 ```
 [root@ms1 fan]# lsblk /dev/sdb
 NAME   MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
@@ -190,7 +192,7 @@ PLAY RECAP *********************************************************************
 localhost                  : ok=311  changed=175  unreachable=0    failed=1 
 ```
 
-禁用掉 lbaas 也没用。因为是在部署 neutron，所以应该是网络配置出现问题导致后面没法拉镜像。尴尬。为什么不先下载所有镜像然后开始部署？干净 centos 部署没有问题，几次之后就会出现这个问题。有 iptables 之类的残留？
+禁用掉 lbaas 也没用。因为是在部署 neutron，所以应该是网络配置出现问题导致后面没法拉镜像。尴尬。为什么不先下载所有镜像然后开始部署？干净 centos 部署没有问题，几次之后就会出现这个问题。有 iptables 之类的残留？[这里](https://www.reddit.com/r/openstack/comments/8zmvia/the_network_problem_with_kollaansible/e2letmw/)和[这里](https://ask.openstack.org/en/question/93376/during-kolla-deploy-when-neutron-comes-up-networking-goes-down/)都有讨论这个问题，似乎 kolla 会创建一个 br-ex 网桥来做外部通信。后来尝试在宿主机中禁用 `neutron_external_interface`，也就是关掉 DHCP 获取 IP，问题消失，😂
 
 ### Think
 * Ansible 是幂等的，也就是说反复部署不会对功能造成影响，这个是理想情况。
@@ -199,5 +201,6 @@ localhost                  : ok=311  changed=175  unreachable=0    failed=1
 * 直接用 Docker，出了错只能直接操作 Docker 调试，显然用 k8s 更好些，但牵涉到网络、存储这个问题就更复杂了。
 * 漫长的部署居然没有写日志的地方，我只找到使用管道 `tee` 的方法。
 * kolla 部署了大量镜像，这些镜像有缓存么？`docker images ls` 没有看到任何镜像。
+* kolla 用 Docker 方法部署 OpenStack，目的是为了简化，但是坑也比较多，还要注意各种参数。
 
 

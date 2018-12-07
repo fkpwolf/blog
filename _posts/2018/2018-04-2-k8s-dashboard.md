@@ -2,6 +2,9 @@
 layout: post
 title:  "Kubernetes Dashboard 整合"
 date:   2018-04-2 14:20:33
+categories:
+  - cloud
+  - web
 typora-root-url: ../../../blog
 ---
 ### 安装
@@ -66,15 +69,15 @@ REST Call Steps：
 [kube-state-metrics](https://github.com/kubernetes/kube-state-metrics) Heapster 只是收集和转发数据，这个会主动抓取和收集 k8s 的监控信息，应该内容更多点。
 
 今天发现界面 metric 图表显示不了，heapster log：
-
+```
 E1030 15:58:05.030468 1 summary.go:97] error while getting metrics summary from Kubelet k8s-3-new(192.168.51.13:10255): Get http://192.168.51.13:10255/stats/summary/: dial tcp 192.168.51.13:10255: getsockopt: connection refused 
-
+```
 他会依次到各个节点上拉取数据，但是本身只有一个 pod，单点故障。
 
 这里有 [issue](https://github.com/kubernetes-incubator/metrics-server/issues/77) 解决这个问题，要修改启动的参数，现在是 https。然后：
-
+```
 Error in scraping containers from kubelet_summary:192.168.51.13:10250: request failed - "403 Forbidden", response: "Forbidden (user=system:serviceaccount:kube-system:eerie-sparrow-heapster, verb=get, resource=nodes, subresource=stats)”
-
+```
 这个说是要修改 [RBAC](https://github.com/stephenmoloney/k8s-scw-baremetal/commit/9f71910055d97909d30e2345be45cd0aa084f6a9)，kubectl edit clusterrole system:heapster，需要加上对资源 nodes/stats 的访问即可。这种直接赋予权限，安全不是纸糊的一样？有点像 Android 的权限申请，安装的时候提出警告，但是对于镜像代码来说是透明的。
 
 UI 的实时数据自动更新还在开发中 <https://github.com/kubernetes/dashboard/issues/2541> <https://github.com/kubernetes/dashboard/pull/1459>，对于简单的可以参考 src/app/frontend/logs/component.js，使用 angular.$interval。
