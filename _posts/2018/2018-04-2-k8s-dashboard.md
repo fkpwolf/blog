@@ -134,6 +134,24 @@ Normal   Killing. 32m (x3 over 34m)   kubelet, vm2 Killing container with id doc
 
 发布后，<https://vm1/helm/list/delete_dialog.html> 404 奇怪的为什么会发送这个请求？现在只能把 dialog template 放在 js 当中。
 
+证书的问题：
+```
+NET::ERR_CERT_INVALID
+Subject: kubernetes-dashboard-846b8b6844-mlxjd.kube-system
+Issuer: kubernetes-dashboard-846b8b6844-mlxjd.kube-system
+Expires on: 293878年1月10日
+Current date: 2018年12月8日
+PEM encoded chain:
+-----BEGIN CERTIFICATE-----
+MIIBwTCCAWagAwIBAgIQPRWE/kHIbl8xorbl55Pe4zAKBggqhkjOPQQDAjA8MTow
+OAYDVQQDEzFrdWJlcm5ldGVzLWRhc2hib2FyZC04NDZiOGI2ODQ0LW1seGpkLmt1
+OGI2ODQ0LW1seGpkLmt1YmUtc3lzdGVthwQKZB0CMAoGCCqGSM49BAMCA0kAMEYC
+IQD4Ad9IN01Eb/ENdzY1w+oUXo+HXnuAB+zlGuDS/Bz7jQIhAMd+2bWiX0VeR2VW
+F+XikYiQErDOUghEOPwXt2kuF6Bp
+-----END CERTIFICATE-----
+```
+[这里](https://github.com/kubernetes/dashboard/issues/2954)说要重新生成证书，不过这个本身很奇怪，有的时候怎么可以。
+
 ### 后端
 主要访问 k8s API Server，做了大量的封装，主要是对 API 进行合并的操作，比如在 pod details 这种页面，包含了多个纬度的信息，每个都要一个独立的 request 才能获取到。合并后前端一个 request 能返回更多内容，大大减少了前端开发量。
 所有路由都定义在 src/app/backend/handler/apihandler.go 里面
