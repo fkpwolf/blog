@@ -146,6 +146,10 @@ sdb1 下面都是散放的文件，这个就是 filestore 的意思？现在可�
 
 [Kolla集成外接ceph存储](https://blog.csdn.net/dylloveyou/article/details/79114741) 集成到我原来创建好的 Rook Ceph 上去？滑稽。
 
+启用 ceph 后，kolla 也会安装 ceph dashboard，也就是 ceph-mgr docker image，一个 web 的监控 UI。容器映射端口是多少呢？奇怪的是用 `docker port` 返回空，`netstat -tlnp` 才找到端口为 7000。
+
+默认 OpenStack 会创建的 ceph pool 有 images, volumes, backups, vms。images 保持 glance 里面的 Linux Cloud Image，和 `glance image-list` 返回一样，raw 或者 qcow2 格式。vms 放 vm 节点的启动磁盘（这个不知道如何用命令查看）。volumes 则是 vm 节点的扩展磁盘，和 `openstack volume list` 返回一样。
+
 ### log
 
 [Central Logging](https://docs.openstack.org/kolla-ansible/latest/reference/logging-and-monitoring/central-logging-guide.html) 原来已经有这个东西。kolla ansible 的部署日志没法记录吧，那时候日志服务还没好。

@@ -368,7 +368,10 @@ tar -cvzf <name of tarball>.tgz /path/to/source/folder
 
 即便这种 REST 刷新可以用，也不是好的办法：先发送创建 API，然后发送刷新 API，而这个由前端保证事务完整性和可靠性，如果后端则小题大做了。监控的地方也是：更新 configmap，然后 reload 监控服务。似乎 MQ 的解决办法更可靠一点。或者还是 CRD 来一套？这个是微服务导致的新问题，和分布式事务有关系。 
 
+[0.8.0 更新](https://github.com/helm/chartmuseum/releases/tag/v0.8.0) 带来了 auth token支持，还有[chartmuseum/ui](https://github.com/chartmuseum/ui)，可以上传，跟我们做的很像啊😄 [beego](https://beego.me/) - The web framework used，国人产品，一种模板语言，简单的使用了 jQuery。
+
 配置约束： 
 
-1. 仓库 name 必须是 chartmuseum，前端依据 repo.name 来判断是不是用户上传的 
+1. 仓库 name 必须是 chartmuseum，前端依据 repo.name 来判断是不是用户上传的
+2. Helm 虽然不及 Operator 强大，但对于 k8s 新手来说很有帮助，因为马上有了 PaaS 平台的感觉，安装删除一个应用很方便，对开发帮助胜过运维。
 
