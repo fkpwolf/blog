@@ -149,7 +149,9 @@ openstack stack resource list foo
 
 这个可视化编排工具和 AWS 的就非常像了，到底能起多大作用就不得而知了。
 
-疑问：块设备（cinder）是属于哪个资源类型？也会存在同样问题。一种解决办法当 k8s 通过 cloud provider 在 OpenStack 中创建资源时，填入一个新的字段：k8s cluster id，删除时根据 id 找到 lb 和 volume，全部删除。具体查看 [openstack_loadbalancer.go](https://github.com/kubernetes/cloud-provider-openstack/blob/master/pkg/cloudprovider/providers/openstack/openstack_loadbalancer.go) , [openstack_volumes.go](https://github.com/kubernetes/cloud-provider-openstack/blob/master/pkg/cloudprovider/providers/openstack/openstack_volumes.go) 和 `magnum/api/controllers/v1/cluster.py` [delete 方法](https://github.com/openstack/magnum/blob/master/magnum/api/controllers/v1/cluster.py#L559)。更完美的方法应该是 Cloud Provider 调用 heat 来创建资源，也就是对 stack 进行操作。不然为什么自动创建的 etcd & api LB 可以删除呢？但是 heat 是根据 template 来创建 stack，所以[修改](https://docs.openstack.org/newton/user-guide/cli-create-and-manage-stacks.html)可能没那么容易。
+疑问：块设备（cinder）是属于哪个资源类型？也会存在同样问题。一种解决办法当 k8s 通过 cloud provider 在 OpenStack 中创建资源时，填入一个新的字段：k8s cluster id，删除时根据 id 找到 lb 和 volume，全部删除。具体查看 [openstack_loadbalancer.go](https://github.com/kubernetes/cloud-provider-openstack/blob/master/pkg/cloudprovider/providers/openstack/openstack_loadbalancer.go) , [openstack_volumes.go](https://github.com/kubernetes/cloud-provider-openstack/blob/master/pkg/cloudprovider/providers/openstack/openstack_volumes.go) 和 `magnum/api/controllers/v1/cluster.py` [delete 方法](https://github.com/openstack/magnum/blob/master/magnum/api/controllers/v1/cluster.py#L559)。更完美的方法应该是 Cloud Provider 调用 heat 来创建资源（失去了通用性），也就是对 stack 进行操作。不然为什么自动创建的 etcd & api LB 可以删除呢？但是 heat 是根据 template 来创建 stack，所以[修改](https://docs.openstack.org/newton/user-guide/cli-create-and-manage-stacks.html)可能没那么容易。
+
+所以这里就要看 heat 的设计理念了。heat 创建 stack 时候，需要传入 template-file 和 environment-file，后者其实就是 template 里面定义的各种参数（这种结构和 Helm 很类似）。template 描述了各种预定义资源，那么当 stack 运行起来后，其自生（应用内部）创建的资源是否属于 stack 管理范围呢？这是个很有意思的取舍。创建集群后，如果使用 magnum 动态扩容 - 添加一个新节点，这个节点在 heat 管理范围内么？
 
 ### Ceph
 
