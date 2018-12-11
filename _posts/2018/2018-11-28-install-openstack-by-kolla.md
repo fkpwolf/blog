@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Install OpenStack by Kolla Ansible and get LoadBalancer IP"
+title:  "Install OpenStack by Kolla Ansible and Get LoadBalancer IP"
 date:   2018-11-28 14:20:33
 typora-root-url: ../../../blog
 categories:
@@ -8,24 +8,21 @@ categories:
   - setup
 ---
 
-总文档 https://docs.openstack.org/kolla-ansible/latest/user/quickstart.html 
-
 ### 安装
 
-* fatal: [localhost]: FAILED! => {"changed": false, "failed": true, "msg": "Unknown error message: Tag 4.0.1 not found in repository docker.io/kolla/ubuntu-binary-kolla-toolbox"}. → 修改里面的openstack-version，从auto改为4.0.0。这是因为4.0.1没有push到docker hubs上面？
-* deploy后，打开dashboard可以，但是static file都返回404。→ cleanup-containers & tools/cleanup-host under /usr/local/share/kolla-ansible/tools/, and try again. cleanup-host will remove networks. And then reboot.
-* `fatal: [localhost]: FAILED! => {"failed": true, "msg": "The conditional check ''{{ hostvars[item['item']]['ansible_' + hostvars[item['item']]['api_interface']]['ipv4']['address'] }}' not in '{{ item.stdout }}'' failed. The error was: Invalid conditional detected: EOL while scanning string literal (<unknown>, line 1)\n\nThe error appears to have been in '/usr/local/share/kolla-ansible/ansible/roles/rabbitmq/tasks/precheck.yml': line 54, column 3, but may\nbe elsewhere in the file depending on the exact syntax problem.\n\nThe offending line appears to be:\n\n\n- fail: msg=\"Hostname has to resolve to IP address of api_interface\"\n ^ here\n"}` → 我看安装程序已经设置hostname的ip为api_interface的ip。
-* Docker will not be able to stop the nova_libvirt container with those running. → 自己create的nova instance默认是用libvirt（因为我的host机器不是vm），shutdown后就可以运行cleanup-containers了。
-* Cannot uninstall 'PyYAML'. It is a distutils installed project and thus we cannot accurately determine which files belong to it which would lead to only a partial uninstall. → pip install pip==8.1.2
+指导文档：https://docs.openstack.org/kolla-ansible/latest/user/quickstart.html 
 
 CentOS 7.3 多节点Kolla安装 http://www.chenshake.com/kolla-centos-over-more-than-7-3-node-installation/
 
-/usr/share/kolla-ansible/init-runonce 文件里面 EXT_NET_CIDR这个是设置浮动IP的范围，必须设置好，这样 init-runonce 后，绑定 floating ip可以直接assign外网ip了，否则又得重新部署。http://www.chenshake.com/kolla-installation/ 这个里面有谈到。里面说 这个其实是从 neutron_external_interface 网卡访问的，如何确认？因为在 OpenWrt 是看不到的。`arp -an` 里面返回对应 IP 地址是 fa:16:3e:62:fb:ed，私营 mac，看了下也不是 vm nic mac，ui 里面看了下，是 network:router_gateway public1 的 Mac 地址。
+* fatal: [localhost]: FAILED! => {"changed": false, "failed": true, "msg": "Unknown error message: Tag 4.0.1 not found in repository docker.io/kolla/ubuntu-binary-kolla-toolbox"}. → 修改里面的openstack-version，从auto改为4.0.0。这是因为4.0.1没有push到docker hubs上面？
+* deploy后，打开dashboard可以，但是static file都返回404。→ cleanup-containers & cleanup-host in /usr/local/share/kolla-ansible/tools. 这是清空重新部署的常用命令。
+* `fatal: [localhost]: FAILED! => {"failed": true, "msg": "The conditional check ''{{ hostvars[item['item']]['ansible_' + hostvars[item['item']]['api_interface']]['ipv4']['address'] }}' not in '{{ item.stdout }}'' failed. The error was: Invalid conditional detected: EOL while scanning string literal (<unknown>, line 1)\n\nThe error appears to have been in '/usr/local/share/kolla-ansible/ansible/roles/rabbitmq/tasks/precheck.yml': line 54, column 3, but may\nbe elsewhere in the file depending on the exact syntax problem.\n\nThe offending line appears to be:\n\n\n- fail: msg=\"Hostname has to resolve to IP address of api_interface\"\n ^ here\n"}` → 我看安装程序已经设置hostname的ip为api_interface的ip。
+* Docker will not be able to stop the nova_libvirt container with those running. → 自己create的nova instance默认是用libvirt（因为我的host机器不是vm），shutdown后就可以运行cleanup-containers了。
+* Cannot uninstall 'PyYAML'. It is a distutils installed project and thus we cannot accurately determine which files belong to it which would lead to only a partial uninstall. → pip install pip==8.1.2
+* /usr/share/kolla-ansible/init-runonce 文件里面 EXT_NET_CIDR这个是设置浮动IP的范围，必须设置好，这样 init-runonce 后，绑定 floating ip可以直接assign外网ip了，否则又得重新部署。http://www.chenshake.com/kolla-installation/ 这个里面有谈到。里面说 这个其实是从 neutron_external_interface 网卡访问的，如何确认？因为在 OpenWrt 是看不到的。`arp -an` 里面返回对应 IP 地址是 fa:16:3e:62:fb:ed，私营 mac，看了下也不是 vm nic mac，ui 里面看了下，是 network:router_gateway public1 的 Mac 地址。
 这次忘了设置，修改再次运行时，报错 This tool should only be run once per deployment.
 不想重新运行，按照这里 https://www.howtoing.com/openstack-networking-guide 在界面上创建网络。But notebook can’t ping floating ip & vm can’t ping 192.168.51.1. `yum install openswitch` then run ovs-vsctl show, otherwise command not found.
 No idea. Re-deploy. tools/cleanup-containers & tools/cleanup-host as https://docs.openstack.org/kolla-ansible/latest/user/operating-kolla.html. cmd is in /usr/share/kolla-ansible/tools.
-
-在 horizon 里面，外网或者内网网络是一个 IP 地址池（子网络），通过路由来连接两个网络，下面图中路由通过两个接口来连接两个网络。而浮动 ip 是外网子网里面的一个 ip，其和内网子网的某个 ip 做了绑定，这样就能通过浮动 ip 直接访问内网虚拟机。
 
 Vm ssh 免密码登录必须要在 root 用户下才能进，密钥在root用户下？是的，安装用的是 root 账户。
 部署好后，默认的就可以访问 horizon，在 network_interface 上面，admin password is in  /etc/kolla/passwords.yml:keystone_admin_password.
@@ -38,32 +35,33 @@ init-runonce 会创建很多初始化的资源，比如网络路由、cirros 磁
 
 ### magnum
 
-既然已经有了：enable_horizon_magnum & enable_magnum，打开设置，kolla-ansible deploy。是很方便，就是似乎每次添加一个组件都挺耗时。
+既然已经有了：enable_horizon_magnum & enable_magnum，启用，然后 kolla-ansible deploy，是很方便，就是似乎每次添加一个组件都挺耗时。
 刷新后界面上已经有了新的菜单项 container Infra，但是会出错误消息：Error: Unable to retrieve the cluster templates. Error: Unable to retrieve the stats.
 客户端用命令行安装 `pip install -U python-magnumclient`，这个是想当然猜出来的（现在已经用 `openstack coe` 来代替 magnum 命令了。）。`magnum cluster-list` 报错：
-
 ```
 ERROR: 'NoneType' object has no attribute 'replace' (HTTP 500) (Request-ID: req-6c01fbcf-f883-41e3-a7f9-cecf92c7cf34)
 ```
-https://stackoverflow.com/questions/52466203/error-nonetype-object-has-no-attribute-replace-http-500-openstack-magnum 这里同样问题，说是 github 已经 fix 了。但是我看 /etc/kolla/magnum-conductor 下面还是用的 www_authenticate_uri，什么情况。
+[这里](https://stackoverflow.com/questions/52466203/error-nonetype-object-has-no-attribute-replace-http-500-openstack-magnum) 同样问题，说是 GitHub 已经 fix 了。但是我看 /etc/kolla/magnum-conductor 下面还是用的 www_authenticate_uri，什么情况。
 重新部署，这次用开发模式，git clone kolla & kolla-ansible，git checkout stable/rocky。为什么要有两个项目？然后安装 pip install kolla/ & pip install kolla-ansible/， 否则没有命令可以用啊，这个文档里面没有写。其实命令都在 kolla-ansible/tools 代码下面。但是  /etc/kolla/magnum-conductor 这个目录是谁产生的？开发模式下没有看到这个目录。安装过程中？算了，重新安装 rocky 版本试试。这次使用 `kolla-ansible -i ./all-in-one deploy -t magnum` 就可以安装这个模块。`magnum cluster-list` 返回：
-
 ```
 ERROR: Unable to establish connection to http://192.168.51.254:9511/v1/clusters: HTTPConnectionPool(host='192.168.51.254', port=9511): Max retries exceeded with url: /v1/clusters (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fe0abfd3d10>: Failed to establish a new connection: [Errno 111] Connection refused',))
 ```
 但是我看 `magnum docker` 已经运行起来了。好吧，还是老老实实运行 `kolla-ansible -i ./all-in-one deploy`，然后错误还是回到了 NoneType。
-直接跑到 /usr/share/kolla-ansible/ansible/roles/magnum 下修改 magnum.conf.j2，原来上面的/etc/kolla 里面都是根据这个来产生的，重新 deploy 后可以看到/etc/kolla 下面被修改了，但是 docker ps 显示对应镜像还是 半小时前的，所以错误还是一样，如何重新生成呢？算了，清空重新部署。现在magnum ui & cli 都可以运行不出错。这个重新部署很要命，有的可以，有的要清空然后重新部署。有地方说重启全部容器就可以。
+
+直接跑到 /usr/share/kolla-ansible/ansible/roles/magnum/templates 下修改 magnum.conf.j2，原来上面的 /etc/kolla 都是根据这个来产生的，重新 deploy 后可以看到/etc/kolla 下面被修改了，但是 docker ps 显示对应镜像还是 半小时前的，所以错误还是一样，如何重新生成呢？清空重新部署。现在magnum ui & cli 都可以运行不出错。这个重新部署很要命，有的可以，有的要清空然后重新部署，有地方说重启全部容器就可以。
+
 然后在界面创建 cluster template，这比命令行方便。但是出现错误（错误都只在 http response 里面才能看到）：`Cluster type (vm, None, kubernetes) not supported (HTTP 400)`
 这个错误在命令行下可以看到，所以 UI 做的不行还不如命令行。这种 hello world 一定要能测试通过，否则就失去了 UI 快速上手的意义。
-上面错误在 https://ask.openstack.org/en/question/116089/cant-create-k8s-cluster-in-magnum-image-issue/ 解释很清楚，原因在于我的 os image 必须带一个属性 **os_distro** 标明其 linux 发行名，属性可以在 ui 里面的 image meta 加（失败，只能命令行，这个 UI 似乎很烂啊！）。但是现在只支持 fedora-atomic, coreos，看来这个 magnum 知道 k8s 配置对操作系统很敏感。
-集群创建中一直报错：
+上面错误在[这里](https://ask.openstack.org/en/question/116089/cant-create-k8s-cluster-in-magnum-image-issue/) 解释很清楚，原因在于我的 os image 必须带一个属性 **os_distro** 标明其 linux 发行名，属性可以在 ui 里面的 image meta 加（rocky 只能命令行，UI 会报错）。现在[只支持](https://docs.openstack.org/magnum/latest/user/#kubernetes) fedora-atomic, coreos，看来 magnum 知道 k8s 配置对操作系统很敏感。
 
+    openstack image set --property os_distro=fedora-atomic foo
+
+集群创建中一直报错：
 ```
 Service cinder is not available for resource type Magnum::Optional::Cinder::Volume, reason: cinder volumev3 endpoint is not in service catalog.
 ```
 这个 Cinder 是必须的么？开启 enable_cinder，重新 deploy，这个不需要任何 backend？先这样再说。
 创建集群还是出错，这次用 cli 查看，因为 ui 又连不上。
-
 ```
 magnum cluster-show fantest
 Resource CREATE failed: resources[0]: resources.kube_masters.Property error: resources.docker_volume.properties.volume_type: Error validating value '': The VolumeType () could not be found.
@@ -71,7 +69,7 @@ Resource CREATE failed: resources[0]: resources.kube_masters.Property error: res
 修改模板 `magnum cluster-template-update fedora add volume_driver=cinder`，还是一样。我在界面创建卷的时候也看到 No Volume type。`openstack volume type list` 也为空。
 好吧，enable_ceph，重新 deploy，没看到啥变化，只是多了两个 ceph 容器。手工创建一个 volume type，然后创建一个该 type 的 volume，失败。看来部署 Cehp 没有那么简单。
 
-下面 Ceph 配置好后，回到这里。现在可以在界面创建一个 volume，但是创建 k8s 集群时依然同样错误。[这里](https://ask.openstack.org/en/question/110729/magnum-cluster-create-k8s-cluster-error-resourcefailure/)说缺少一个`default_docker_volume_type` 字段，`docker exec -it magnum_conductor` 进去后直接修改，然后 restart container，后来发现 restart 后值丢失，原来要修改 `/etc/kolla/magnum-*` 下面的对应文件，我猜容器是用 mount /etc 目录的方式来访问配置，这种操作如果放在 k8s 下面做就简单方便很多。这个值原始定义在 `/usr/share/kolla-ansible/ansible/roles/magnum/defaults/main.yml` 中。这个 volume type 没有绑定特定的 volume backend，可能被当做为默认类型。
+下面 Ceph 配置好后，回到这里。现在可以在界面成功创建一个 volume，但是创建 k8s 集群时依然同样错误。[这里](https://ask.openstack.org/en/question/110729/magnum-cluster-create-k8s-cluster-error-resourcefailure/)说缺少一个`default_docker_volume_type` 字段，`docker exec -it magnum_conductor` 进去后直接修改，然后 restart container，后来发现 restart 后值丢失，原来要修改 `/etc/kolla/magnum-*` 下面的对应文件，我猜容器是用 mount /etc 目录的方式来访问配置，这种操作如果放在 k8s 下面做就简单方便很多。这个值原始定义在 `/usr/share/kolla-ansible/ansible/roles/magnum/defaults/main.yml` 中。这个 volume type 没有绑定特定的 volume backend，可能被当做为默认类型。
 
 现在开始漫长的创建 k8s 集群了。然后居然就可以了，一个 master，两个 minion，没有出现任何错误。看来已经颇为稳定了。
 
@@ -99,6 +97,59 @@ fi
 然后把集群里面已经装好的 dashboard service 改为 LoadBalancer 类型的，稍等片刻就能拿到 external IP 了。也试了下 Cinder StorageClass，简单的声明，没有 IP 配置之类，测试成功。有了 cloud provider 获取外部资源确实方便。
 
 OpenStack 到此一游。
+
+![openstack-k8s-network-topology](/images/2018/openstack-k8s-network-topology.png)
+
+这个网络拓扑可以看到集群时由 1 个 master、2 个 minion 节点组成，属于 private 子网，然后通过一个 router 连接外网。private 子网的端口（Ports）除了 3 个节点，还有 DHCP，和 load balancer。
+
+在 horizon 里面，外网或者内网网络是一个 IP 地址池（子网络），通过路由来连接两个网络，图中路由通过两个接口来连接两个网络。而浮动 ip 是外网子网里面的一个 ip，其和内网子网的某个 ip 做了绑定，这样就能通过浮动 ip 直接访问内网虚拟机。
+
+queens 创建出来 k8s 默认版本是 1.9.3，rocky 的是 1.11.1。暂时没有找到配置 k8s 版本的地方。 
+
+### k8s 集群删除失败的问题
+
+一直在删除中，重启服务器后 DELETE_FAILED。进入容器查看 /var/log/kolla/magnum/magnum-condductor.log：
+```
+ERROR magnum.drivers.heat.driver [req-b693] Cluster error, stack status: DELETE_FAILED, stack_id: c8789bac-6957-48f1-8dd7-94124073c996, reason: Resource DELETE failed: Conflict: resources.network.resources.extrouter_inside: Router interface for subnet 50b433da-d225-413f-89b8-56d94acd7bb0 on router fd2120d9-4599-4a0a-acb0-c237d5bbc126 cannot be deleted, as it is required by one or more floating IPs.
+```
+查看 floating IP，只有一个 Dashboard load balance 的还没有删除。浮动 IP 手工释放，但是 load balance 挺难删除，相互依赖，摸索后发现最后删除次序为：`pool's healthmonitor —> pool —> listener -> LB -> k8s network`。
+
+Magnum 是如何知道这个浮动 ip 资源是属于 k8s 集群(这里叫stack)的呢？并没有 db 保存这些数据啊？还是 heat 做的？为什么创建集群时创建的 etcd & api LB 都可以删除，dashboard 的却不能？资源都属于一个完整的 stack 范围，这个 stack 和 AWS 的是一样的。
+```
+openstack stack list
+openstack stack resource list foo
+```
+全部都在这里，magnum 只是一个支持多集群的工具而已。更多命令看 [heat 文档](https://docs.openstack.org/python-heatclient/latest/man/heat.html)。创建好集群后，各资源为：
+
+| resource_name               | physical_resource_id                 | resource_type                                                                        | resource_status | updated_time         |
+|-----------------------------|--------------------------------------|--------------------------------------------------------------------------------------|-----------------|----------------------|
+| etcd_lb                     | 0fe47743-fa07-488d-ad2a-4975b2f18825 | file:///usr/lib/python2.7/site-packages/magnum/drivers/common/templates/lb.yaml      | CREATE_COMPLETE | 2018-12-10T03:38:08Z |
+| kube_masters                | 51ff11de-11f8-47c2-aa99-9c01a223e36f | OS::Heat::ResourceGroup                                                              | CREATE_COMPLETE | 2018-12-10T03:38:07Z |
+| network                     | 0d8ebd19-fad5-4be6-bcf8-121a81a73f31 | file:///usr/lib/python2.7/site-packages/magnum/drivers/common/templates/network.yaml | CREATE_COMPLETE | 2018-12-10T03:38:08Z |
+| api_lb                      | ce7a4d96-0f13-4fa2-8b5f-5f204aa5330f | file:///usr/lib/python2.7/site-packages/magnum/drivers/common/templates/lb.yaml      | CREATE_COMPLETE | 2018-12-10T03:38:08Z |
+| secgroup_kube_minion        | 97c19df9-c9dc-4466-9c01-463aa3c19932 | OS::Neutron::SecurityGroup                                                           | CREATE_COMPLETE | 2018-12-10T03:38:07Z |
+| nodes_server_group          | 73e54288-535d-4564-b46c-ceb2adc18e7d | OS::Nova::ServerGroup                                                                | CREATE_COMPLETE | 2018-12-10T03:38:08Z |
+| secgroup_kube_master        | cf148deb-ffd2-474e-aecf-6f913f7f0802 | OS::Neutron::SecurityGroup                                                           | CREATE_COMPLETE | 2018-12-10T03:38:07Z |
+| kube_minions                | 8eb65593-bb46-40dc-b98a-90b07878035f | OS::Heat::ResourceGroup                                                              | CREATE_COMPLETE | 2018-12-10T03:38:07Z |
+| api_address_floating_switch | 06644da0-8e50-4512-9e97-458263924be9 | Magnum::FloatingIPAddressSwitcher                                                    | CREATE_COMPLETE | 2018-12-10T03:38:07Z |
+| api_address_lb_switch       | a941f98d-a2fe-4077-a375-5fdde66982f8 | Magnum::ApiGatewaySwitcher                                                           | CREATE_COMPLETE | 2018-12-10T03:38:07Z |
+| etcd_address_lb_switch      | f544d40b-6f4a-46be-a29d-6f63e35aac7f | Magnum::ApiGatewaySwitcher                                                           | CREATE_COMPLETE | 2018-12-10T03:38:07Z |
+
+可以看到有 api 和 etcd 的 LB。手工设置 Dashboard Service Type 为 LoadBalancer 后，上面列表并没有改变，问题可能出现在这里，看上去只有纳入 heat 管理的资源才会被正确的删除。magnum 创建了 subnet，所有的 Ports （node & LB）都属于这个子网，删除这个网络必须先移除所有的 Ports，k8s 创建 LB (直接调用 OpenStack API)的 magnum 觉得不属于自己管理，所以就不会主动删除，这导致整个网络也无法删除。上面表格里面有个资源类型,比如 LB 的`/usr/lib/python2.7/site-packages/magnum/drivers/common/templates/lb.yaml`，可能 magnum（或者 heat）严格按照这个来进行创建和删除，这有点像 k8s。
+
+删除上面集群，`openstack stack resource list` 变为：
+
+| resource_name | physical_resource_id                 | resource_type                                                                        | resource_status | updated_time         |
+|---------------|--------------------------------------|--------------------------------------------------------------------------------------|-----------------|----------------------|
+| network       | 0d8ebd19-fad5-4be6-bcf8-121a81a73f31 | file:///usr/lib/python2.7/site-packages/magnum/drivers/common/templates/network.yaml | DELETE_FAILED   | 2018-12-10T03:38:08Z |
+
+其他的都已经删除。`heat event-list mystack` 也可以查看删除失败原因，其实上面所有信息在 Horizon Orchestration 界面上看得更清楚，😄 
+
+![openstack-heat-stack-graph](/images/2018/openstack-heat-stack-graph.png)
+
+这个可视化编排工具和 AWS 的就非常像了，到底能起多大作用就不得而知了。
+
+疑问：块设备（cinder）是属于哪个资源类型？也会存在同样问题。一种解决办法当 k8s 通过 cloud provider 在 OpenStack 中创建资源时，填入一个新的字段：k8s cluster id，删除时根据 id 找到 lb 和 volume，全部删除。具体查看 [openstack_loadbalancer.go](https://github.com/kubernetes/cloud-provider-openstack/blob/master/pkg/cloudprovider/providers/openstack/openstack_loadbalancer.go) , [openstack_volumes.go](https://github.com/kubernetes/cloud-provider-openstack/blob/master/pkg/cloudprovider/providers/openstack/openstack_volumes.go) 和 `magnum/api/controllers/v1/cluster.py` [delete 方法](https://github.com/openstack/magnum/blob/master/magnum/api/controllers/v1/cluster.py#L559)。更完美的方法应该是 Cloud Provider 调用 heat 来创建资源，也就是对 stack 进行操作。不然为什么自动创建的 etcd & api LB 可以删除呢？但是 heat 是根据 template 来创建 stack，所以[修改](https://docs.openstack.org/newton/user-guide/cli-create-and-manage-stacks.html)可能没那么容易。
 
 ### Ceph
 
@@ -195,13 +246,24 @@ NO MORE HOSTS LEFT *************************************************************
 PLAY RECAP ************************************************************************************************************************************************
 localhost                  : ok=311  changed=175  unreachable=0    failed=1 
 ```
-
 禁用掉 lbaas 也没用。因为是在部署 neutron，所以应该是网络配置出现问题导致后面没法拉镜像。尴尬。为什么不先下载所有镜像然后开始部署？干净 centos 部署没有问题，几次之后就会出现这个问题。有 iptables 之类的残留？[这里](https://www.reddit.com/r/openstack/comments/8zmvia/the_network_problem_with_kollaansible/e2letmw/)和[这里](https://ask.openstack.org/en/question/93376/during-kolla-deploy-when-neutron-comes-up-networking-goes-down/)都有讨论这个问题，似乎 kolla 会创建一个 br-ex 网桥来做外部通信。后来尝试在宿主机中禁用 `neutron_external_interface`，也就是关掉 DHCP 获取 IP，问题消失，😂
+
+### Rocky 创建 k8s 集群失败
+`CREATE aborted (Task create from SoftwareDeployment "enable_cert_manager_api_deployment" Stack "cai-7fzsht5k5dzv-kube_masters-zmbdkz4oxa5s-0-4zytyo6ftz4h" [3bb2ae99-ee48-41e7-b4d7-a38c93a2da41] Timed out)`
+在 master 节点上面运行 `journalctl | grep runc`，
+```
+novalocal runc[2745]: E1211 03:57:42.946464       1 reflector.go:205] k8s.io/kubernetes/cmd/kube-scheduler/app/server.go:176: Failed to list *v1.Pod: Get http://127.0.0.1:8080/api/v1/pods?fieldSelector=status.phase%21%3DFailed%2Cstatus.phase%21%3DSucceeded&limit=500&resourceVersion=0: dial tcp 127.0.0.1:8080: connect: connection refused
+novalocal runc[2849]: W1211 03:57:43.388424       1 proxier.go:469] Failed to load kernel module ip_vs with modprobe. You can ignore this message when kube-proxy is running inside container without mounting /lib/modules
+novalocal runc[2468]: Source [heat] Unavailable.
+novalocal runc[2406]: /var/lib/os-collect-config/local-data not found. Skipping
+novalocal runc[2468]: publicURL endpoint for orchestration service in null region not found
+```
+如此之多错误？运行 `runc list` 可以看到 atomic 上面 heat 是作为一个容器运行在 master node 上面，查看 log 用 `journalctl --no-pager -u heat-container-agent`。对于 publicURL endpoint for orchestration service in null region not found 的问题，[这里](https://ask.openstack.org/en/question/7652/publicurl-endpoint-for-orchestration-not-found/)有解释，我本地试了下，`openstack endpoint list` 包含 heat，Service Type：orchestration，`openstack service list` 里面也包含 heat，难道是因为 RegionOne 没有传给 heat agent？可能因为 heat 依赖 keystone 来找到所有的注册信息。
 
 ### Think
 * Ansible 是幂等的，也就是说反复部署不会对功能造成影响，这个是理想情况。
 * Docker 对宿主机的网络和设备全面接管，和独立运行的程序没啥差别。用容器部署比直接程序更简便么？可能隔离性更好，不需要安装包，对宿主机操作系统影响不大。另外：其配置（/etc/kolla/）和运行时（容器）是隔离开的，符合 12 法则应用理论。
-* Docker 用的不错。那用了 docker 还用 openstack vm 干啥呢？技术变化太快，总的来说：OpenStack plays the role of the overall data center management. KVM as the multi-tenant compute resource management, and Docker containers as the application deployment package.
+* Docker 用的不错。那用了 Docker 还用 OpenStack vm 干啥呢？技术变化太快，总的来说：OpenStack plays the role of the overall data center management. KVM as the multi-tenant compute resource management, and Docker containers as the application deployment package. 容器另外一个问题是**强隔离**还不够好，vm 能弥补这个缺点。
 * 直接用 Docker，出了错只能直接操作 Docker 调试，显然用 k8s 更好些，但牵涉到网络、存储这个问题就更复杂了。
 * 漫长的部署居然没有写日志的地方，我只找到使用管道 `tee` 的方法。
 * kolla 部署了大量镜像，这些镜像有缓存么？`docker images ls` 没有看到任何镜像。

@@ -46,6 +46,11 @@ Github自己也有编辑器了，也支持MarkDown。感觉git已经被玩坏。
 
 这种新旧技术结合起来用，即便classeur.io不稳定，也没有关系，因为数据都是保存在Github上面。
 
+最近(2018.12.11)我的编辑器已经改为 Typora + VS Code，前者批量拷贝时会保留格式，后者适合小修改。
+Evernote 或者印象笔记，感觉还是有需要，草稿可以放在这里，大致成型后移到 GitHub。
+
+### hexo
+现在发现很多网站已经改为这个了，结合主题 [next](https://theme-next.iissnan.com/)，简单且有设计感。都有详细的中文文档，有空可以试试。
 
 [jekyll]:      http://jekyllrb.com
 [jekyll-gh]:   https://github.com/jekyll/jekyll
