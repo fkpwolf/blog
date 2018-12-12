@@ -280,6 +280,19 @@ Task create from ResourceGroup "kube_masters" Stack "tong-wvfftolmtniv" [3d0dae3
 Task create from SoftwareDeployment "enable_cert_manager_api_deployment" Stack "tong-wvfftolmtniv-kube_masters-4pu45beuteve-0-vsoxums4xz6k" [9f7f80df-9fbd-4624-a029-55b58391dc50] timed out
 ```
 后面一个 task 依赖前面一个，可以忽略。
+<https://github.com/openstack/magnum/blob/master/magnum/drivers/common/image/heat-container-agent/scripts/heat-config-notify> 里面有获取 orchestration endpoint 的代码： 
+```
+endpoint = ks.service_catalog.url_for(
+    service_type='messaging', endpoint_type='publicURL',
+    region_name=iv.get('deploy_region_name'))
+```
+这个方法由 `55-heat-config` 调用，输入为两个文件。
+
+write-os-apply-config-templates.sh 这文件会写入 /var/run/heat-config/heat-config，
+
+    echo "{{deployments}}" > $oac_templates/var/run/heat-config/heat-config
+
+deployments 变量是容器的输入变量。
 
 ### 转为开发模式暨步骤总结
 Check [Kolla source code](https://github.com/openstack/kolla-ansible). It has branches like stable/rocky. It is very clear. But if you just `pip install`, you will get **master** version and can't get the exact one by OpenStack version. As above shows, master use `www_authenticate_uri` which was wrong(valid in future). Rocky should use `auth_uri`. So we should use git branch rather than latest pip package.
