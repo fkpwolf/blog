@@ -19,21 +19,21 @@ CentOS 7.3 多节点Kolla安装 http://www.chenshake.com/kolla-centos-over-more-
 * `fatal: [localhost]: FAILED! => {"failed": true, "msg": "The conditional check ''{{ hostvars[item['item']]['ansible_' + hostvars[item['item']]['api_interface']]['ipv4']['address'] }}' not in '{{ item.stdout }}'' failed. The error was: Invalid conditional detected: EOL while scanning string literal (<unknown>, line 1)\n\nThe error appears to have been in '/usr/local/share/kolla-ansible/ansible/roles/rabbitmq/tasks/precheck.yml': line 54, column 3, but may\nbe elsewhere in the file depending on the exact syntax problem.\n\nThe offending line appears to be:\n\n\n- fail: msg=\"Hostname has to resolve to IP address of api_interface\"\n ^ here\n"}` → 我看安装程序已经设置hostname的ip为api_interface的ip。
 * Docker will not be able to stop the nova_libvirt container with those running. → 自己create的nova instance默认是用libvirt（因为我的host机器不是vm），shutdown后就可以运行cleanup-containers了。
 * Cannot uninstall 'PyYAML'. It is a distutils installed project and thus we cannot accurately determine which files belong to it which would lead to only a partial uninstall. → pip install pip==8.1.2
-* /usr/share/kolla-ansible/init-runonce 文件里面 EXT_NET_CIDR这个是设置浮动IP的范围，必须设置好，这样 init-runonce 后，绑定 floating ip可以直接assign外网ip了，否则又得重新部署。http://www.chenshake.com/kolla-installation/ 这个里面有谈到。里面说 这个其实是从 neutron_external_interface 网卡访问的，如何确认？因为在 OpenWrt 是看不到的。`arp -an` 里面返回对应 IP 地址是 fa:16:3e:62:fb:ed，私营 mac，看了下也不是 vm nic mac，ui 里面看了下，是 network:router_gateway public1 的 Mac 地址。
+* /usr/share/kolla-ansible/init-runonce 文件里面 EXT_NET_CIDR这个是设置浮动IP的范围，必须设置好，这样运行 init-runonce 后，绑定 floating ip可以直接assign外网ip了，否则又得重新部署。http://www.chenshake.com/kolla-installation/ 这个里面有谈到。里面说 这个其实是从 neutron_external_interface 网卡访问的，如何确认？因为在 OpenWrt 是看不到的。`arp -an` 里面返回对应 IP 地址是 fa:16:3e:62:fb:ed，私营 mac，看了下也不是 vm nic mac，ui 里面看了下，是 network:router_gateway public1 的 Mac 地址。
 这次忘了设置，修改再次运行时，报错 This tool should only be run once per deployment.
 不想重新运行，按照这里 https://www.howtoing.com/openstack-networking-guide 在界面上创建网络。But notebook can’t ping floating ip & vm can’t ping 192.168.51.1. `yum install openswitch` then run ovs-vsctl show, otherwise command not found.
 No idea. Re-deploy. tools/cleanup-containers & tools/cleanup-host as https://docs.openstack.org/kolla-ansible/latest/user/operating-kolla.html. cmd is in /usr/share/kolla-ansible/tools.
 
-Vm ssh 免密码登录必须要在 root 用户下才能进，密钥在root用户下？是的，安装用的是 root 账户。
+VM ssh 免密码登录必须要在 root 用户下才能进，密钥在root用户下？是的，安装用的是 root 账户。
 部署好后，默认的就可以访问 horizon，在 network_interface 上面，admin password is in  /etc/kolla/passwords.yml:keystone_admin_password.
 
-安装好后，很多服务比如swift没有安装。这个我得自己弄么？Just edit /etc/kolla/globals.yml and enable serivce like cinder. Then kolla-ansible deploy -i all-in-one again. Then OK.
+安装好后，很多服务比如 swift 没有安装。这个我得自己弄么？Just edit /etc/kolla/globals.yml and enable serivce like cinder. Then kolla-ansible deploy -i all-in-one again. Then OK.
 今天又重新装了遍，安装好后，发现horizon没有装（现在默认不装了？），修改global.yaml，enable后重新deploy，居然也没有错，然后可以访问horizon。
 可以额外添加的服务 https://github.com/openstack/kolla-ansible/blob/master/README.rst#openstack-services 注释里面的值就是默认值。比如默认打开了 horizon, heat。但是我看没有 heat 这个命令，仿照 openstackclient 安装方法 pip install python-heatclient，但是运行时报警：WARNING (shell) "heat stack-list" is deprecated, please use "openstack stack list” instead。
 
 init-runonce 会创建很多初始化的资源，比如网络路由、cirros 磁盘镜像、虚机类型，但是只能运行一次。
 
-### magnum
+### Magnum
 
 既然已经有了：enable_horizon_magnum & enable_magnum，启用，然后 kolla-ansible deploy，是很方便，就是似乎每次添加一个组件都挺耗时。
 刷新后界面上已经有了新的菜单项 container Infra，但是会出错误消息：Error: Unable to retrieve the cluster templates. Error: Unable to retrieve the stats.
@@ -41,14 +41,7 @@ init-runonce 会创建很多初始化的资源，比如网络路由、cirros 磁
 ```
 ERROR: 'NoneType' object has no attribute 'replace' (HTTP 500) (Request-ID: req-6c01fbcf-f883-41e3-a7f9-cecf92c7cf34)
 ```
-[这里](https://stackoverflow.com/questions/52466203/error-nonetype-object-has-no-attribute-replace-http-500-openstack-magnum) 同样问题，说是 GitHub 已经 fix 了。但是我看 /etc/kolla/magnum-conductor 下面还是用的 www_authenticate_uri，什么情况。
-重新部署，这次用开发模式，git clone kolla & kolla-ansible，git checkout stable/rocky。为什么要有两个项目？然后安装 pip install kolla/ & pip install kolla-ansible/， 否则没有命令可以用啊，这个文档里面没有写。其实命令都在 kolla-ansible/tools 代码下面。但是  /etc/kolla/magnum-conductor 这个目录是谁产生的？开发模式下没有看到这个目录。安装过程中？算了，重新安装 rocky 版本试试。这次使用 `kolla-ansible -i ./all-in-one deploy -t magnum` 就可以安装这个模块。`magnum cluster-list` 返回：
-```
-ERROR: Unable to establish connection to http://192.168.51.254:9511/v1/clusters: HTTPConnectionPool(host='192.168.51.254', port=9511): Max retries exceeded with url: /v1/clusters (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fe0abfd3d10>: Failed to establish a new connection: [Errno 111] Connection refused',))
-```
-但是我看 `magnum docker` 已经运行起来了。好吧，还是老老实实运行 `kolla-ansible -i ./all-in-one deploy`，然后错误还是回到了 NoneType。
-
-直接跑到 /usr/share/kolla-ansible/ansible/roles/magnum/templates 下修改 magnum.conf.j2，原来上面的 /etc/kolla 都是根据这个来产生的，重新 deploy 后可以看到/etc/kolla 下面被修改了，但是 docker ps 显示对应镜像还是 半小时前的，所以错误还是一样，如何重新生成呢？清空重新部署。现在magnum ui & cli 都可以运行不出错。这个重新部署很要命，有的可以，有的要清空然后重新部署，有地方说重启全部容器就可以。
+[这里](https://stackoverflow.com/questions/52466203/error-nonetype-object-has-no-attribute-replace-http-500-openstack-magnum) 同样问题，说是 GitHub 已经 fix 了。但是我看 /etc/kolla/magnum-conductor 下面还是用的 www_authenticate_uri，什么情况。直接跑到 /usr/share/kolla-ansible/ansible/roles/magnum/templates 下修改 magnum.conf.j2，将 www_authenticate_uri 改为 auth_uri，原来上面的 /etc/kolla 都是根据这个来产生的，重新 deploy 后可以看到/etc/kolla 下面被修改了，但是 docker ps 显示对应镜像还是 半小时前的，所以错误还是一样，如何重新生成呢？清空重新部署。现在magnum ui & cli 都可以运行不出错。这个重新部署很要命，有时可以，有时要清空然后重新部署，有地方说重启全部容器就可以。
 
 然后在界面创建 cluster template，这比命令行方便。但是出现错误（错误都只在 http response 里面才能看到）：`Cluster type (vm, None, kubernetes) not supported (HTTP 400)`
 这个错误在命令行下可以看到，所以 UI 做的不行还不如命令行。这种 hello world 一定要能测试通过，否则就失去了 UI 快速上手的意义。
@@ -151,11 +144,11 @@ openstack stack resource list foo
 
 疑问：块设备（cinder）是属于哪个资源类型？也会存在同样问题。一种解决办法当 k8s 通过 cloud provider 在 OpenStack 中创建资源时，填入一个新的字段：k8s cluster id，删除时根据 id 找到 lb 和 volume，全部删除。具体查看 [openstack_loadbalancer.go](https://github.com/kubernetes/cloud-provider-openstack/blob/master/pkg/cloudprovider/providers/openstack/openstack_loadbalancer.go) , [openstack_volumes.go](https://github.com/kubernetes/cloud-provider-openstack/blob/master/pkg/cloudprovider/providers/openstack/openstack_volumes.go) 和 `magnum/api/controllers/v1/cluster.py` [delete 方法](https://github.com/openstack/magnum/blob/master/magnum/api/controllers/v1/cluster.py#L559)。更完美的方法应该是 Cloud Provider 调用 heat 来创建资源（失去了通用性），也就是对 stack 进行操作。不然为什么自动创建的 etcd & api LB 可以删除呢？但是 heat 是根据 template 来创建 stack，所以[修改](https://docs.openstack.org/newton/user-guide/cli-create-and-manage-stacks.html)可能没那么容易。
 
-所以这里就要看 heat 的设计理念了。heat 创建 stack 时候，需要传入 template-file 和 environment-file，后者其实就是 template 里面定义的各种参数（这种结构和 Helm 很类似）。template 描述了各种预定义资源，那么当 stack 运行起来后，其自生（应用内部）创建的资源是否属于 stack 管理范围呢？这是个很有意思的取舍。创建集群后，如果使用 magnum 动态扩容 - 添加一个新节点，这个节点在 heat 管理范围内么？
+所以这里就要看 heat 的设计理念了。heat 创建 stack 时候，需要传入 template-file 和 environment-file，后者其实就是 template 里面定义的各种参数（这种结构和 Helm 很类似）。template 描述了各种预定义资源，那么当 stack 运行起来后，其自生（应用内部）创建的资源是否属于 stack 管理范围呢？这是个很有意思的取舍。创建集群后，如果使用 magnum 动态扩容 - 添加一个新节点，这个节点在 heat 管理范围内么？AWS 是如何处理的？
 
 ### Ceph
 
-感觉相关依赖没有做好，后面加 Ceph，前面创建好的 Cinder 容器没有重建，容器里面的配置都没有修改，这怎么能行呢？清除后重建集群。登录到后发现 cinder-api 下面还是没有 /etc/ceph/ceph.conf 文件，cinder-volume 有，ceph status 无法登录。ceph-mgr 容器运行 `ceph osd pool ls` 返回四个已经创建好的 pool：images, volumes, backups, vms。ceph -s 返回 0 kB used, 0 kB / 0 kB avail。日。
+感觉相关依赖没有做好，后面加 Ceph，前面创建好的 Cinder 容器没有重建，容器里面的配置都没有修改，这怎么能行呢？清除后重建集群。登录到后发现 cinder-api 下面还是没有 /etc/ceph/ceph.conf 文件，cinder-volume 有，ceph status 无法登录。ceph-mgr 容器运行 `ceph osd pool ls` 返回四个已经创建好的 pool：images, volumes, backups, vms。`ceph -s` 返回 0 kB used, 0 kB / 0 kB avail。日。
 
 https://docs.openstack.org/kolla-ansible/latest/reference/storage/ceph-guide.html 这里有详细配置，原来这个需要给硬盘加标签，然后 kolla 才会把这个硬盘分配给 Ceph。我只运行：
 
@@ -166,7 +159,7 @@ https://docs.openstack.org/kolla-ansible/latest/reference/storage/ceph-guide.htm
 http://docs.ceph.com/docs/master/start/quick-ceph-deploy/ 这里创建 rbd 都是直接命令行，没有放到配置里面。
 不行，/usr/share/kolla-ansible/ansible/roles/ceph/tasks/start_osds.yml 创建 osd 的脚本，但是如何知道运行结果呢？kolla-ansible 运行只输出到屏幕，没有地方看全部日志，可能我没找到。启用 verbose，使用命令 
 
-    kolla-ansible ...  - v | tee log
+    kolla-ansible ...  -v | tee log
 
 果然发现：
 ```
@@ -185,7 +178,21 @@ localhost | FAILED! => {
     "msg": "UnicodeDecodeError('ascii', '\\xe6\\x96\\xb0\\xe5\\x8a\\xa0\\xe5\\x8d\\xb7', 0, 1, 'ordinal not in range(128)')"
 }
 ```
-有对应磁盘反而报错，似乎是字符集的问题，问题是这个看不懂。下载源码 [find_disk.py](https://github.com/openstack/kolla/blob/master/docker/kolla-toolbox/find_disks.py)，稍作修改，本地运行，发现磁盘有个 LABEL **新加卷**，导致出错。`parted /dev/sdb` 这个命令默认就会产生这个 label。折腾各种命令来修改 label，最后发现这个『新加卷』是原来的 Windows 磁盘，parted 并不会删除旧有分区。mkfs.ext4 格式化之，现在 OK 了！检查最后成功状态：
+有对应磁盘反而报错，似乎是字符集的问题，问题是这个看不懂。下载源码 [find_disk.py](https://github.com/openstack/kolla/blob/master/docker/kolla-toolbox/find_disks.py)，稍作修改，本地运行，发现磁盘有个 LABEL **新加卷**，导致出错。`parted /dev/sdb` 这个命令默认就会产生这个 label。折腾各种命令来修改 label，最后发现这个『新加卷』是原来的 Windows 磁盘，用的 parted 命令并不会删除旧有分区。mkfs.ext4 格式化之 或者使用 parted 交互式方式删除分区。
+
+另外一个问题：
+```
+TASK [ceph : Bootstrapping Ceph OSDs] failed: [localhost] (item=[0, {u'fs_uuid': u'', u'journal_device': u'/dev/sdb', u'journal': u'/dev/sdb2', u'partition': u'/dev/sdb1', u'partition_num': u'1', u'journal_num': 2, u'fs_label': u'', u'device': u'/dev/sdb', u'partition_label': u'KOLLA_CEPH_OSD_BOOTSTRAP', u'external_journal': False}]) => {"changed": true, "item": [0, {"device": "/dev/sdb", "external_journal": false, "fs_label": "", "fs_uuid": "", "journal": "/dev/sdb2", "journal_device": "/dev/sdb", "journal_num": 2, "partition": "/dev/sdb1", "partition_label": "KOLLA_CEPH_OSD_BOOTSTRAP", "partition_num": "1"}], "msg": "Container exited with non-zero return code 1"}
+```
+这个 bootstrap 容器运行后退出，`docker ps --all`才能看到。`docker logs bootstrap_osd_0` 日志里面有：
+```
+GPT data structures destroyed! You may now partition the disk using fdisk orother utilities.
+Warning: The kernel is still using the old partition table.The new table will be used at the next reboot.
+mkfs.xfs: cannot open /dev/sdb1: Device or resource busy
+```
+所以每次清空部署后，最好重启服务器。
+
+现在 OK 了！检查最后成功状态：
 ```
 [root@ms1 fan]# lsblk /dev/sdb
 NAME   MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
@@ -203,7 +210,7 @@ sdb1 下面都是散放的文件，这个就是 filestore 的意思？现在可�
 
 默认 OpenStack 会创建的 ceph pool 有 images, volumes, backups, vms。images 保持 glance 里面的 Linux Cloud Image，和 `glance image-list` 返回一样，raw 或者 qcow2 格式。vms 放 vm 节点的启动磁盘（这个不知道如何用命令查看）。volumes 则是 vm 节点的扩展磁盘，和 `openstack volume list` 返回一样。
 
-### log
+### Log
 
 [Central Logging](https://docs.openstack.org/kolla-ansible/latest/reference/logging-and-monitoring/central-logging-guide.html) 原来已经有这个东西。kolla ansible 的部署日志没法记录吧，那时候日志服务还没好。
 
@@ -231,10 +238,9 @@ Docker ps 有返回 kolla/centos-binary-horizon:queens，这里才知道安装�
 
 还有虚机运行的磁盘文件是直接放在宿主机上面：-drive file=/var/lib/nova/instances/78687529-9333-429f-a184-9a13c725fcca/disk,format=qcow2，如果使用了 ceph，会放到 ceph 上面？
 
-### 部署到 Neutron 时候挂起
+### 部署到 Neutron 时候控制台挂起
 
-一次成功部署后，重启机器，主端口连接不上。清空重新部署，运行到 Running Neutron bootstrap container，ssh 网络断开，console 登录查看最后日志为：
-
+一次成功部署后，重启机器，主端口连接不上。清空重新部署，运行到 Running Neutron bootstrap container，控制台 ssh 网络断开，TTY console 登录查看最后日志为：
 ```
 TASK [neutron : Running Neutron bootstrap container] ******************************************************************************************************
 changed: [localhost -> localhost] => {"changed": true, "result": false}
@@ -250,6 +256,8 @@ localhost                  : ok=311  changed=175  unreachable=0    failed=1
 ```
 禁用掉 lbaas 也没用。因为是在部署 neutron，所以应该是网络配置出现问题导致后面没法拉镜像。尴尬。为什么不先下载所有镜像然后开始部署？干净 centos 部署没有问题，几次之后就会出现这个问题。有 iptables 之类的残留？[这里](https://www.reddit.com/r/openstack/comments/8zmvia/the_network_problem_with_kollaansible/e2letmw/)和[这里](https://ask.openstack.org/en/question/93376/during-kolla-deploy-when-neutron-comes-up-networking-goes-down/)都有讨论这个问题，似乎 kolla 会创建一个 br-ex 网桥来做外部通信。后来尝试在宿主机中禁用 `neutron_external_interface`，也就是关掉 DHCP 获取 IP，问题消失，😂
 
+每次清除集群后最好重启下服务器，因为有些 network interface like qbr, qvo, qvb 没有清理干净。
+
 ### Rocky 创建 k8s 集群失败
 `CREATE aborted (Task create from SoftwareDeployment "enable_cert_manager_api_deployment" Stack "cai-7fzsht5k5dzv-kube_masters-zmbdkz4oxa5s-0-4zytyo6ftz4h" [3bb2ae99-ee48-41e7-b4d7-a38c93a2da41] Timed out)`
 在 master 节点上面运行 `journalctl | grep runc`，
@@ -260,7 +268,31 @@ novalocal runc[2468]: Source [heat] Unavailable.
 novalocal runc[2406]: /var/lib/os-collect-config/local-data not found. Skipping
 novalocal runc[2468]: publicURL endpoint for orchestration service in null region not found
 ```
-如此之多错误？运行 `runc list` 可以看到 atomic 上面 heat 是作为一个容器运行在 master node 上面，查看 log 用 `journalctl --no-pager -u heat-container-agent`。对于 publicURL endpoint for orchestration service in null region not found 的问题，[这里](https://ask.openstack.org/en/question/7652/publicurl-endpoint-for-orchestration-not-found/)有解释，我本地试了下，`openstack endpoint list` 包含 heat，Service Type：orchestration，`openstack service list` 里面也包含 heat，难道是因为 RegionOne 没有传给 heat agent？可能因为 heat 依赖 keystone 来找到所有的注册信息。
+如此之多错误？运行 `runc list` 可以看到 atomic 上面 heat 是作为一个容器运行在 master node 上面，查看 log 用 `journalctl --no-pager -u heat-container-agent`。对于 publicURL endpoint for orchestration service in **null** region not found 的问题，[这里](https://ask.openstack.org/en/question/7652/publicurl-endpoint-for-orchestration-not-found/)有解释，我本地试了下，`openstack endpoint list` 包含 heat，Service Type：orchestration，`openstack service list` 里面也包含 heat，难道是因为 RegionOne 没有传给 heat agent？（/etc/kolla/magnum-conductor/magnum.conf 里面已经定义了 RegionOne）可能因为 heat 依赖 keystone 来找到所有的注册信息。在 master node 上面 `cat /var/run/heat-config/heat-config`，返回为 `[]`，空数组，正常是一大堆 JSON。从 **null regin** 看，多半还是配置问题。费劲转为开发模式后还是一样问题😂 
+
+Heat 创建一个虚拟机，参数如何传递？cloud-init 还是 ssh？
+
+heat-container-agent 容器会向 heat 报告信息。具体看 <https://github.com/openstack/magnum/blob/master/magnum/drivers/k8s_fedora_atomic_v1/templates/kubemaster.yaml>，里面有 [start_container_agent](https://github.com/openstack/magnum/blob/master/magnum/drivers/common/templates/kubernetes/fragments/start-container-agent.sh)。注意里面的 `write_heat_params`，传入大量参数，写入到 /etc/sysconfig/heat-params，里面包含 `REGION_NAME="RegionOne"`，按我理解 heat 拿到 keystone 地址后调用 api，找到 orchestration service 地址，现在看来数据都在。`heat-config` 是如何产生出来的呢？
+
+heat-engine log:
+```
+Task create from ResourceGroup "kube_masters" Stack "tong-wvfftolmtniv" [3d0dae3d-5cce-4e47-976b-400633f92d94] timed out
+Task create from SoftwareDeployment "enable_cert_manager_api_deployment" Stack "tong-wvfftolmtniv-kube_masters-4pu45beuteve-0-vsoxums4xz6k" [9f7f80df-9fbd-4624-a029-55b58391dc50] timed out
+```
+后面一个 task 依赖前面一个，可以忽略。
+
+### 转为开发模式暨步骤总结
+Check [Kolla source code](https://github.com/openstack/kolla-ansible). It has branches like stable/rocky. It is very clear. But if you just `pip install`, you will get **master** version and can't get the exact one by OpenStack version. As above shows, master use `www_authenticate_uri` which was wrong(valid in future). Rocky should use `auth_uri`. So we should use git branch rather than latest pip package.
+1. cd /etc/kolla，use old/tested global.yaml & passwords.yml. Just keep these 2 files and clear others.
+2. git checkout stable/rocky
+3. edit ./kolla-ansible/ansible/roles/magnum/defaults/main.yml, set `default_docker_volume_type: "ssdvolume"`
+4. edit ./kolla-ansible/ansible/roles/ceph/templates/ceph.conf.j2, set `osd pool default size = 1` & `osd pool default min size = 1` since server has only one disk
+5. parted /dev/sdb -s -- mklabel gpt mkpart KOLLA_CEPH_OSD_BOOTSTRAP 1 -1; parted /dev/sdb print
+6. deploy as deployment mode
+7. edit kolla-ansible/tools/init-runonce(IP range) and run it
+8. glance image-create --name atomic27 --visibility public --disk-format raw --container-format bare < Fedora-Atomic-27-1.6.x86_64.raw
+9. openstack image set --property os_distro=fedora-atomic atomic27
+10. openstack volume type create "ssdvolume"
 
 ### Think
 * Ansible 是幂等的，也就是说反复部署不会对功能造成影响，这个是理想情况。

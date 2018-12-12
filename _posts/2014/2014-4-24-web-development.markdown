@@ -110,6 +110,36 @@ https://github.com/golang/go/wiki/WebAssembly
 如何调用操作系统接口比如线程呢？
 我甚至看到有 JavaScript 写的虚拟机，可以直接加载运行 Windows 2000，简单的说就是用 JS 模拟 x86 指令的运行，这这里的 WebAssembly 没有关系。
 
+### Performance
+
+SPDY 是什么？如何部署 SPDY？ <http://www.geekpark.net/topics/158198>  
+
+SPDY also is part of HTTP/2 <http://zh.wikipedia.org/wiki/HTTP/2> 
+
+Netty系列之Netty高性能之道  <http://www.infoq.com/cn/articles/netty-high-performance> 
+
+提高 web 应用性能之 JavaScript 性能调优 <https://www.ibm.com/developerworks/cn/web/1107_zhouxiang_tunejs/> 
+
+可以先创建和组装好了DOM之后再放入body，这样减少重画。 
+
+提高 web 应用性能之 CSS 性能调优 <https://www.ibm.com/developerworks/cn/web/1109_zhouxiang_optcss/> 
+
+ETag <https://zh.wikipedia.org/wiki/HTTP_ETag> 代表资源是否修改过的 hash 值 
+
+    If-Modified-Since:Wed, 10 May 2017 07:58:51 GMT 
+    If-None-Match:W/"102600-15bf15e2678” 
+
+这两个字段都会发送，如果带 tag 的话对比会更为准确。 
+
+cowboy-高性能简洁的erlang版web框架 <http://blog.yufeng.info/archives/3051>mokcAPI 是用这个搞的。好像只是 Express？ 
+
+"在c实现中nginx是做的最好的，但是如果你用nginx写自己的业务代码的时候，你就会把整个系统的性能拖到实现者的水平，总体来讲性能不会太高。而基于cowboy的实现再加上erlang天然的优势，通常一台机器做到几万的QPS的业务，对实现者的要求非常低，可以大大促进生产力，额外的福利还有热升级和稳定可靠。” 
+
+<https://github.com/heroku/cowboyku> Heroku 也在用做路由和转发，这点倒和 Express 很像，对于不同的 domain/url 路由到对应的应用，这是利用了 Erlang 热部署或者路由的功能？但是很长时间没更新了。<https://github.com/ninenines/cowboy> 这个倒是一直在更新。 
+
+AMP，来自 Google 的移动页面优化方案 <https://imququ.com/post/amp-project.html> 
+
+
 ### Think
 * 测试
 UI 很难或者无法测试
