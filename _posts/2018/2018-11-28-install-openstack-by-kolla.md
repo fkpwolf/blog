@@ -41,7 +41,9 @@ init-runonce 会创建很多初始化的资源，比如网络路由、cirros 磁
 ```
 ERROR: 'NoneType' object has no attribute 'replace' (HTTP 500) (Request-ID: req-6c01fbcf-f883-41e3-a7f9-cecf92c7cf34)
 ```
-[这里](https://stackoverflow.com/questions/52466203/error-nonetype-object-has-no-attribute-replace-http-500-openstack-magnum) 同样问题，说是 GitHub 已经 fix 了。但是我看 /etc/kolla/magnum-conductor 下面还是用的 www_authenticate_uri，什么情况。直接跑到 /usr/share/kolla-ansible/ansible/roles/magnum/templates 下修改 magnum.conf.j2，将 www_authenticate_uri 改为 auth_uri，原来上面的 /etc/kolla 都是根据这个来产生的，重新 deploy 后可以看到/etc/kolla 下面被修改了，但是 docker ps 显示对应镜像还是 半小时前的，所以错误还是一样，如何重新生成呢？清空重新部署。现在magnum ui & cli 都可以运行不出错。这个重新部署很要命，有时可以，有时要清空然后重新部署，有地方说重启全部容器就可以。
+[这里](https://stackoverflow.com/questions/52466203/error-nonetype-object-has-no-attribute-replace-http-500-openstack-magnum) 同样问题，说是 GitHub 已经 fix 了。但是我看 /etc/kolla/magnum-conductor 下面还是用的 www_authenticate_uri，什么情况。直接跑到 /usr/share/kolla-ansible/ansible/roles/magnum/templates 下修改 magnum.conf.j2，将 www_authenticate_uri 改为 auth_uri，原来上面的 /etc/kolla 都是根据这个来产生的。这个是已知 bug <https://bugs.launchpad.net/ubuntu/+source/magnum/+bug/1793813>。
+
+重新 deploy 后可以看到/etc/kolla 下面被修改了，但是 docker ps 显示对应镜像还是 半小时前的，所以错误还是一样，如何重新生成呢？清空重新部署。现在magnum ui & cli 都可以运行不出错。这个重新部署很要命，有时可以，有时要清空然后重新部署，有地方说重启全部容器就可以。
 
 然后在界面创建 cluster template，这比命令行方便。但是出现错误（错误都只在 http response 里面才能看到）：`Cluster type (vm, None, kubernetes) not supported (HTTP 400)`
 这个错误在命令行下可以看到，所以 UI 做的不行还不如命令行。这种 hello world 一定要能测试通过，否则就失去了 UI 快速上手的意义。
@@ -274,19 +276,51 @@ Heat 创建一个虚拟机，参数如何传递？cloud-init 还是 ssh？
 
 heat-container-agent 容器会向 heat 报告信息。具体看 <https://github.com/openstack/magnum/blob/master/magnum/drivers/k8s_fedora_atomic_v1/templates/kubemaster.yaml>，里面有 [start_container_agent](https://github.com/openstack/magnum/blob/master/magnum/drivers/common/templates/kubernetes/fragments/start-container-agent.sh)。注意里面的 `write_heat_params`，传入大量参数，写入到 /etc/sysconfig/heat-params，里面包含 `REGION_NAME="RegionOne"`，按我理解 heat 拿到 keystone 地址后调用 api，找到 orchestration service 地址，现在看来数据都在。`heat-config` 是如何产生出来的呢？
 
-heat-engine log:
+heat-engine log，里面可以看到一个个 task 的运行日志:
 ```
 Task create from ResourceGroup "kube_masters" Stack "tong-wvfftolmtniv" [3d0dae3d-5cce-4e47-976b-400633f92d94] timed out
 Task create from SoftwareDeployment "enable_cert_manager_api_deployment" Stack "tong-wvfftolmtniv-kube_masters-4pu45beuteve-0-vsoxums4xz6k" [9f7f80df-9fbd-4624-a029-55b58391dc50] timed out
 ```
-后面一个 task 依赖前面一个，可以忽略。
+后面一个 task 属于前面一个。
 <https://github.com/openstack/magnum/blob/master/magnum/drivers/common/image/heat-container-agent/scripts/heat-config-notify> 里面有获取 orchestration endpoint 的代码： 
 ```
+ks = ksclient.Client(
+    auth_url=iv['deploy_auth_url'],
+    user_id=iv['deploy_user_id'],
+    password=iv['deploy_password'],
+    project_id=iv['deploy_project_id'])
 endpoint = ks.service_catalog.url_for(
     service_type='messaging', endpoint_type='publicURL',
     region_name=iv.get('deploy_region_name'))
 ```
-这个方法由 `55-heat-config` 调用，输入为两个文件。
+这个方法由 `55-heat-config` 调用，输入为两个文件，上面的大量参数比如 `deploy_auth_url` 都由 heat-config 传递，其格式为：
+```json
+[
+    {
+        "inputs": [
+            {
+                "type": "String",
+                "name": "deploy_server_id",
+                "value": "3fb12f6a-cc17-4478-8a2f-ce4cca0bfb8b",
+                "description": "ID of the server being deployed to"
+            }
+        ],
+        "group": "script",
+        "name": "kong-ob42euoeumne-kube_masters-hfnvgsn727tt-0-k8s_keystone_service-nzkdrrgtemm5",
+        "outputs": [],
+        "creation_time": "2018-12-10T08:11:27",
+        "options": {},
+        "config": "#!/bin/sh\n\n. /etc/sysconfig/heat-params\nexport PATH=$PATH:/var...."
+    }
+]
+```
+master node 上面的 heat agent 容器收到这个请求后执行任务。不是，agent 只是回报 heat 部署进展。因为即使部署失败，我看到 enable_services 还是被触发了。
+
+根据[这里的提示](http://eavesdrop.openstack.org/irclogs/%23openstack-containers/%23openstack-containers.2018-11-07.log.html)，查看 /etc/os-collect-config.conf，果然发现其中 `region_name = null`，老版本没有这个值。这个文件是如何产生的呢？这个是 nova 配置主机方式，template 定义 在 write-os-apply-config-templates.sh，数据在 /var/lib/os-collect-config/os_config_files.json，其包含 /var/lib/os-collect-config/heat_local.json，里面 region_name: null，其他都有。[这里](https://github.com/openstack/os-collect-config)看，这个为 heat local metadata，应该是 heat 创建 vm 时传入。[os-collect-config heat_local.py](https://github.com/openstack/os-collect-config/blob/master/os_collect_config/heat_local.py) 负责写入 heat_local，数据从 /var/lib/heat-cfntools/cfn-init-data，里面数据等同于 /var/lib/cloud/data/cfn-init-data。[Heat Walk-through](https://wiki.openstack.org/wiki/Heat/ApplicationDeployment) 里面会做这一步，如此看来，这是 heat bug？因为都是自动化部署出来的，没办法来个途中硬编码确认。
+
+region_name 是 stack 运行的一个参数，dashboard 显示这个值已经传入。
+
+打开 debug 后会输出更多内容，如何打开？
 
 write-os-apply-config-templates.sh 这文件会写入 /var/run/heat-config/heat-config，
 
@@ -315,5 +349,6 @@ Check [Kolla source code](https://github.com/openstack/kolla-ansible). It has br
 * 漫长的部署居然没有写日志的地方，我只找到使用管道 `tee` 的方法。
 * kolla 部署了大量镜像，这些镜像有缓存么？`docker images ls` 没有看到任何镜像。
 * kolla 用 Docker 方法部署 OpenStack，目的是为了简化，但是坑也比较多，还要注意各种参数。
+* Python 动态语言虽然开发遍历，但如何保证类型安全，这里感觉 Go 更为合适
 
 
