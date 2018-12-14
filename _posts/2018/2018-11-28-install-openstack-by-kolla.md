@@ -328,6 +328,87 @@ write-os-apply-config-templates.sh 这文件会写入 /var/run/heat-config/heat-
 
 deployments 变量是容器的输入变量。
 
+关于 heat, Heat metadata service is provided via the CFN API, its primary use is for heat-cfntools to talk to Heat via that API. 
+
+Heat [Troubleshooting](https://wiki.openstack.org/wiki/Heat/ApplicationDeployment) 描述了获取 user data 方法：
+```shell
+    curl -s http://169.254.169.254/2009-04-04/user-data
+```
+试了下，果然可以（为什么是 2009-04-04 😂），这是 multipart 数据格式。这个是 vm 内置的 metadata server。最后两段为：
+```
+--===============2826715925626734437==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+...
+
+systemctl enable wc-notify
+systemctl start --no-block wc-notify
+
+--===============2826715925626734437==
+Content-Type: text/x-cfninitdata; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="cfn-init-data"
+
+{"os-collect-config": {"heat": {"password": "x#g*ilkG&E*rNp%9u3z#KQO89bC4FK0!", "user_id": "0a3afbf8af2246bf86c2a480afa766ff", "region_name": null, "stack_id": "tong-wvfftolmtniv-kube_masters-4pu45beuteve-0-vsoxums4xz6k/9f7f80df-9fbd-4624-a029-55b58391dc50", "resource_name": "kube-master", "auth_url": "http://192.168.51.253:5000/v3/", "project_id": "4d70c955bbef4a8a94dfa9c7370042cb"}, "collectors": ["ec2", "heat", "local"]}, "deployments": []}
+```
+可以看到里面 region_name 也为空。而这段对应 magnum/drivers/k8s_fedora_atomic_v1/templates/kubemaster.yaml
+```yaml
+  kube_master_init:
+    type: OS::Heat::MultipartMime
+    properties:
+      parts:
+        - config: {get_resource: install_openstack_ca}
+        - config: {get_resource: disable_selinux}
+        - config: {get_resource: write_heat_params}
+        - config: {get_resource: configure_etcd}
+        - config: {get_resource: write_kube_os_config}
+        - config: {get_resource: configure_docker_storage}
+        - config: {get_resource: configure_kubernetes}
+        - config: {get_resource: make_cert}
+        - config: {get_resource: add_proxy}
+        - config: {get_resource: start_container_agent}
+        - config: {get_resource: enable_services}
+        - config: {get_resource: write_flannel_config}
+        - config: {get_resource: flannel_config_service}
+        - config: {get_resource: flannel_service}
+        - config: {get_resource: kube_apiserver_to_kubelet_role}
+        - config: {get_resource: master_wc_notify}
+```
+可以看出 master_wc_notify 能找到定义，但是 cfn-init-data 没有，可能为 Heat 默认附上。
+
+直接查看 Heat 源代码，nova.py build_userdata 方法会写这块 multipart：
+```python
+    if metadata:
+        attachments.append((jsonutils.dumps(metadata),
+                            'cfn-init-data', 'x-cfninitdata'))
+```
+调用者 heat/heat/engine/resources/openstack/nova/server.py：
+```python
+    metadata = self.metadata_get(True) or {}
+
+    userdata = self.client_plugin().build_userdata(
+        metadata,
+        ud_content,
+        instance_user=None,
+        user_data_format=user_data_format)
+```
+metadata 数据会写入 userdata。metadata_get 定义在 heat/engine/resource.py（VS Code 安装扩展后可以方便的查看方法定义）
+```python
+    def metadata_get(self, refresh=False):
+        if refresh:
+            self._rsrc_metadata = None
+        if self.id is None or self.action == self.INIT:
+            return self.t.metadata()
+        if self._rsrc_metadata is not None:
+            return self._rsrc_metadata
+        rs = resource_objects.Resource.get_obj(self.stack.context, self.id,
+                                               refresh=True,
+                                               fields=('rsrc_metadata', ))
+        self._rsrc_metadata = rs.rsrc_metadata
+        return rs.rsrc_metadata
+```
+
 ### 转为开发模式暨步骤总结
 Check [Kolla source code](https://github.com/openstack/kolla-ansible). It has branches like stable/rocky. It is very clear. But if you just `pip install`, you will get **master** version and can't get the exact one by OpenStack version. As above shows, master use `www_authenticate_uri` which was wrong(valid in future). Rocky should use `auth_uri`. So we should use git branch rather than latest pip package.
 1. cd /etc/kolla，use old/tested global.yaml & passwords.yml. Just keep these 2 files and clear others.
@@ -350,5 +431,7 @@ Check [Kolla source code](https://github.com/openstack/kolla-ansible). It has br
 * kolla 部署了大量镜像，这些镜像有缓存么？`docker images ls` 没有看到任何镜像。
 * kolla 用 Docker 方法部署 OpenStack，目的是为了简化，但是坑也比较多，还要注意各种参数。
 * Python 动态语言虽然开发遍历，但如何保证类型安全，这里感觉 Go 更为合适
+* Heat 设计因为模仿了 AWS CloudFormation，和原来 OpenStack 并不十分吻合，很多地方有拼凑之感，颇为恶心
+* Heat 编排大量依赖 cloud-init/userdata，隔着 vm 在 Linux 上面各种操作，颇有 hack 之感，k8s 则没有 vm 这个屏障，初始化过程看得清清楚楚
 
 
