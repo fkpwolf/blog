@@ -412,15 +412,15 @@ metadata 数据会写入 userdata。metadata_get 定义在 heat/engine/resource.
 ### 转为开发模式暨步骤总结
 Check [Kolla source code](https://github.com/openstack/kolla-ansible). It has branches like stable/rocky. It is very clear. But if you just `pip install`, you will get **master** version and can't get the exact one by OpenStack version. As above shows, master use `www_authenticate_uri` which was wrong(valid in future). Rocky should use `auth_uri`. So we should use git branch rather than latest pip package.
 1. cd /etc/kolla，use old/tested global.yaml & passwords.yml. Just keep these 2 files and clear others.
-2. git checkout stable/rocky
+2. `git checkout stable/rocky`
 3. edit ./kolla-ansible/ansible/roles/magnum/defaults/main.yml, set `default_docker_volume_type: "ssdvolume"`
 4. edit ./kolla-ansible/ansible/roles/ceph/templates/ceph.conf.j2, set `osd pool default size = 1` & `osd pool default min size = 1` since server has only one disk
-5. parted /dev/sdb -s -- mklabel gpt mkpart KOLLA_CEPH_OSD_BOOTSTRAP 1 -1; parted /dev/sdb print
-6. deploy as deployment mode
+5. `parted /dev/sdb -s -- mklabel gpt mkpart KOLLA_CEPH_OSD_BOOTSTRAP 1 -1; parted /dev/sdb print`
+6. deploy `./kolla-ansible/tools/kolla-ansible -i ./kolla-ansible/ansible/inventory/all-in-one deploy -v | tee log`
 7. edit kolla-ansible/tools/init-runonce(IP range) and run it
-8. glance image-create --name atomic27 --visibility public --disk-format raw --container-format bare < Fedora-Atomic-27-1.6.x86_64.raw
-9. openstack image set --property os_distro=fedora-atomic atomic27
-10. openstack volume type create "ssdvolume"
+8. `glance image-create --name atomic27 --visibility public --disk-format raw --container-format bare < Fedora-Atomic-27-1.6.x86_64.raw`
+9. `openstack image set --property os_distro=fedora-atomic atomic27`
+10. `openstack volume type create "ssdvolume"`
 
 ### Think
 * Ansible 是幂等的，也就是说反复部署不会对功能造成影响，这个是理想情况。
