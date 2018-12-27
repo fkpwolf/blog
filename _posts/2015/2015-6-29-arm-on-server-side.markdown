@@ -146,3 +146,5 @@ MAAS 启动和安装，这些都要自动化的控制。raspberry pi 可以么�
 glusterfs 倒是很多文档 <https://magazine.odroid.com/article/exploring-software-defined-storage-glusterfs-odroid-hc1-part-1-server-setup/> 
 
 [Banana Pi to Launch a 24-Core Arm Server](https://www.cnx-software.com/2018/12/26/banana-pi-24-core-arm-server/) 规格未知，CPU 据说是 SocioNext SC2A11。
+
+AWS 现在(2018.12.30)也提供 [Arm 服务器](https://aws.amazon.com/cn/blogs/china/new-ec2-instances-a1-powered-by-arm-based-aws-graviton-processors/)，使用的是 Annapurna Labs Graviton Processors，这种 SOC 个人是无缘接触了。
