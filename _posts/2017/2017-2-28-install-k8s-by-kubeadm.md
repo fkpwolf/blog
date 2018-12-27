@@ -365,4 +365,4 @@ openssl x509 -noout -text -in /var/lib/kubelet/pki/kubelet-client-current.pem
 ```
 2018/12/07 10:57:09 Error while initializing connection to Kubernetes apiserver. This most likely means that the cluster is misconfigured (e.g., it has invalid apiserver certificates or service accounts configuration) or the --apiserver-host param points to a server that does not exist. Reason: Get https://192.168.1.140:6443/version: x509: certificate has expired or is not yet valid
 ```
-奇怪的是集群内部的 dashboard 正常运行，in-cluster 访问 api server 不校验证书？这个问题有个 [kubeadm issue](https://github.com/kubernetes/kubeadm/issues/581) 解决，就是太麻烦了。可以试试 [这个 stackoverflow](https://stackoverflow.com/questions/46360361/invalid-x509-certificate-for-kubernetes-master) 的方法。
+奇怪的是集群内部的 dashboard 正常运行，in-cluster 访问 api server 不校验证书？这个问题有个 [kubeadm issue](https://github.com/kubernetes/kubeadm/issues/581) 解决，就是太麻烦了。[这个 stackoverflow](https://stackoverflow.com/questions/46360361/invalid-x509-certificate-for-kubernetes-master) 的方法不用重启节点。
