@@ -436,7 +436,7 @@ Check [Kolla source code](https://github.com/openstack/kolla-ansible). It has br
 * kolla 用 Docker 方法部署 OpenStack，目的是为了简化，但是坑也比较多，还要注意各种参数。
 * Python 动态语言虽然开发遍历，但如何保证类型安全，这里感觉 Go 更为合适
 * Heat 设计因为模仿了 AWS CloudFormation，和原来 OpenStack 并不十分吻合，很多地方有拼凑之感，颇为恶心
-* Heat 编排大量依赖 cloud-init/userdata，隔着 vm 在 Linux 上面各种操作，颇有 hack 之感，k8s 则没有 vm 这个屏障，初始化过程看得清清楚楚
+* Heat 编排大量依赖 cloud-init/userdata，隔着 vm 在 Linux 上面各种操作，颇有 hack 之感，k8s 则没有 vm 这个屏障，初始化过程看得清清楚楚。如果一个漫长的过程部署失败，出现错误的地方分布在不同平台，调试起来心累。 
 
 ### 总的来说
 **太复杂**：功能重合、磨合不稳定、技术演变太快。。。云服务提供商有理由用这种混合模式，企业内部还是直接裸机部署 k8s 好了。或许 OpenStack 上面直接使用 Ansible + kubeadm 会简单些。[这里](https://github.com/kubernetes-sigs/kubespray/tree/master/contrib/terraform/openstack)使用 kubespray + Terraform 在 OpenStack 上面部署 k8s，我原来以为 kubespray 只是裸机部署的。
