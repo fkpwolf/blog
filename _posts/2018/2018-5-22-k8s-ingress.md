@@ -126,8 +126,8 @@ status:
 
 参考 **Kubernetes 存储** 条目，这里有个 cloud provider。 
 
-使用 Ingress 访问 Dashboard 并且去掉 https 方法： 
-```
+使用 Ingress 访问 Dashboard 并且去掉 HTTPS 方法： 
+```yaml
 [centos@k8s-1 ~]$ cat dashboard-ingress.yaml
 apiVersion: extensions/v1beta1
 kind: Ingress
@@ -169,6 +169,30 @@ spec:
         path: / 
 ```
 如果要使用 https 访问，上面配置中不能使用 host，否则都是 404 default backend。 
+
+使用 Nginx 的[自定义代码](https://github.com/kubernetes/ingress-nginx/tree/master/docs/examples/customization/configuration-snippets)，比如直接返回 mock 数据：
+```yaml
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: customization-ingress
+  namespace: default
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "Content-Type: application/json";
+      return 200 '{"data":[]}';
+spec:
+  rules:
+  - host: cust.192.168.51.12.nip.io
+    http:
+      paths:
+      - backend:
+          serviceName: nginx-ingress-default-backend
+          servicePort: 80
+        path: /
+```
+这里必须弄一个假的backend，否则 kubectl apply 无法通过校验，我用的是默认 nginx ingress backend。
 
 ### 内部机制
 
