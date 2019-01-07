@@ -37,11 +37,11 @@ AMD 皓龙™ A1100 处理器 <http://www.amd.com/zh-cn/products/server/opteron-
 
 <http://www.cnbeta.com/articles/tech/670109.htm> 早期跑分曝光：ARM在服务器CPU领域崭露头角
 
-这些主板对于个人来说还是太贵了吧。ARM 只是核多就厉害？intel 的优势呢？可能 intel I/O 吞吐量更大，而这里只是评估了 cpu 计算性能。
+这些商业主板对于个人来说还是太贵了吧。ARM 只是核多就厉害？Intel 的优势呢？可能 Intel I/O 吞吐量更大，而这里只是评估了 cpu 计算性能。
 
 <https://www.cnx-software.com/2017/11/09/odroid-mc1-quad-board-cluster-launched-for-220/> 这里说 24个 ARM A17核(MIQI)比 intel soc 4核在编译代码时还要快，真的是这样？编译kernel时核数的多少这么重要？
 
-<http://wiki.ant-computing.com/Choosing_a_processor_for_a_build_farm> build farm 对比 
+<http://wiki.ant-computing.com/Choosing_a_processor_for_a_build_farm> build farm 对比。似乎编译对频率要求不高，增加 CPU 数更为明显。 
 
 <http://b2b.gigabyte.com/ARM-Server/H270-T70-rev-110#ov>  8 x Cavium® ThunderX™ 48-core ARM processors
 
@@ -112,7 +112,7 @@ ARM
 
 <http://www.cnx-software.com/2017/01/17/pine64-introduces-sopine-a64-allwinner-a64-som-and-sopine-model-a-baseboard/> 这个可以做成 SOM 的集群，还准备从网卡 PXE 启动。
 
-<https://blog.hypriot.com/> 这个是树莓派的集群，kubernetes 还推荐在这个上面部署。 
+[Hypriot](https://blog.hypriot.com/) 在 Raspberry Pi 上面运行容器技术，这个 OS 列在 kubeadm 的支持列表中。其 FAQ 说支持全系列树莓派，但是 aarch64 只能运行在 Raspberry Pi 3 上面吧？
 
 <https://insights.ubuntu.com/2017/01/30/installing-a-diy-bare-metal-gpu-cluster-for-kubernetes> 这个用 MAAS 管理机器，MAAS 装在 raspberry pi 上面，用 k8s 管理集群，每台机器都是 nuc 小电脑，电源管理是手动（自己开关机？）。然后居然在上面运行 gpu + cuda。这个集群多半还是以主机为单位，多主机间的 cuda 协作代价应该很大吧。
 
@@ -131,7 +131,9 @@ POE <https://www.kickstarter.com/projects/pisupply/pi-poe-switch-hat-power-over-
 | Odroid HC1                                                   | Exynos5422, 4 * A15 + 4 * A7 | 2G           | 49$   |                                                              |
 | Orange Pi [RK3399](https://www.cnx-software.com/2018/01/29/orange-pi-rk3399-development-board-launched-for-109/) | 4 * A72, 4 * A53             |              | 109$  |                                                              |
 
-感觉这些板子只要能稳定运行 Docker 就可以。代码支持并行一则开发成本高，而则伸缩性差，不如全分布式方案。map-reduce就是分布式的，vm 的也是，现在有个更简单的，就是 Docker，而docker要运行好，一则内存，一则cpu核数。E5 的 cpu，14 core 28 th，3000￥。odroid mc1, 32 cpu, 8G dram，just 220$. It's document support Docker Swarm, build farm & PXE boot. Mabye the only 8G memeory is a shortcome.
+感觉这些板子只要能稳定运行 Docker 就可以。代码支持并行一则开发成本高，而则伸缩性差，不如全分布式方案。map-reduce就是分布式的，vm 的也是，现在有个更简单的，就是 Docker，而 Docker要运行好，一则内存，一则cpu核数。E5 的 cpu，14 core 28 th，3000￥。odroid mc1, 32 cpu, 8G dram，just 220$. It's document support Docker Swarm, build farm & PXE boot. Mabye the only 8G memeory is a shortcome.
+
+<https://www.cnx-software.com/2019/01/07/nanopi-neo4-build-farm-rk3399-overclocking/> 这个是 NanoPi NEO4 RK3399，CPU 颇有优势，而且内核和文档都很成熟。
 
 arm 这块高通已经放弃，我也觉得优势不大，在大规模形成的性价比上。只能用来教学用用。
 
