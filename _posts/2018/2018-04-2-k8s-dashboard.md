@@ -17,7 +17,7 @@ sudo xcode-select --switch /Library/Developer/CommandLineTools # Enable command 
 * export KUBE_DASHBOARD_KUBECONFIG=~/k8s-admin.conf
 * http://localhost:3001/ 会打开 BrowserSync，但是我修改了页面并不会自动刷新。还要我修改代码。这个刷新是整个页面刷新，只有 CSS 才会局部刷新。
 
-![k8s-dashboard-arch](/images/2018/k8s-dashboard-arch.png)
+![](/images/2018/k8s-dashboard-arch.png)
 
 开发环境中 BrowserSync (9090) ---> Dashboard backend (9091) ---> Kubernetes API Server (8080),  ~~这个 backend 也作为静态服务器，这样开发环境中我就没法配置我的代理了。~~其实也可以修改 build/serve.js 添加自己的 proxy，但是要注意的是生产环境下是没有 BrowserSync 的。BrowserSync 只会转发 /api 开头的到 backend。
 
@@ -156,6 +156,12 @@ F+XikYiQErDOUghEOPwXt2kuF6Bp
 主要访问 k8s API Server，做了大量的封装，主要是对 API 进行合并的操作，比如在 pod details 这种页面，包含了多个纬度的信息，每个都要一个独立的 request 才能获取到。合并后前端一个 request 能返回更多内容，大大减少了前端开发量。
 所有路由都定义在 src/app/backend/handler/apihandler.go 里面
 但是也提供逃逸接口 `api/v1/_raw/namespace/name/:name`，这个删除命名空间是没有封装的，可以这样直接调用，当然这种标准的 k8s 资源操作方式才可以这样。如果我们大量使用 CRD，则前端直接调用某个微服务 Ingress 的可能性就会大大减少。
+
+### 整合
+需要整合监控告警、镜像仓库、应用商店。
+
+![](/images/2018/dashboard-integrate.png)
+
 
 ### 疑问 / TODO
 1. 整合结果也发布成 Helm Chart
