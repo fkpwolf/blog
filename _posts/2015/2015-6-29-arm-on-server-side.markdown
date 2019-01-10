@@ -39,9 +39,7 @@ AMD 皓龙™ A1100 处理器 <http://www.amd.com/zh-cn/products/server/opteron-
 
 这些商业主板对于个人来说还是太贵了吧。ARM 只是核多就厉害？Intel 的优势呢？可能 Intel I/O 吞吐量更大，而这里只是评估了 cpu 计算性能。
 
-<https://www.cnx-software.com/2017/11/09/odroid-mc1-quad-board-cluster-launched-for-220/> 这里说 24个 ARM A17核(MIQI)比 intel soc 4核在编译代码时还要快，真的是这样？编译kernel时核数的多少这么重要？
-
-<http://wiki.ant-computing.com/Choosing_a_processor_for_a_build_farm> build farm 对比。似乎编译对频率要求不高，增加 CPU 数更为明显。 
+<https://www.cnx-software.com/2017/11/09/odroid-mc1-quad-board-cluster-launched-for-220/> 这里说 24个 ARM A17核(MIQI)比 Intel SOC 4核在编译代码时还要快，真的是这样？编译kernel时核数的多少这么重要？[Build farm](http://wiki.ant-computing.com/Choosing_a_processor_for_a_build_farm) 对比。似乎编译对频率要求不高，增加 CPU 数更为明显。 
 
 <http://b2b.gigabyte.com/ARM-Server/H270-T70-rev-110#ov>  8 x Cavium® ThunderX™ 48-core ARM processors
 
@@ -51,12 +49,11 @@ AMD 皓龙™ A1100 处理器 <http://www.amd.com/zh-cn/products/server/opteron-
 
 Ampere SoC Designed for Cloud Computing Comes with 32 ARMv8 Cores @ 3.3 GHz, Supports up to 1TB RAM <https://www.cnx-software.com/2018/02/06/ampere-soc-designed-for-cloud-computing-comes-with-32-armv8-cores-3-3-ghz-supports-up-to-1tb-ram/> 
 
-其实 ARM 或者 x86 核心对于上面的应用来说并不重要，intel 也能做到很便宜的价格。可能稍微重要的地方在于： 
+其实 ARM 或者 x86 核心对于上面的应用来说并不重要，Intel 也能做到很便宜的价格。可能稍微重要的地方在于：
 
 1. 核心更多，更适合虚拟化； 
 2. 功耗低 
-
-在 ARM 服务器产业形成规模前，x86 还是有规模优势的。 
+3. 边缘计算
 
 <https://www.cnx-software.com/2017/11/11/gateworks-newport-sbcs-powered-by-cavium-octeon-tx-64-bit-arm-soc-are-designed-for-network-applications/>
 
@@ -131,11 +128,11 @@ POE <https://www.kickstarter.com/projects/pisupply/pi-poe-switch-hat-power-over-
 | Odroid HC1                                                   | Exynos5422, 4 * A15 + 4 * A7 | 2G           | 49$   |                                                              |
 | Orange Pi [RK3399](https://www.cnx-software.com/2018/01/29/orange-pi-rk3399-development-board-launched-for-109/) | 4 * A72, 4 * A53             |              | 109$  |                                                              |
 
-感觉这些板子只要能稳定运行 Docker 就可以。代码支持并行一则开发成本高，而则伸缩性差，不如全分布式方案。map-reduce就是分布式的，vm 的也是，现在有个更简单的，就是 Docker，而 Docker要运行好，一则内存，一则cpu核数。E5 的 cpu，14 core 28 th，3000￥。odroid mc1, 32 cpu, 8G dram，just 220$. It's document support Docker Swarm, build farm & PXE boot. Mabye the only 8G memeory is a shortcome.
+感觉这些板子只要能稳定运行 Docker 就可以。代码支持并行一则开发成本高，而则伸缩性差，不如全分布式方案。map-reduce就是分布式的，vm 的也是，现在有个更简单的，就是 Docker，而 Docker 要运行好，一则内存，一则 CPU 核数。E5 的 cpu，14 core 28 th，3000￥。odroid mc1, 32 cpu, 8G dram，just 220$. It's document support Docker Swarm, build farm & PXE boot. Mabye the only 8G memeory is a shortcome.
 
 <https://www.cnx-software.com/2019/01/07/nanopi-neo4-build-farm-rk3399-overclocking/> 这个是 NanoPi NEO4 RK3399，CPU 颇有优势，而且内核和文档都很成熟。
 
-arm 这块高通已经放弃，我也觉得优势不大，在大规模形成的性价比上。只能用来教学用用。
+ARM Server 这块高通已经放弃，我也觉得优势不大，在大规模形成的性价比上。只能用来教学用用。
 
 MAAS 启动和安装，这些都要自动化的控制。raspberry pi 可以么？这种小设备上不可能安装
 
@@ -147,6 +144,8 @@ MAAS 启动和安装，这些都要自动化的控制。raspberry pi 可以么�
 
 glusterfs 倒是很多文档 <https://magazine.odroid.com/article/exploring-software-defined-storage-glusterfs-odroid-hc1-part-1-server-setup/> 
 
-[Banana Pi to Launch a 24-Core Arm Server](https://www.cnx-software.com/2018/12/26/banana-pi-24-core-arm-server/) 规格未知，CPU 据说是 SocioNext SC2A11。
+[Banana Pi to Launch a 24-Core Arm Server](https://www.cnx-software.com/2018/12/26/banana-pi-24-core-arm-server/) 规格未知，CPU 据说是 SocioNext SC2A11。[V-Raptor](https://www.cnx-software.com/2019/01/08/v-raptor-24-core-arm-server-socionext-sc2a11/) 也是同样的 CPU，不过似乎是 PCI 接口直接查到主板上。
 
 AWS 现在(2018.12.30)也提供 [Arm 服务器](https://aws.amazon.com/cn/blogs/china/new-ec2-instances-a1-powered-by-arm-based-aws-graviton-processors/)，使用的是 Annapurna Labs Graviton Processors，这种 SOC 个人是无缘接触了。
+
+[Kubernetes on the Edge](https://rancher.com/blog/2018/2018-12-11-kubernetes-on-the-edge/) Rancher 在国内的一个项目，奇葩之处是客户需要每个边缘节点上都要安装一个独立的 k8s 集群，因为网络不稳定，而且客户想用 k8s 方便部署升级的功能（多半类似电信l网关路由器跑 OSGI）。为了能让 k8s 运行在 ARM 4GB 内存节点上（好像一般便宜 ARM 板子都是这个规格😂 ），他们特意搞了个精简版 - <https://github.com/ibuildthecloud/k3s>，问起为什么有这个东东，[作者说](https://github.com/ibuildthecloud/k3s/issues/1)只是想学习下 k8s 的架构... 如果像 Linux Kernel 有个 `make menuconfig` 来模块化的编译 k8s 就好了，这样精简起来更容易，否则一个个 commit 来删除代码将来无法和 upstream 同步。

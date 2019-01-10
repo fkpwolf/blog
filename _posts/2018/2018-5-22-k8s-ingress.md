@@ -88,7 +88,7 @@ jxing-nginx-ingress-controller   LoadBalancer   10.110.233.125   <pending>     8
 这个没有外部 IP？一般情况下在 AWS 或者 Google Cloud 才有 LoadBalancer 集成。 
 
 magnum 上面创建有外部 IP，但是这个 IP 既不是 magnum cluster-list 里面显示的 external_vip，也不是 nova list 里面显示的 floating ip。那是从哪里获取的？我从 LB IP 或者 直接访问 node ip 都可以访问 dashboard，后者的 node ip 应该是 nginx-ingress 安装的 node ip。这个外部 IP 是 OpenStack 的网络环境给的？其如何探测外部网络控制器？ 
-```
+```shell
 [root@p1-u55snrcux-0-i2y6p7rdsmyj-kube-master-wghdy7r4yg7q ~]# kubectl get svc ingress-nginx -n ingress-nginx -o yaml
 apiVersion: v1
 kind: Service
@@ -205,7 +205,7 @@ spec:
 然后为了减少 nginx 频繁 reload，如果只是 endpoint 修改，使用 Lua openresty 来做动态的路由变更。 
 
 Nginx-ingress-controller 是直接在容器中起了一个 nginx 进程，这个可以在容器命令行里面看到： 
-```
+```shell
 root@k8s-1:/# ps aux   
 USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
 root         1  0.0  0.0   4040   360 ?        Ss   May21   0:00 /usr/bin/dumb-init /nginx-ingress-controller --default-backend-service=d
@@ -251,7 +251,7 @@ jxing-nginx-ingress-controller-6d45cdfdc8-474vb 是一个 pod id，使用 config
 `kubectl apply -f https://j.hept.io/contour-deployment-rbac` 自己部署在自己的 namespace 里面，服务默认是 LoadBalance，这个是 aws ELB 才能用，我改成 NodePort 
 
 `kubectl apply -f https://j.hept.io/contour-kuard-example` 这个会部署一个 kuard demo， 然后访问 http://k8s-1:port 就可以访问了。 
-```
+```shell
 [centos@k8s-1 ~]$ kubectl get ing
 NAME             HOSTS                        ADDRESS   PORTS     AGE
 kong-dashboard   dashboard-kong.x.access.ly             80, 443   31d
@@ -264,7 +264,7 @@ kuard            *                                      80        1m
 尝试一个常见的 rewrite 规则 <https://github.com/heptio/contour/blob/master/docs/ingressroute.md#prefix-rewrite-support> ，这个在 Nginx Ingress 里面要用 nginx 特有的复杂规则。 
 
 IngressRoute 自己扩展的么（k8s 官方用来替代 Ingress 的，到现在为止只有 Contour 支持）， 
-```
+```shell
 [centos@k8s-1 ~]$ kubectl get ingressroute
 NAME      FQDN      TLS SECRET   FIRST ROUTE   STATUS     STATUS DESCRIPTION
 kuard                            /             orphaned   this IngressRoute is not part of a delegation chain from a root IngressRoute
@@ -309,7 +309,7 @@ Nginx 很快，Lua 就快么？[Top ten things about openresty](http://www.stati
 
 ### External IP / Load Balance
 如果 k8s 集群运行在 OpenStack 下面，
-```
+```shell
 [fedora@kong-s4cfqkyjsyu2-master-0 ~]$ kubectl get service -n kube-system
 NAME                   TYPE           CLUSTER-IP       EXTERNAL-IP     PORT(S)                  AGE
 heapster               ClusterIP      10.254.67.110    <none>          80/TCP                   1h
@@ -320,7 +320,7 @@ kubernetes-dashboard   LoadBalancer   10.254.199.103   192.168.51.64   443:31567
 
 ![k8s-ingress-lb](/images/2018/k8s-ingress-lb.png)
 listener 代表上面的关系，pool 则表示后端主机列表，端口就是上面 dashboard service 的内部端口。奇怪的是这个 pool 有两台主机，其实 dashboard pod 只有一个实例，可能是因为这个是 default pool。进入其中某个节点：
-```
+```shell
 [fedora@kong-s4cfqkyjsyu2-minion-1 ~]$ sudo netstat -tulpn
 Active Internet connections (only servers)
 Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name    

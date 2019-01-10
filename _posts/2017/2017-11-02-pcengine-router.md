@@ -18,9 +18,9 @@ AMD GX-412TC [SOC](https://www.amd.com/en/system/files?file=2017-06/g-series-soc
 ### 软件
 软件还是上 Ubuntu + OpenWrt(kvm 直通)。这台机器没有 VGA 口，只有个串口连出来，所以安装 Ubuntu 得麻烦些，因为需要配置好让整个安装界面通过串口显示出来，有点像一般开发板。安装中会从网络上下载所有包，相当慢。
 
-KVM/IOMMU 则更麻烦，Ubuntu 和 BIOS(coreboot) 都要改，参照 <http://pcengines.info/forums/?page=post&id=77FF51E3-8ACA-4B79-BD2C-1380B9B48B5D> 这个帖子，需要自己编译内核。虽然麻烦，但总是有办法，社区还算成熟。这个板子编译内核还是很慢的，最好弄台 Ubuntu 版本一样的虚拟机。除了对 kernel 打 patch，还要个内核参数 `pcie_acs_override=downstream`，否则分配 PCI-e 设备时只能把 IOMMU Group 里面的三个网卡一起给一台虚拟机，这个也是 IOMMU 的常见问题了。
+KVM/IOMMU 则更麻烦，Ubuntu 和 BIOS(coreboot) 都要改，参照[这个帖子](http://pcengines.info/forums/?page=post&id=77FF51E3-8ACA-4B79-BD2C-1380B9B48B5D)，需要自己编译内核。虽然麻烦，但总是有办法，社区还算成熟。在这个板子上面编译内核还是很慢的，最好弄台 Ubuntu 版本一致的虚拟机。除了对 kernel 打 patch，还要加个内核参数 `pcie_acs_override=downstream`，否则分配 PCI-e 设备时只能把 IOMMU Group 里面的三个网卡一起给一台虚拟机，这个也是 IOMMU 的常见问题了。
 
-<https://github.com/pcengines/coreboot/pull/186/commits> 最新的 coreboot 应该已经 merge patch 了，就不用自己编译了。自己编译步骤为：
+包含这个 [commit](https://github.com/pcengines/coreboot/pull/186/commits) 的最新的 coreboot 应该已经 merge patch 了，就不用自己编译了。自己编译步骤为：
 1. 先 checkout coreboot 代码，然后 checkout enable_iommu 分支
 2. 运行：`./build.sh dev-build ../coreboot/ apu2`，直接在 Docker 里面编译 coreboot 代码
 
@@ -28,10 +28,12 @@ coreboot 是个开源的 BIOS，类似常见的 U-Boot，Chrome OS 用的也是�
 
 要让 OpenWrt 用上 AES-NI 加速，得用 LEDE（合并后可能新的 OpenWrt 也支持），然后`cryptsetup benchmark`性能会大幅度提升，基本和宿主机上面测试值相当。当然具体软件是否用了硬件加速就得额外测试了。
 
-更多可以参考 <https://volatilesystems.org/optimising-lede-openwrt-for-the-pc-engines-apu2.html>，写的很详细。
+更多可以参考 <https://volatilesystems.org/optimising-lede-openwrt-for-the-pc-engines-apu2.html>，写的比我详细。
+
+之所以在 kvm 上面跑 OpenWrt，实在是因为我太懒，不想每次安装都大费周章的配置和调试 OpenWrt 阔学上网。
 
 ### 部署
 和几台交换机玩叠叠乐。最上面的电信光网路由器，我只用其桥接功能。
-这样占用空间少，路由器就是要小巧精悍。但是不好散热，一到夏天烫的吓人。
+这样占用空间少，路由器就是要小巧精悍，我也不建议 all-in-one 的那样把所有鸡蛋放一个笼子里面。但是不好散热，一到夏天烫的吓人。
 
 ![Image 2 of APU2](/images/2017/apu2-2.JPG)
