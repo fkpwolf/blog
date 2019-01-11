@@ -3,7 +3,7 @@ layout: post
 title:  "Kong as an API Gateway"
 date:   2018-10-17 14:20:33
 categories:
-  - board
+  - cloud
 typora-root-url: ../../../blog
 ---
 

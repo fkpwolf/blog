@@ -2,9 +2,13 @@
 layout: post
 title:  "大数据各开源框架简介"
 date:   2017-05-02 14:20:33
+categories:
+  - bigdata
+  - overview
 ---
 
 https://hadoopecosystemtable.github.io/ 英文的，很全面。
+
 https://hortonworks.com/ecosystems/ 整个生态系统
 
 Apache Accumulo 是一个可靠的、可伸缩的、高性能的排序分布式的 Key-Value 存储解决方案，基于单元访问控制以及可定制的服务器端处理。使用 Google BigTable 设计思路，基于 Apache Hadoop、Zookeeper 和 Thrift 构建
@@ -42,7 +46,7 @@ Hadoop（大数据分析领域无可争辩的王者）专注于批处理。这�
 
 http://jupyter.org/ Open source, interactive data science and scientific computing across over 40 programming languages. 和 hue 有点像，图像似乎是后台产生的。能交互式的展示大数据的数据。https://try.jupyter.org/ 这个可以直接试用。文档和代码混合，可以随时调整，通过文档和代码配合，更适合学习和交流用。
 
-https://deeplearning4j.org/ 深度学习的 java 版，有用到 spark。
+https://deeplearning4j.org/ 深度学习的 Java 版，有用到 Spark。
 
 Apache Beam将统一大数据平台的开发 http://www.infoq.com/cn/news/2016/05/big-data-weekly-8
 Apache Beam本身不是一个流式处理平台，而是一个统一的编程框架，它提供了开源的、统一的编程模型，帮助你创建自己的数据处理流水线，实现可以运行在任意执行引擎之上批处理和流式处理任务。Google 开源出来的东西。http://www.infoq.com/cn/articles/why-google-replace-beam-with-apache-mapreduce  为什么Google用Apache Beam彻底替换掉MapReduce
@@ -50,13 +54,15 @@ Apache Beam本身不是一个流式处理平台，而是一个统一的编程框
 http://www.infoq.com/cn/articles/why-google-replace-beam-with-apache-mapreduce 背后的理念
 https://beam.apache.org/get-started/wordcount-example/
 
-Apache Flink 的核心是一个提供了数据分发以及并行化计算的流数据处理引擎，已经支持了 API 化的 SQL 查询，包括图操作和机器学习的相关算法。 https://www.ibm.com/developerworks/cn/opensource/os-cn-apache-flink/ quick start看也是建立在 hadoop 上面的一个任务管理平台。其任务之间可以交换数据流。这个框架位置和 Spark 一样，都是流式处理，但流行度还是 Spark 高。
+Apache Flink 的核心是一个提供了数据分发以及并行化计算的流数据处理引擎，已经支持了 API 化的 SQL 查询，包括图操作和机器学习的相关算法。 https://www.ibm.com/developerworks/cn/opensource/os-cn-apache-flink/ Quick Start看也是建立在 Hadoop 上面的一个任务管理平台。其任务之间可以交换数据流。这个框架位置和 Spark 一样，都是流式处理，但流行度还是 Spark 高。
 
 http://bigtop.apache.org/ 类似 CDH/HDP，可以安装一整套的环境，而且也提供了 BigPetstore 作为例子来做性能评估。
 
 Tez是Apache最新的支持DAG作业的开源计算框架，它可以将多个有依赖的作业转换为一个作业从而大幅提升DAG作业的性能。
 http://dongxicheng.org/mapreduce-nextgen/apache-tez/ spark与tez比较. 类似 DAG 框架还有Oozie。
 
-Mahout 其主要目标是创建一些可伸缩的机器学习算法 它们正好也是实际应用程序中相当常见的三个领域：协作筛选, 聚合, 分类。https://www.ibm.com/developerworks/cn/java/j-mahout/
+Mahout 其主要目标是创建一些可伸缩的机器学习算法，它们正好也是实际应用程序中相当常见的三个领域：协作筛选, 聚合, 分类。https://www.ibm.com/developerworks/cn/java/j-mahout/
 
 Nutch 是一个开源Java实现的搜索引擎。它提供了我们运行自己的搜索引擎所需的全部工具。包括全文搜索和Web爬虫。
+
+Apache Kylin 是一个开源的分布式分析引擎，提供 Hadoop/Spark 之上的SQL查询接口及多维分析（OLAP）能力以支持超大规模数据，最初由eBay Inc. 开发并贡献至开源社区。它能在亚秒内查询巨大的Hive表。国人主导开发。
