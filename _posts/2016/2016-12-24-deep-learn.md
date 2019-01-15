@@ -88,6 +88,8 @@ Data 8X: Foundations of Data Science now on edX <https://data.berkeley.edu/educa
 
 机器学习速成课程 <https://developers.google.cn/machine-learning/crash-course/> 谷歌的，中文 
 
+『在20系显卡的首发评测中，我们说到过，完整版TU106采用的是全新设计的图灵计算单元，其中包括为光线追踪而生的RT Core，为深度学习打造的Tensor Core』[深度学习要买RTX 2080吗？](https://yinguobing.com/rtx-2080-for-deep-learning/)，[深度分析】深度学习选GPU，RTX 20系列性价比最高](https://zhuanlan.zhihu.com/p/42809635)，[NVIDIA深度学习Tensor Core核心全面解析：测试篇](https://news.mydrivers.com/1/594/594120.htm)，[NVIDIA Tensor Core深度学习核心解析：全是干货](https://news.mydrivers.com/1/593/593001.htm)。20 系列卖的这么贵，原来是有 Tensor Core？那么问题来了，一般游戏用户不会用到这个吧？
+
 ### TensorFlow  
 
 <https://www.tensorflow.org/>  
@@ -197,4 +199,3 @@ CDAP 举的例子是把计算一堆点的中心点。
 语义分析的一些方法(一) [link](http://www.flickering.cn/ads/2015/02/%E8%AF%AD%E4%B9%89%E5%88%86%E6%9E%90%E7%9A%84%E4%B8%80%E4%BA%9B%E6%96%B9%E6%B3%95%E4%B8%80/)  
 
 API 网上算法，按调用付钱，提供了很多例子 <https://algorithmia.com/> 
-
