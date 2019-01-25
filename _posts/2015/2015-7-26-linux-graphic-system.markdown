@@ -1,32 +1,32 @@
 ---
 layout: post
-title:  "Linux 图形系统？"
+title:  "Linux 图形子系统"
 date:   2015-7-26 16:27:00
 ---
 
 我原来的老帖子：
-1. http://fkpwolf.net/2012/11/03/framebuffer-on-raspberry-pi/
-2. http://fkpwolf.net/2012/12/28/light-weight-window-for-raspberry-pi/
+1. <http://fkpwolf.net/2012/11/03/framebuffer-on-raspberry-pi/>
+2. <http://fkpwolf.net/2012/12/28/light-weight-window-for-raspberry-pi/>
 
-Gnome 3 has include clutter https://wiki.gnome.org/Projects/Clutter
+Gnome 3 has include clutter <https://wiki.gnome.org/Projects/Clutter>
 ```
 ldd /usr/bin/gnome-shell | grep -i clutter
 libclutter-1.0.so.0 => /usr/lib/x86_64-linux-gnu/libclutter-1.0.so.0
 ```
-http://www.tuxradar.com/content/clutter-beginners-tutorial It will distort screen to low screen resolution in hiDPI mode.
+<http://www.tuxradar.com/content/clutter-beginners-tutorial> It will distort screen to low screen resolution in hiDPI mode.
 
-debug Gnome : You currently run it by pressing Alt-F2, typing lg, then Return. https://wiki.gnome.org/Projects/GnomeShell/LookingGlass
+debug Gnome : You currently run it by pressing Alt-F2, typing lg, then Return. <https://wiki.gnome.org/Projects/GnomeShell/LookingGlass>
 
-Gnome Shell use Mutter as window manager. Mutter https://en.wikipedia.org/wiki/Mutter_(software) is a Wayland compositor like Weston. Mutter use Clutter as graphics library.
-A new era for Linux's low-level graphics - Part 1 https://www.collabora.com/news-and-blog/blog/2018/03/20/a-new-era-for-linux-low-level-graphics-part-1/
+Gnome Shell use Mutter as window manager. [Mutter](https://en.wikipedia.org/wiki/Mutter_(software)) is a Wayland compositor like Weston. Mutter use Clutter as graphics library.
+[A new era for Linux's low-level graphics - Part 1](https://www.collabora.com/news-and-blog/blog/2018/03/20/a-new-era-for-linux-low-level-graphics-part-1/)
 
 How to know whether Wayland or X11 is being used. <https://unix.stackexchange.com/questions/202891/how-to-know-whether-wayland-or-x11-is-being-used>
 
-https://medium.com/@bugaevc/how-to-easily-determine-if-an-app-runs-on-xwayland-or-on-wayland-natively-8191b506ab9a
+<https://medium.com/@bugaevc/how-to-easily-determine-if-an-app-runs-on-xwayland-or-on-wayland-natively-8191b506ab9a>
 
 Does your application run on Wayland natively, or uses XWayland (X11 compatibility layer)? <https://fedoraproject.org/wiki/How_to_debug_Wayland_problems#Does_your_application_run_on_Wayland_natively.2C_or_uses_XWayland_.28X11_compatibility_layer.29.3F>
 
-https://www.phoronix.com/scan.php?page=news_item&px=GTK-Vulkan-Wayladdnd-Setup
+<https://www.phoronix.com/scan.php?page=news_item&px=GTK-Vulkan-Wayladdnd-Setup>
 
 [Programming Wayland Clients](https://jan.newmarch.name/Wayland/index.html)，这本书不错，很多 hello world 的代码。
 https://jan.newmarch.name/Wayland/EGL/ 编译方法 `cc -o egl egl.c -lwayland-client -lEGL -lwayland-egl`
@@ -122,11 +122,14 @@ libglw1-mesa-dev - GL widget library for Athena and Motif -- development files
 这个对比更为清楚。主要是对于普通 X11 application，所有的渲染操作都是 server 完成，client 只发送消息，这属于典型 C/S 模式，性能会有额外开销。Wayland 则是自己直接渲染。
 
 ### 树莓派
-https://github.com/anholt/mesa/wiki/VC4 Enabling the driver is controlled using raspi-config. Select Advanced Options option and then GL Driver.
+<https://github.com/anholt/mesa/wiki/VC4> Enabling the driver is controlled using raspi-config. Select Advanced Options option and then GL Driver.
 Raspbian only supports vc4 on the Raspberry PI 2 and later. The driver supports Raspberry Pi 1, but raspi-config refuses to do it.
-https://www.collabora.com/news-and-blog/blog/2016/06/03/running-weston-on-a-raspbian/ 只有少量程序可以运行
+
+<https://www.collabora.com/news-and-blog/blog/2016/06/03/running-weston-on-a-raspbian/> 只有少量程序可以运行
 
 
-Evolution in Flatpak https://wiki.gnome.org/Apps/Evolution/Flatpak
+Evolution in Flatpak <https://wiki.gnome.org/Apps/Evolution/Flatpak>
 As of Evolution release 3.30.0, users can build the latest stable (or development) version of Evolution using Flatpak.As of Evolution release 3.30.0, users can build the latest stable (or development) version of Evolution using Flatpak.
 沙箱运行环境，桌面这么大的也可以运行在沙箱里面？用来做开发测试倒是蛮好的。
+
+postmarketOS，专门为老手机提供最新 Linux 系统，[User-Interfaces](https://wiki.postmarketos.org/wiki/User-Interfaces)，其使用的默认窗口管理系统是 Weston。有些驱动比如无线和蓝牙是闭源的，不知道图像驱动是不是也是。

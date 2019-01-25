@@ -204,7 +204,7 @@ Change hostname, 重启后发现两个pod 都无法起来，the server could not
 
 ### Upgrade
 
-kubeadm upgrade apply stable  <https://kubernetes.io/docs/tasks/administer-cluster/kubeadm-upgrade-1-9/> 它会让你先升级 kubeadm，似乎 kubeadm 版本是和 k8s 一一跟随的。 Upgrading your Static Pod-hosted control plane to version "v1.9.2"… 每个 client node 也要自己手动升级么？ 
+kubeadm upgrade apply stable  <https://kubernetes.io/docs/tasks/administer-cluster/kubeadm-upgrade-1-9/> 它会让你先升级 kubeadm，似乎 kubeadm 版本是和 k8s 一一跟随的。 Upgrading your Static Pod-hosted control plane to version "v1.9.2"… 每个 client node 也要自己手动升级么？ 升级不能跳跃小版本，比如 v1.11 只能先升级到 v1.12，然后再升级到 v1.13。
 ```
 [upgrade/kubelet] Now that your control plane is upgraded, please proceed with upgrading your kubelets in turn. 
 ```
