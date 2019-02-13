@@ -35,6 +35,8 @@ HTTPS 图解 <https://tls.ulfheim.net/>
 
 第一步是对邮件里面的附件签名进行解密，得到摘要 digest。然后对整个邮件进行 hash（哪种哈希算法？），得到新的摘要，对比两个摘要来判断是否确实由某人发出。 
 
+ssh-copy-id 是常用的免密登录方式，这个命令会把本地计算机的公钥拷贝到远程 ssh 服务器的 `.ssh/authorized_keys` 中，格式为 `ssh-rsa AAAAB3Ng...Jxr fan@fans-iMac.lan` 登录时需要使用密钥，密钥文件开始为 `-----BEGIN OPENSSH PRIVATE KEY-----`。
+
 <https://blog.cloudflare.com/memcrashed-major-amplification-attacks-from-port-11211/> Memcached 默认使用了 UDP，而且没有绑定在 127.0.0.1，也没有在防火墙后面。15 个字节的请求返回 134KB，这个放大了一万倍。这个就是放大攻击。TCP 不能放大么？可能 TCP 需要保持连接，对客户端要求更严格了。最后建议开发者不要使用 UDP。 
 
 [QQ 为什么以 UDP 协议为主，以 TCP 协议为辅？](https://www.zhihu.com/question/20292749) “原因是因为当时没有epoll这种可以支持成千上万tcp并发连接的技术,所以他们使用了udp,然后在udp上面封装了一下,模拟了一下tcp,解决了大并发的问题,之后因为做的很nb了,虽然epoll这种技术出现了,还是没有改回使用tcp了.现在再做类似的东西就不需要使用udp了.” 
