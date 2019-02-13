@@ -20,7 +20,7 @@ https://blog.golang.org/go-maps-in-action
 
 `strings.split(el, "\n”)` 没有字符串的操作，这不是面向对象了，连 JavaScript 的字符串都有 method。查看数组长度为 len(myArray)，好难看。
  
-`go install hello.go`(or `go build hello.go`) will generate a big file(~2MB). Would be a standalone/distributable program. Use `otool -L hello`. No dependency. So “No more C”?(https://golang.org/doc/go1.5#c).
+`go install hello.go`(or `go build hello.go`) will generate a big file(~2MB). Would be a standalone/distributable program. Use `otool -L hello` or `ldd hello`. No dependency. So “No more C”?(https://golang.org/doc/go1.5#c).
 
 为什么要使用 Go 语言？Go 语言的优势在哪里？ https://www.zhihu.com/question/21409296
 
