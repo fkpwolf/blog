@@ -49,5 +49,6 @@ windows 10 HDR https://www.chiphell.com/thread-1865767-1-1.html 感觉要打开�
 
 https://chocolatey.org/packages/Cmder 包管理，加上一般常用命令，感觉不错。虽然没有试过，感觉里面会有一堆坑。
 
+命令行工具推荐 https://developers.google.com/web/shows/ttt/series-2/windows-commandline，支持多 tab 窗口，不过感觉还是 putty 更简单。
 
 ```
