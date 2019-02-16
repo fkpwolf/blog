@@ -16,16 +16,14 @@ Comparison of Networking Solutions for Kubernetes http://machinezone.github.io/r
 最新实践 | 将Docker网络方案进行到底 http://blog.shurenyun.com/shurenyun-docker-133/ 写的不错，对比了各种不同网络。可以看出 ovs 和 flannel 都是隧道网络(Overlay)，还有一种是“路由网络”。
 [Container-Native Networking - Comparison](https://docs.google.com/spreadsheets/d/1polIS2pvjOxCZ7hpXbra68CluwOZybsP1IYfr-HrAXc/edit#gid=0)，很细致，有谈网络 feature 比如 ingress/engress，但是 ovs 谈的不多，暂时看不出来容器网络和 ovs 有啥很大区别。
 
-苏宁容器云Kubernetes + Contiv网络架构技术实现 http://www.sohu.com/a/246377951_804130
+苏宁容器云Kubernetes + Contiv网络架构技术实现 http://www.sohu.com/a/246377951_804130 京东也用 Contiv，感觉这帮人都是从 OpenStack 出来的吧。
 
 部署kubernetes1.8.4+contiv高可用集群 https://www.cnblogs.com/keithtt/p/8136289.html
 
 容器网络插件 Calico 与 Contiv Netplugin深入比较 http://dockone.io/article/1935
 
-京东也用 contiv，感觉这帮人都是从 openstack 出来的吧
-
 ### Calico - 典型的路由网络
-Image come from https://docs.projectcalico.org/v1.6/reference/without-docker-networking/docker-container-lifecycle 一步一步的演示如何让容器可以 ping 通。 网络包没有像 overlay 那样需要封包和解包动作，全靠 kernel 的 iptables 来进行路由。这个是1.6版本的，新的全变了么？这种基于 IP 三层网络。感觉有点像静态路由。"最新实践 | 将Docker网络方案进行到底” 这个讲了不少Calico。如此一来，每台 host 机器上面的 iptables 会不会很巨大？因为这个要定义一对一的访问路径。"* BGP Route Reflector（BIRD），大规模部署时使用，摒弃所有节点互联的 mesh 模式，通过一个或者多个BGP Route Reflector来完成集中式的路由分发。” 那这种集中式的就需要很高的转发能力了？而且还得是集群模式。route reflector - RR 似乎是交换机领域已有的东西。https://en.wikipedia.org/wiki/Route_reflector
+Image come from https://docs.projectcalico.org/v1.6/reference/without-docker-networking/docker-container-lifecycle 一步一步的演示如何让容器可以 ping 通。 网络包没有像 overlay 那样需要封包和解包动作，全靠 kernel 的 iptables 来进行路由。这种基于 IP 三层网络。感觉有点像静态路由。"最新实践 | 将Docker网络方案进行到底” 这个讲了不少Calico。如此一来，每台 host 机器上面的 iptables 会不会很巨大？因为这个要定义一对一的访问路径。"* BGP Route Reflector（BIRD），大规模部署时使用，摒弃所有节点互联的 mesh 模式，通过一个或者多个BGP Route Reflector来完成集中式的路由分发。” 那这种集中式的就需要很高的转发能力了？而且还得是集群模式。route reflector - RR 似乎是交换机领域已有的东西。https://en.wikipedia.org/wiki/Route_reflector
 
 ![calico](/images/2017/calico.png)
 
@@ -34,6 +32,10 @@ Image come from https://docs.projectcalico.org/v1.6/reference/without-docker-net
 图解Kubernetes网络（二）http://dockone.io/article/3212 图解Kubernetes网络（一）http://dockone.io/article/3211
 
 "例如，AWS路由表最多支持50条路由才不至于影响网络性能。因此如果我们有超过50个Kubernetes节点，AWS路由表将不够。这种情况下，使用Overlay网络将帮到我们。"
+
+![](/images/2017/flannel-packet-01.png)
+
+从上面这张 flannel 官网的经典之图可以看出网络包有封包和解包的过程，这个是 ovs 的特点。也没有用额外的 etcd 来保存路由规则。
 
 ### Weave - overlay 网络
 [Fast Datapath & Weave Net](https://www.weave.works/docs/net/latest/concepts/fastdp-how-it-works/), 因为 weave 是 overlay 网络，为了提高封包、解包的效率，这里利用了网卡的 VXLAN offload 功能。而且避免了包在用户态和核心态反复进入和出去，如果不需要进入 weave router，报文里面就包含了路由信息 - 知道怎么去目的？

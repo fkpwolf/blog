@@ -13,7 +13,7 @@ typora-root-url: ../../../blog
 * Nginx Ingress 文档 <https://kubernetes.github.io/ingress-nginx/> 
 * `helm install stable/nginx-ingress --set controller.hostNetwork=true` Kubeadm 安装的集群中，Helm 安装似乎必须得用这种方式，因为没有 cloud provider。
 
-两个 nginx web server 的例子 <https://blog.frognew.com/2017/04/kubernetes-ingress.html> 很简单，但是这个里面的 hostname 如何配置？按照 monocular（ kubectl edit ing monocular-monocular ）配置了个无 host 的： 
+两个 nginx web server 的[例子](https://blog.frognew.com/2017/04/kubernetes-ingress.html) 很简单，但是这个里面的 hostname 如何配置？按照 monocular（ `kubectl edit ing monocular-monocular` ）配置了个无 host 的： 
 ```yaml
 apiVersion: extensions/v1beta1 
 kind: Ingress 
@@ -29,11 +29,11 @@ spec:
           servicePort: 80 
         path: /
 ```
-然后访问 https://192.168.51.11/n 就会有 nginx 的欢迎页面。https://192.168.51.11/ 还是monocular ui。注意同一namespace下需要有个nginx-ingress-controller，否则访问会有503的错误。不需要，整个系统一个就够了。整个ingress还是https，不知道这个是哪里配置的。nginx成功后，转战dashboard，不成功。后来参考 [nginx: How to enable dashboard on a sub-path](https://github.com/kubernetes/ingress-nginx/issues/683#issuecomment-361042654) 还要这么复杂的配置，可能是因为这个backend是https的。 
+然后访问 https://192.168.51.11/n 就会有 nginx 的欢迎页面。https://192.168.51.11/ 还是monocular ui。~~注意同一namespace下需要有个nginx-ingress-controller，否则访问会有503的错误。~~ 不需要，整个系统一个就够了。整个ingress还是https，不知道这个是哪里配置的。nginx成功后，转战dashboard，不成功。后来参考 [nginx: How to enable dashboard on a sub-path](https://github.com/kubernetes/ingress-nginx/issues/683#issuecomment-361042654) 还要这么复杂的配置，可能是因为这个backend是https的。 
 
-起了多个nginx-ingress-controller后，发现每个的 /etc/nginx/nginx.conf 其实都是一样的。所以如果根目录/给monocular ui占了，dashboard只能用sub path了。用host方式应该更好，但是host应该客户端要自己修改 hosts 吧，如果没有DNS的话。 
+起了多个nginx-ingress-controller后，发现每个的 /etc/nginx/nginx.conf 其实都是一样的。所以如果根目录/给monocular ui占了，dashboard 只能用 sub path 了。用 host 方式应该更好，但是 host 应该客户端要自己修改 hosts 吧，如果没有 DNS 的话。 
 
-今天在公司同样部署了一遍，发现还是有问题。查看/etc/nginx/nginx.conf，公司里面都没有 rewrite，又和上面一样问题？发现 nginx ingress 版本和家里的不一致。删除之，运行 helm repo update，再 install 最新版本，找不到安装[指定版本的命令](https://docs.helm.sh/helm/)，不知道为什么不能用—version？折腾几次才好。现在 dashboard 好了，monocular 又不行，没有 rewrite，对比 yaml： 
+今天在公司同样部署了一遍，发现还是有问题。查看 /etc/nginx/nginx.conf，公司里面都没有 rewrite，又和上面一样问题？发现 nginx ingress 版本和家里的不一致。删除之，运行 helm repo update，再 install 最新版本，找不到安装[指定版本的命令](https://docs.helm.sh/helm/)，不知道为什么不能用 --version？折腾几次才好。现在 dashboard 好了，monocular 又不行，没有 rewrite，对比 yaml： 
 ```
     "ingress.kubernetes.io/rewrite-target": "/", 
     "nginx.ingress.kubernetes.io/rewrite-target": “/" 
@@ -57,27 +57,19 @@ path: /api/
 ```
 这个 API 是这样访问的：`curl 10.105.184.166/v1/releases`
 
-一个 ingress 里面的转发 service 只能在同一个 namespace 下面，这个不灵活性太差了么？当然，可以放到一个文件里面放条 ingress。 
+一个 ingress 里面的转发 service 只能在同一个 namespace 下面（安全的考虑），这个不灵活性太差了么？当然，可以放到一个文件里面放条 ingress。好的地方在于修改了 ingress ，nginx 会马上生效。赞。如果每个 ingress 都是分离的，但是如果 path 一样，会冲突，而且也很难调试。 
 
-好的地方在于修改了 ingress ，nginx 会马上生效。赞。如果每个 ingress 都是分离的，但是如果 path 一样，会冲突，而且也很难调试。 
-
-dig nip.io 这个提供了 host 的方法，这样每个 host 的配置都是分离的，应用也可以独占 root / context。不知道 Ajax 能否发送到不同的host（DNS  ROOT 一样），比如：dashboard.192.168.51.11.nip 向后端发送 a.192.168.51.11.nip.com AJAX. 或者中间再转发一道？从配置上看，nginx ingress 是推荐host方案的。 
+`dig nip.io` 这个提供了 host 的方法，这样每个 host 的配置都是分离的，应用也可以独占 root / context。不知道 Ajax 能否发送到不同的host（DNS  ROOT 一样），比如：dashboard.192.168.51.11.nip 向后端发送 a.192.168.51.11.nip.com AJAX. 或者中间再转发一道？从配置上看，nginx ingress 是推荐 host 方案的。 
 
 Ingress Server 里面有 log： 
 ```
 error obtaining service endpoints: error getting service kube-system/exacerbated-parrot-monocular-api from the cache: service kube-system/exacerbated-parrot-monocular-api was not found 
 ```
-这个 api 是在 default namespace 里面啊？ 
+这个 api 是在 default namespace 里面啊？ 这个 ingress 转发的 service 如果不在指定的 namespace 里面是不会转发的，返回404。这种隔离还是可以的。 "kubernetes.io/ingress.class": "gitlab-nginx” 这个可以做隔离，这样可以安装多个 nginx，每个处理不同的 class，这个 class 名字可以随意命名。 
 
-这个 ingress 转发的 service 如果不在指定的 namespace 里面是不会转发的，返回404。这种隔离还是可以的。 
+查看其容器文件系统 /etc/nginx/nginx.conf 文件，service 会解析成对应的 pod IP 集合，这样就绕开了 kubelet proxy，性能更好。这是准备取代之么？那他就必须监听 service 的变化了。 
 
-"kubernetes.io/ingress.class": "gitlab-nginx” 这个可以做隔离，这样可以安装多个 nginx，每个处理不同的 class，这个 class 名字可以随意命名。 
-
-查看其 Docker 里面的 /etc/nginx/nginx.conf 文件，service 会解析成对应的 pod IP 集合，这样就绕开了 kubelet proxy，性能更好。这是准备取代之么？那他就必须监听 service 的变化了。 
-
-现在发现 nginx controller 安装到哪个节点上面就只能通过这个节点访问，还是需要绑定到某个 external ip？ 
-
-如此一来，如果每个 node 都安装 controller，那外面还得再套一层 vip 才能组成 HA？当然，外面的 HA 不需要做复杂的 rule rewrite。 
+现在发现 nginx controller 安装到哪个节点上面就只能通过这个节点访问，还是需要绑定到某个 external ip？ 如此一来，如果每个 node 都安装 controller，那外面还得再套一层 vip 才能组成 HA？当然，外面的 HA 不需要做复杂的 rule rewrite。 
 
 Helm install stable/nginx-ingress 能否在每个节点上都安装一个呢？守护进程集？浪费了点。 
 ```
@@ -93,12 +85,8 @@ magnum 上面创建有外部 IP，但是这个 IP 既不是 magnum cluster-list 
 apiVersion: v1
 kind: Service
 metadata:
-  creationTimestamp: 2018-07-18T05:48:42Z
   name: ingress-nginx
   namespace: ingress-nginx
-  resourceVersion: "1873"
-  selfLink: /api/v1/namespaces/ingress-nginx/services/ingress-nginx
-  uid: 3a71f77b-8a4e-11e8-a253-fa163ef2fe66
 spec:
   clusterIP: 10.254.65.105
   externalTrafficPolicy: Cluster
@@ -124,9 +112,7 @@ status:
 ```
 虽然上面有 IP，但是这个是自动获取的。这里结合外部 DNS 可以直接在访问权那里看到 ingress 的 DNS？ 
 
-参考 **Kubernetes 存储** 条目，这里有个 cloud provider。 
-
-使用 Ingress 访问 Dashboard 并且去掉 HTTPS 方法： 
+使用 Ingress 访问 Dashboard 并且去掉 HTTPS(ssl-passthrough) 方法： 
 ```yaml
 [centos@k8s-1 ~]$ cat dashboard-ingress.yaml
 apiVersion: extensions/v1beta1
@@ -170,7 +156,7 @@ spec:
 ```
 如果要使用 https 访问，上面配置中不能使用 host，否则都是 404 default backend。 
 
-使用 Nginx 的[自定义代码](https://github.com/kubernetes/ingress-nginx/tree/master/docs/examples/customization/configuration-snippets)，比如直接返回 mock 数据：
+使用 Nginx 的[自定义代码](https://github.com/kubernetes/ingress-nginx/tree/master/docs/examples/customization/configuration-snippets)直接返回 mock 数据：
 ```yaml
 apiVersion: extensions/v1beta1
 kind: Ingress
@@ -192,7 +178,7 @@ spec:
           servicePort: 80
         path: /
 ```
-这里必须弄一个假的backend，否则 kubectl apply 无法通过校验，我用的是默认 nginx ingress backend。
+这里必须弄个backend，否则 kubectl apply 无法通过校验，可以用默认 backend。
 
 ### 内部机制
 
@@ -202,7 +188,7 @@ spec:
 
 <https://my.oschina.net/caicloud/blog/829365>
 
-然后为了减少 nginx 频繁 reload，如果只是 endpoint 修改，使用 Lua openresty 来做动态的路由变更。 
+然后如果只是 endpoint 修改，为了减少 nginx 频繁 reload，使用 Lua openresty 来做动态的路由变更。 
 
 Nginx-ingress-controller 是直接在容器中起了一个 nginx 进程，这个可以在容器命令行里面看到： 
 ```shell
@@ -216,7 +202,7 @@ nobody   10350  0.0  0.9 401344 36612 ?        Sl   14:47   0:00 nginx: worker p
 ```
 容器有个很少用的定义 hostPort: 80，直接占用 80 端口，这个很霸道，所以我们能直接 k8s-2 这种不加端口方式访问服务，这种就在拿不到 LoadBalance ip 情况下还能访问服务。 
 
-nginx-ingress-controller 如何让 nginx reload？ingress-nginx/internal/ingress/controller/nginx.go, nginxExecCommand("-s", "reload”)，直接调用命令。 
+nginx-ingress-controller 如何让 nginx reload？查看代码 ingress-nginx/internal/ingress/controller/nginx.go, 里面有 nginxExecCommand("-s", "reload”)，原来是直接调用命令。 
 ```
 /nginx-ingress-controller 
 --default-backend-service=default/crabby-aardvark-nginx-ingress-default-backend 
@@ -224,7 +210,7 @@ nginx-ingress-controller 如何让 nginx reload？ingress-nginx/internal/ingress
 --ingress-class=nginx 
 --configmap=default/crabby-aardvark-nginx-ingress-controller 
 ```
-这个是controller的启动参数，里面配置了default backend，这个是默认的 404 返回。为什么要单独做成一个pod呢？放在controller里面不可以？我能想到唯一优点就是多个 ingress-controller 可以共用一个 default backend service，如果 ingress controller 挂了也能转发就厉害了。 
+这个是 controller 的启动参数，里面配置了 default backend，这个是默认的 404 返回。为什么要单独做成一个 pod 呢？放在 controller 里面不可以？我能想到唯一优点就是多个 ingress-controller 可以共用一个 default backend service，如果 ingress controller pod 挂了也能转发就厉害了。 
 
 上面有个—election-id 参数，表示的是个 configmap。 
 ```
@@ -232,13 +218,13 @@ kubectl edit configmap ingress-controller-leader-nginx -n kube-system
 annotations: 
     control-plane.alpha.kubernetes.io/leader: '{"holderIdentity":"jxing-nginx-ingress-controller-6d45cdfdc8-474vb","leaseDurationSeconds":30,"acquireTime":"2018-09-20T03:58:08Z","renewTime":"2018-10-09T02:42:30Z","leaderTransitions":34}’ 
 ```
-jxing-nginx-ingress-controller-6d45cdfdc8-474vb 是一个 pod id，使用 configmap 就完成 leader election？这个 election 有啥用？既然流量是负载均衡的。这个参数的[定义](https://kubernetes.github.io/ingress-nginx/user-guide/cli-arguments/)是『Election id to use for Ingress status updates. (default "ingress-controller-leader”)』。跟踪代码，ingress-nginx/internal/ingress/status/status.go 这里选举了 leader 来负责更新 ingress 状态，比如 kubectl get ingress 返回的 address。里面依赖的 leaderelection 是 k8s client-go 提供的，提供一个简单的方法来选取 leader，leader 会不断刷新 renewTime，如果自己挂了，其他轮训的 controller 会变为 leader，变为 leader 的 pod 在其 OnStartedLeading callback 中会开始更新 ingress status task。因为每个 ingress controller 的状态都是一样的，所以谁来更新都一样，但是没有必要每个人都来更新。 
+jxing-nginx-ingress-controller-6d45cdfdc8-474vb 是一个 pod id，使用 configmap 就完成 leader election？既然流量是负载均衡的，这个 election 有啥用？这个参数的[定义](https://kubernetes.github.io/ingress-nginx/user-guide/cli-arguments/)是『Election id to use for Ingress status updates. (default "ingress-controller-leader”)』。跟踪代码，ingress-nginx/internal/ingress/status/status.go 这里选举了 leader 来负责更新 ingress 状态，比如 kubectl get ingress 返回的 address。里面依赖的 leaderelection 是 k8s client-go 提供的，提供一个简单的方法来选取 leader，leader 会不断刷新 renewTime，如果自己挂了，其他轮询的 controller 会变为 leader，变为 leader 的 pod 在其 OnStartedLeading callback 中会开始更新 ingress status task。因为每个 ingress controller 的状态都是一样的，所以谁来更新都一样，但是没有必要每个人都来更新。 
 
-[Simple leader election with Kubernetes and Docker](https://kubernetes.io/blog/2016/01/simple-leader-election-with-kubernetes/) 这个是一个使用这个类库的 hello world。kube-controller-manager 也使用了类似机制，有个 --leader-elect=true 参数，在 HA k8s 会有用到。 
+[Simple leader election with Kubernetes and Docker](https://kubernetes.io/blog/2016/01/simple-leader-election-with-kubernetes/) 这个是一个使用这个类库的 hello world。kube-controller-manager 也使用了类似机制，有个 `--leader-elect=true` 参数，在 k8s HA 会有用到。 
 
 这里方法是 [分布式系统理论基础 - 选举、多数派和租约](http://www.cnblogs.com/bangerlee/p/5767845.html) 里面谈到的租约方法，『租约机制确保了一个时刻最多只有一个leader，避免只使用心跳机制产生双主的问题。在实践应用中，zookeeper、ectd可用于租约颁发。』 
 
-其 build 系统颇为复杂，最上层的镜像定义为 rootfs/Dockerfile，定义了入口 CMD ["/nginx-ingress-controller”]。然后我猜想这个镜像是基于自己定义的一个 nginx 镜像 images/nginx/rootfs/Dockerfile，其 images/nginx/README.md 定义了这个镜像的组成，里面包含了很多 nginx 模块比如 openresty set-misc-nginx-module。然后这个镜像是基于 [debian-base](https://github.com/kubernetes/kubernetes/tree/master/build/debian-base)，一个 k8s 对 Debian 的精简版本，删除了很多东西，只有 40MB。这个几个组成了一个层级的容器镜像，这样每个部分可以独立演化，也减小了本地镜像的大小：比如开发中 nginx-ingress-controller 有多个版本（这个是常见情况），但是底层都没变，这样的镜像总体存储会小很多。 
+其 build 系统颇为复杂，最上层的镜像定义为 rootfs/Dockerfile，定义了入口 CMD ["/nginx-ingress-controller”]。然后我猜想这个镜像是基于自己定义的一个 nginx 镜像 images/nginx/rootfs/Dockerfile，其 images/nginx/README.md 定义了这个镜像的组成，里面包含了很多 nginx 模块比如 openresty set-misc-nginx-module。然后这个镜像是基于 [debian-base](https://github.com/kubernetes/kubernetes/tree/master/build/debian-base)，一个 k8s 对 Debian 的精简版本，删除了很多东西，只有 40MB。这几个组成了一个层级的容器镜像，这样每个部分可以独立演化，也减小了本地镜像的大小：比如开发中 nginx-ingress-controller 有多个版本（这个是常见情况），但是底层都没变，这样的镜像总体存储会小很多。 
 
 使用 NodePort 后，~~服务都可以直接从 master:nodeport 访问，不需要 proxy~~。但是这样 master 不就压力大了么？NodePort 可以从每个运行 backend pod 的节点上面访问，也就是是说每个节点都打开一个同样数字的端口，kube-proxy 做的？没错，kube-proxy 其实就是管理 service 的访问入口，包括集群内 Pod 到 Service 的访问和集群外访问 service。ingress 是和 kube-proxy 平级的，比如 nginx-ingress 就是直接代理到 pod port。
 
@@ -275,7 +261,7 @@ kuard                            /             orphaned   this IngressRoute is n
 
 确实是使用 hostname 时候不能使用端口，看解释是上游 envoy 的 bug，nginx ingress 有类似的问题么？ 
 
-### 其他 api 网关
+### 其他 API 网关
 
 <https://jimmysong.io/kubernetes-handbook/concepts/traefik-ingress-controller.html> 这个里面推荐是 Traefik，这个似乎比 Nginx 慢，但是 Go 语言写的，更轻量级，<https://traefik.io/> 功能更多。 
 
@@ -316,7 +302,7 @@ heapster               ClusterIP      10.254.67.110    <none>          80/TCP   
 kube-dns               ClusterIP      10.254.0.10      <none>          53/UDP,53/TCP,9153/TCP   1h
 kubernetes-dashboard   LoadBalancer   10.254.199.103   192.168.51.64   443:31567/TCP            1h
 ```
-可以看到能获取外部 IP，如果运行在没有外部云环境情况下（比如 kubeadm 搭建的集群），EXTERNAL-IP 这栏就显示 `<pending>`。这个 IP 是 OpenStack 的一个浮动 IP，和节点的内网 IP、浮动 IP 都不同。如果 k8s 集群创建时启用了 Master LB，Openstack 也会创建 API 和 etcd 这两个 load balance。一个 load balance 维护了EXTERNAL-IP、端口和后端主机列表的关系。
+可以看到能获取外部 IP，如果运行在没有外部云环境情况下（比如 kubeadm 搭建的集群），EXTERNAL-IP 这栏就显示 `<pending>`。这个 IP 是 OpenStack 的一个浮动 IP，和节点的内网 IP、浮动 IP 都不同。如果 k8s 集群创建时启用了 Master LB，Openstack 也会为 API 和 etcd 创建 LB。一个 load balance 维护了EXTERNAL-IP、端口和后端主机列表的关系。
 
 ![k8s-ingress-lb](/images/2018/k8s-ingress-lb.png)
 listener 代表上面的关系，pool 则表示后端主机列表，端口就是上面 dashboard service 的内部端口。奇怪的是这个 pool 有两台主机，其实 dashboard pod 只有一个实例，可能是因为这个是 default pool。进入其中某个节点：
@@ -340,5 +326,5 @@ kube-proxy 在这两个节点都有开放 31567 这个端口，不管这个节�
 
 如果 dashboard 伸缩为两个，运行在两台不同主机上面，load balance 也就需要动态变更后端主机列表了。所以从这里看其运行模式和 ingress 是一样的。这些关系是谁动态维护的？可能是 k8s 向 cloud provider 申请的，cloud provider 则使用 OpenStack API 直接操作其资源。
 
-如果性能要求最高，应该是 Service 直接定义成负载均衡模式，而不用 Nginx Ingress-》Service 模式，但是一般负载均衡器都是要付钱的，所以还是用一个总的 LoadBalance Ingress 或者一个总的 LoadBalance Service（比如 Contour）。有点废话，ingress 也是 service。
+如果性能要求最高，应该是 Service 直接定义成负载均衡模式，而不用 Nginx Ingress --> Service 模式，但是一般负载均衡器都是要付钱的，所以还是用一个总的 LoadBalance Ingress 或者一个总的 LoadBalance Service（比如 Contour）。有点废话，ingress 也是 service。
 

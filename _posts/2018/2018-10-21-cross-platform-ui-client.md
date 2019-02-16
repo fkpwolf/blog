@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "跨平台客户端 Discord,Telegram..."
+title:  "跨平台图形客户端 Discord,Telegram..."
 date:   2018-10-21 14:20:33
 ---
 

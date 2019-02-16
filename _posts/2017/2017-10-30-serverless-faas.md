@@ -29,9 +29,7 @@ categories:
 
 "FaaS 和 PaaS 在运维方面的关键区别是伸缩性（Scaling）。对于大多数 PaaS 平台而言你需要考虑如何伸缩，例如在 Heroku 上你要用到多少 Dyno 实例？对于 FaaS 应用这一步骤是完全透明的。即便你将 PaaS 配置为自动伸缩，也无法精细到单个请求级别，除非你有一个非常明确稳定的流量曲线可以针对性地配置。所以 FaaS 应用在成本方面要高效得多。” 
 
-[资深CTO带来的8条Serverless最佳实践](http://www.techug.com/post/serverless-best-practices.html)
-
-一个 function 应该只做一件事, 不让 function 调用其他 function, 尽可能少在 function 中使用额外的库, 避免使用基于连接的服务（少建立 RDBMS 连接）, 一个路由对应一个 function 
+[资深CTO带来的8条Serverless最佳实践](http://www.techug.com/post/serverless-best-practices.html) 一个 function 应该只做一件事, 不让 function 调用其他 function, 尽可能少在 function 中使用额外的库, 避免使用基于连接的服务（少建立 RDBMS 连接）, 一个路由对应一个 function 
 
 <https://aws.amazon.com/cn/dynamodb/> 这个客户端也不能直接访问啊，换成 mysql 也可以么，针对 Lambda 有什么特殊优化？ 
 
@@ -81,13 +79,13 @@ k8s 能创建 fn 服务么？Fission <https://kubernetes.io/blog/2017/01/fission
 
 整个项目是 Scala 写的，IBM 搞的，并发多么，为什么要 Scala 写？异步多，都是调用链。[核心 invoker 代码](https://github.com/apache/incubator-openwhisk/tree/master/core/invoker/src/main/scala/whisk/core/invoker)，似乎不复杂。
 
-<https://github.com/apache/incubator-openwhisk/blob/master/docs/use_cases.md> 这使用场景万能啊 
+<https://github.com/apache/incubator-openwhisk/blob/master/docs/use_cases.md> 这使用场景万能啊。
 
 <https://github.com/apache/incubator-openwhisk-deploy-kube/blob/master/README.md> 可以在 k8s 上面安装。折腾一番，居然把我集群搞挂了，k8s api 都不能访问。Java的东西就容易挂？我前面es搜索也是。设置 master 节点为不可调度： 
 
     kubectl taint nodes k8s-1 node-role.kubernetes.io/master=true:NoSchedule 
 
-自己尝试了半天才找到这个命令，不知道对不对。再次安装，这次成功。没有看到 consul，但是有个 redis，替换了？invoker 是守护进程集，会在每个 node 上面创建一个。有两个任务：install-catalog & install-routemgmt。 
+再次安装，这次成功。没有看到 consul，但是有个 redis，替换了？invoker 是守护进程集，会在每个 node 上面创建一个。有两个任务：install-catalog & install-routemgmt。 
 ```
 ./wsk action create greeting greeting.js -i
 ./wsk action list -i
@@ -110,7 +108,7 @@ k8s 能创建 fn 服务么？Fission <https://kubernetes.io/blog/2017/01/fission
 
 这个里面的 eventing 是作何意？ 
 
-安装其例子 <https://github.com/knative/docs/blob/master/install/Knative-with-Minikube.md> + <https://github.com/knative/docs/blob/master/install/getting-started-knative-app.md> 跑一个了 hello world，直接部署一个 Build 好的 image，不带 CI/CD 功能。 
+按照其例子 <https://github.com/knative/docs/blob/master/install/Knative-with-Minikube.md> + <https://github.com/knative/docs/blob/master/install/getting-started-knative-app.md> 跑一个了 hello world，直接部署一个 Build 好的 image，不带 CI/CD 功能。 
 ```yaml
 apiVersion: serving.knative.dev/v1alpha1 # Current version of Knative
 kind: Service
@@ -128,37 +126,28 @@ spec:
             - name: TARGET # The environment variable printed out by the sample app
               value: "Go Sample v1”
 ```
-这个也是 CRD，kubectl get crd 会返回一堆。创建的 pods 里面包含 3 个容器： 
+这个也是 CRD，kubectl get crd 会返回一堆。创建的 pods 里面包含 3 个容器（后面的 hash 是做版本控制么？ ）： 
 
 1. user-container gcr.io/knative-samples/helloworld-go@sha256:98af3... 
 2. queue-proxy gcr.io/knative-releases/github.com/knative/serving/cmd/queue@sha256:90a4... 
 3. istio-proxy docker.io/istio/proxyv2:0.8.0 
 
-后面的 hash 是做版本控制么？ 
-
-第一次触发运行速度很快，后过一段时间，pod 会消失。再次触发，系统会重新生成一个，这次有明显延迟。这个就是“缩放至零”的效果？ 
-
-触发运行的整个过程应该是： 
+第一次触发运行速度很快，后过一段时间，pod 会消失。再次触发，系统会重新生成一个，这次有明显延迟。这个就是“缩放至零”的效果？ 触发运行的整个过程应该是： 
 
 1. 获取 IP:NodePort，通过 istio-system namespace 中的 knative-ingressgateway service 定义。这个不是 istio 的官方 service 吧？ 
 2. 通过 CRD 获取分配给 helloworld 的 hostname 
 3. 通过 1 和 2 的结果来访问，istio 应该根据 hostname 做导向 
 4. 导向到 knative，通过 event？knative 找到 deployment 对应的 CRD 数据，实时部署 pod。这个请求如何暂存如何在 pod 起来后转发是关键。
 
-Istio 在这个里面做了路由的功能，但是并没有暴露给用户。 
-
-上述例子也创建了一个 knative-build namespace，里面也有 webhook，但是没有使用。有空试试。
-[GitHub的例子](https://github.com/knative/docs/tree/master/serving/samples/gitwebhook-go)，要有 GitLab的就好了。 
+Istio 在这个里面做了路由的功能，但是并没有暴露给用户。 上述例子也创建了一个 knative-build namespace，里面也有 webhook，但是没有使用。有空试试。[GitHub的例子](https://github.com/knative/docs/tree/master/serving/samples/gitwebhook-go)，要有 GitLab的就好了。 
 
 [serverless 平台 knative 简介](http://cizixs.com/2018/08/25/knative-serverless-platform) 写的比我的全面。 
 
 ### Nuclio - "Serverless" for Real-Time Events and Data Processing 
 
-<https://github.com/nuclio/nuclio>
-
-主要亮点在于 Real-time processing with minimal CPU and I/O overhead and maximum parallelism 
+<https://github.com/nuclio/nuclio> 主要亮点在于 Real-time processing with minimal CPU and I/O overhead and maximum parallelism 
 
 ### Think
 
-1. Serverless 如何使用、意义何在比其技术本身更为重要，这也是解决其请求延迟的关键。 
+1. Serverless 如何使用、意义何在比其技术本身更为重要，这也是解决其请求延迟的关键
 2. 这个和 CI/CD 结合很紧密
