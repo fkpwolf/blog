@@ -201,3 +201,5 @@ CDAP 举的例子是把计算一堆点的中心点。
 语义分析的一些方法(一) [link](http://www.flickering.cn/ads/2015/02/%E8%AF%AD%E4%B9%89%E5%88%86%E6%9E%90%E7%9A%84%E4%B8%80%E4%BA%9B%E6%96%B9%E6%B3%95%E4%B8%80/)  
 
 API 网上算法，按调用付钱，提供了很多例子 <https://algorithmia.com/> 
+
+[Comparison of top data science libraries for Python, R and Scala](https://medium.com/activewizards-machine-learning-company/comparison-of-top-data-science-libraries-for-python-r-and-scala-infographic-574069949267?hss_channel=tw-816825631) 对比了很多框架
