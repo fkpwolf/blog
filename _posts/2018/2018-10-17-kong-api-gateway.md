@@ -128,6 +128,6 @@ Router 和 Service 定义有重复，似乎是在模仿 k8s ingress 和 service 
 ![](/images/2018/kong-old-vs-new.png)
 
 这里面的 Kong 提供很多功能，比如认证就功能很多，号称 api 网关，使用了数据库，不知道这里为什么要这么复杂，为什么不用 etcd？ Kong 人气很旺，也是基于 OpenResty 开发，[选择Kong作为你的API网关](https://www.cnkirito.moe/kong-introduction/)。其 <https://github.com/Kong/kubernetes-ingress-controller> 基于 ingress nginx，版本才 0.1.1，这是专门搞企业版去了么？ 
-
 虽然 nginx ingress 功能现在比较少，但是优势在于 nginx 非常成熟和经过考验，扩展多。 
 
+[微服务网关 Kong 1.0 正式发布！提供 100+ 项功能](https://www.infoq.cn/article/PFBa9-rsWwbk0eoOamK9)

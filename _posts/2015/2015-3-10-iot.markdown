@@ -172,8 +172,6 @@ PWM <https://dev.openwrt.org/changeset/46474> <http://blog.csdn.net/qianrushizai
 
 ![iot-scree](/images/2015/iot-screen.png)
 
-
-
 ittlevGL is a free and open-source graphics library providing everything you need to create embedded GUI with easy-to-use graphical elements, beautiful visual effects and low memory footprint.
 
 ![iot-scree](/images/2015/iot-screen-2.png)
@@ -191,3 +189,5 @@ Nordic nRF52840 Arm Cortex-M4F WiSoC with 1 MB FLASH and 256 kB RAM，但是没�
 Makerdiary nRF52840 Micro Development Kit Works with OpenThread, Arm Mbed OS, Zephyr OS, Mynewt 
 
 <https://www.cnx-software.com/2018/07/08/makerdiary-nrf52840-micro-development-kit-openthread-arm-mbed-os-zephyr-os-mynewt/> 
+
+<https://cloud.google.com/solutions/iot/kit/> Google 与合作伙伴携手打造了多款入门套件，让开发者能够轻松通过 Cloud IoT Core 连接 Google Cloud Platform。

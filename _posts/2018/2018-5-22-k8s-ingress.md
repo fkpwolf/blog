@@ -188,9 +188,9 @@ spec:
 
 <https://my.oschina.net/caicloud/blog/829365>
 
-然后如果只是 endpoint 修改，为了减少 nginx 频繁 reload，使用 Lua openresty 来做动态的路由变更。 
+然后如果只是 endpoint 修改，为了减少 nginx 频繁 reload，使用 Lua OpenResty 来做动态的路由变更。 
 
-Nginx-ingress-controller 是直接在容器中起了一个 nginx 进程，这个可以在容器命令行里面看到： 
+nginx-ingress-controller 是直接在容器中起了一个 nginx 进程，这个可以在容器命令行里面看到： 
 ```shell
 root@k8s-1:/# ps aux   
 USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
@@ -200,7 +200,7 @@ root        21  0.0  0.8 138812 31904 ?        S    May21   0:29 nginx: master p
 nobody   10349  0.0  0.9 401344 38236 ?        Sl   14:47   0:00 nginx: worker process
 nobody   10350  0.0  0.9 401344 36612 ?        Sl   14:47   0:00 nginx: worker process
 ```
-容器有个很少用的定义 hostPort: 80，直接占用 80 端口，这个很霸道，所以我们能直接 k8s-2 这种不加端口方式访问服务，这种就在拿不到 LoadBalance ip 情况下还能访问服务。 
+容器有个很少用的定义 hostPort: 80，直接占用 80 端口，这个很霸道，所以我们能直接 k8s-2 这种不加端口方式访问服务，这种就在拿不到 LoadBalance IP 情况下还能访问服务。 
 
 nginx-ingress-controller 如何让 nginx reload？查看代码 ingress-nginx/internal/ingress/controller/nginx.go, 里面有 nginxExecCommand("-s", "reload”)，原来是直接调用命令。 
 ```
@@ -212,17 +212,15 @@ nginx-ingress-controller 如何让 nginx reload？查看代码 ingress-nginx/int
 ```
 这个是 controller 的启动参数，里面配置了 default backend，这个是默认的 404 返回。为什么要单独做成一个 pod 呢？放在 controller 里面不可以？我能想到唯一优点就是多个 ingress-controller 可以共用一个 default backend service，如果 ingress controller pod 挂了也能转发就厉害了。 
 
-上面有个—election-id 参数，表示的是个 configmap。 
-```
+上面有个 `election-id` 参数，传入的是个 configmap。 
+```sh
 kubectl edit configmap ingress-controller-leader-nginx -n kube-system 
 annotations: 
     control-plane.alpha.kubernetes.io/leader: '{"holderIdentity":"jxing-nginx-ingress-controller-6d45cdfdc8-474vb","leaseDurationSeconds":30,"acquireTime":"2018-09-20T03:58:08Z","renewTime":"2018-10-09T02:42:30Z","leaderTransitions":34}’ 
 ```
-jxing-nginx-ingress-controller-6d45cdfdc8-474vb 是一个 pod id，使用 configmap 就完成 leader election？既然流量是负载均衡的，这个 election 有啥用？这个参数的[定义](https://kubernetes.github.io/ingress-nginx/user-guide/cli-arguments/)是『Election id to use for Ingress status updates. (default "ingress-controller-leader”)』。跟踪代码，ingress-nginx/internal/ingress/status/status.go 这里选举了 leader 来负责更新 ingress 状态，比如 kubectl get ingress 返回的 address。里面依赖的 leaderelection 是 k8s client-go 提供的，提供一个简单的方法来选取 leader，leader 会不断刷新 renewTime，如果自己挂了，其他轮询的 controller 会变为 leader，变为 leader 的 pod 在其 OnStartedLeading callback 中会开始更新 ingress status task。因为每个 ingress controller 的状态都是一样的，所以谁来更新都一样，但是没有必要每个人都来更新。 
+jxing-nginx-ingress-controller-6d45cdfdc8-474vb 是一个 pod id，使用 configmap 就完成 leader election？既然流量是负载均衡的，这个 election 有啥用？这个参数的[定义](https://kubernetes.github.io/ingress-nginx/user-guide/cli-arguments/)是『Election id to use for Ingress status updates. (default "ingress-controller-leader”)』。跟踪代码，`ingress-nginx/internal/ingress/status/status.go` 这里选举了 leader 来负责更新 ingress 状态，比如 kubectl get ingress 返回的 address。里面依赖的 leaderelection 是 k8s client-go 提供的一个简单的方法来选举 leader，leader 会不断刷新 renewTime，如果自己挂了，其他轮询的 controller 会变为 leader，变为 leader 的 pod 在其 OnStartedLeading callback 中会开始更新 ingress status task。因为每个 ingress controller 的状态都是一样的，所以谁来更新都一样，但是没有必要每个人都来更新。 
 
-[Simple leader election with Kubernetes and Docker](https://kubernetes.io/blog/2016/01/simple-leader-election-with-kubernetes/) 这个是一个使用这个类库的 hello world。kube-controller-manager 也使用了类似机制，有个 `--leader-elect=true` 参数，在 k8s HA 会有用到。 
-
-这里方法是 [分布式系统理论基础 - 选举、多数派和租约](http://www.cnblogs.com/bangerlee/p/5767845.html) 里面谈到的租约方法，『租约机制确保了一个时刻最多只有一个leader，避免只使用心跳机制产生双主的问题。在实践应用中，zookeeper、ectd可用于租约颁发。』 
+[Simple leader election with Kubernetes and Docker](https://kubernetes.io/blog/2016/01/simple-leader-election-with-kubernetes/) 这个是一个使用这个类库的 hello world。kube-controller-manager 也使用了类似机制，有个 `--leader-elect=true` 参数，在 k8s HA 会有用到。这里方法是 [分布式系统理论基础 - 选举、多数派和租约](http://www.cnblogs.com/bangerlee/p/5767845.html) 里面谈到的租约方法，『租约机制确保了一个时刻最多只有一个leader，避免只使用心跳机制产生双主的问题。在实践应用中，zookeeper、ectd可用于租约颁发。』
 
 其 build 系统颇为复杂，最上层的镜像定义为 rootfs/Dockerfile，定义了入口 CMD ["/nginx-ingress-controller”]。然后我猜想这个镜像是基于自己定义的一个 nginx 镜像 images/nginx/rootfs/Dockerfile，其 images/nginx/README.md 定义了这个镜像的组成，里面包含了很多 nginx 模块比如 openresty set-misc-nginx-module。然后这个镜像是基于 [debian-base](https://github.com/kubernetes/kubernetes/tree/master/build/debian-base)，一个 k8s 对 Debian 的精简版本，删除了很多东西，只有 40MB。这几个组成了一个层级的容器镜像，这样每个部分可以独立演化，也减小了本地镜像的大小：比如开发中 nginx-ingress-controller 有多个版本（这个是常见情况），但是底层都没变，这样的镜像总体存储会小很多。 
 

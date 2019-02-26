@@ -37,3 +37,11 @@ coreboot 是个开源的 BIOS，类似常见的 U-Boot，Chrome OS 用的也是�
 这样占用空间少，路由器就是要小巧精悍，我也不建议 all-in-one 的那样把所有鸡蛋放一个笼子里面。但是不好散热，一到夏天烫的吓人。
 
 ![Image 2 of APU2](/images/2017/apu2-2.JPG)
+
+### USB 3.0
+
+USB 硬盘：Lexar JumpDrive S25 128GB USB 3.0 Flash Drive
+
+![](/images/2017/pcengine-usb-disk.png)
+
+拷贝时大多时间可以达到 70~80MB/s，但是由锯齿形下降，可能是缓存用完，正在从内存写入 U 盘。

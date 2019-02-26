@@ -162,6 +162,7 @@ F+XikYiQErDOUghEOPwXt2kuF6Bp
 
 ![](/images/2018/dashboard-integrate.png)
 
+这里使用 MongoDB 存储规则，其实 CRD 更为合适：不仅可以把数据保存在 etcd 中，而且数据触发机制也很完善。
 
 ### 疑问 / TODO
 1. 整合结果也发布成 Helm Chart
