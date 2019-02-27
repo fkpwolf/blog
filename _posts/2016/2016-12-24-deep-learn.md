@@ -188,7 +188,7 @@ CNNs通过逐层累加调整实现分类。它首先检测到边缘，然后是�
 
 正态分布为什么常见？<http://www.ruanyifeng.com/blog/2017/08/normal-distribution.html> 
 
-[推荐算法不够精准？让知识图谱来解决](https://mp.weixin.qq.com/s?__biz=MzAwMTA3MzM4Nw==&mid=501960087&idx=1&sn=25354e027f3099a593e91f2258f3c07f#rd)  
+[推荐算法不够精准？让知识图谱来解决](https://mp.weixin.qq.com/s?__biz=MzAwMTA3MzM4Nw==&mid=501960087&idx=1&sn=25354e027f3099a593e91f2258f3c07f#rd)  [前员工揭内幕：10 年了，为何谷歌还搞不定知识图谱？](https://www.infoq.cn/article/CdYJLgPbEF-MqMIE9Cf7)，感觉这块人工干预太多。
 
 聚类属于无监督学习，以往的回归、朴素贝叶斯、SVM等都是有类别标签y的，也就是说样例中已经给出了样例的分类。 
 

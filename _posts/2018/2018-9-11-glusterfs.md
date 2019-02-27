@@ -26,25 +26,25 @@ gluster volume create gv0 gluster-1:/export/sdb1/brick
 安装方式有多种，可以安装在 k8s 内部，但是看了下还挺麻烦，我还是单独起个进程吧。 创建卷：
 ```
 failed to create volume: failed to create volume: Failed to allocate new volume: No space 
-./heketi-cli --server [http://vm1:8080](http://vm1:8080/) volume create --size=1 
+./heketi-cli --server http://vm1:8080/ volume create --size=1 
 Error: Failed to allocate new volume: No space 
-./heketi-cli --server [http://vm1:8080](http://vm1:8080/) volume create --size=1 --durability=none 
+./heketi-cli --server http://vm1:8080/ volume create --size=1 --durability=none 
 ```
 这种可以，假假的。
 ```
-fandeMac:bin fan$ ./heketi-cli --server [http://192.168.1.121:8080](http://192.168.1.121:8080/) volume delete 83ebfa75567b8b2138dd7df53a53c947 
+fandeMac:bin fan$ ./heketi-cli --server http://192.168.1.121:8080/ volume delete 83ebfa75567b8b2138dd7df53a53c947 
 Error: Unable to get snapshot information from volume vol_83ebfa75567b8b2138dd7df53a53c947: ssh: handshake failed: ssh: unable to authenticate, attempted methods [none publickey], no supported methods remain 
 ```
 这个命令报错很详细，ssh 有点搞。现在我把 heketi 安装在其他节点上，然后 ssh-copy-id 来拷贝证书。 
 ```
-fandeMac:bin fan$ ./heketi-cli --server [http://vm1:8080](http://vm1:8080/) device add --name="/dev/vdb1" --node "5ef3f8c98a2e7456db1a05f7c60088e1" 
+fandeMac:bin fan$ ./heketi-cli --server http://vm1:8080/ device add --name="/dev/vdb1" --node "5ef3f8c98a2e7456db1a05f7c60088e1" 
 Error: WARNING: xfs signature detected on /dev/vdb1 at offset 0. Wipe it? [y/n]: [n] 
   Aborted wiping of xfs. 
   1 existing signature left on the device. 
 ```
 要对/dev/vdb 重新分区，统一纳入 heketi 管理 
 
-    ./heketi-cli --server [http://vm1:8080](http://vm1:8080/) topology info 
+    ./heketi-cli --server http://vm1:8080/ topology info 
 
 现在可以显示真实的大小了。--durability=none 创建的 volume 也可以删除了。 
 
@@ -99,7 +99,7 @@ Heketi 居然在 centos 里面没包安装，fedora 有，ubuntu 没有。简单
 
 看了半天，发现是 GlusterFS 的问题。<https://github.com/helm/monocular/issues/419> <https://github.com/helm/charts/issues/2488> 新的 mongodb-4.0.6 chart 已经修复。 [原因在这里](https://github.com/bitnami/bitnami-docker-drupal/issues/88)，好像是文件系统权限的问题。
 
-### inside
+### Inside
 
 具体存储类型分类 <https://docs.gluster.org/en/v3/Quick-Start-Guide/Architecture/>  Distributed, Replicated, Distributed Replicated, Striped。 图文并茂，写的不错。
 
@@ -125,6 +125,8 @@ Mount Options: backup-volfile-servers=192.168.51.187
 192.168.51.130:vol_573e4b4f72cecb867cbddb75260dab34 on /var/lib/kubelet/pods/7f062c23-f906-11e8-ac1b-3eede03e70f1/volumes/kubernetes.io~glusterfs/pvc-7ed0a1a3-f906-11e8-ac1b-3eede03e70f1 type fuse.glusterfs (rw,relatime,user_id=0,group_id=0,default_permissions,allow_other,max_read=131072) 
 ```
 如何触发来测试这个副本保护机制？[Setting Up GlusterFS Client](https://docs.gluster.org/en/latest/Administrator%20Guide/Setting%20Up%20Clients/)，有个参数 backupvolfile-server，当主 server 挂掉，会连接第二个，和性能没关系，HA 的。 k8s glusterfs provider bug? 
+
+如果在节点上运行 `ps aux|grep gluster`，会发现对于每个 PVC（对 gluster 是一个 volume） 都运行了一个 glusterfsd 进程，如果在 k8s 下面，可以做成一个 pod。
 
 ### 容量翻倍的问题
 
@@ -162,6 +164,9 @@ Devices:
   VG UUID               9WZzBd-CJlr-MWWD-3qRO-z4gD-e0Za-dysaKt
 ```
 这个显示是正确的，用了 24 GB。lvdisplay 显示有 6 个逻辑卷。再次创建一个有状态 helm chart，`pvc pending，Failed to allocate new volume: No space`。 升级 heketi 到 9.0 版本，删除所有 PV，topology info 也显示已经删除，但是` Size (GiB):89 Used (GiB):60  Free (GiB):29`，这时为何？原来要运行 `heketi-cli device resync <id_device>`，这样磁盘大小就同步了。 然后再次安装回有状态 chart，gluster vm 还是显示两个：tmeta & tdata，但是 `heketi-cli topology info` 显示已经是正常了。不知道是版本问题还是需要运行 resync 命令。 
+
+### volume 无法删除的问题
+先是在 k8s 中无法删除，`heketi-cli volume delete id` 显示 error，但是没有有用信息。后来发现一个节点有 mount fuse.glusterfs，umount 之，但并没有用。先提了 [issue](https://github.com/heketi/heketi/issues/1538)。
 
 ### Odroid HC1
 

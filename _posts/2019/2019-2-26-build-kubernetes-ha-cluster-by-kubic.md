@@ -203,6 +203,8 @@ terraform is good if we can finish task by existing task and I can accept the st
 
 `git push fan pci-passthough:pci-passthough`. This command will: 1) submit to my remote branch; 2) create PR to original branch.
 
+Code is here <https://github.com/fkpwolf/terraform-provider-libvirt>.
+
 ### Ansible to bring up HA
 
 tf 是声明式的，需要大量的plugin，似乎 https://github.com/kubernetes-sigs/kubespray 这种更简单，kubespray不创建节点，所以结合使用 terraform 更好。
@@ -229,4 +231,6 @@ The 'until' and 'retries' are really useful for common task. Terraform looks no 
 To clear etcd, I have installed etcd package by brew in Mac OS and run script locally. Terraform has etcd plugin and better support for CNCF.
 
 Ansible error: "Failed to connect to the host via ssh: WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!" It need to change local ssh config. So Ansible use local OS command like ssh. Not good.
+
+Code is here <https://github.com/fkpwolf/kubic-kvm>.
 
