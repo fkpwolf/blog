@@ -166,8 +166,26 @@ Devices:
 这个显示是正确的，用了 24 GB。lvdisplay 显示有 6 个逻辑卷。再次创建一个有状态 helm chart，`pvc pending，Failed to allocate new volume: No space`。 升级 heketi 到 9.0 版本，删除所有 PV，topology info 也显示已经删除，但是` Size (GiB):89 Used (GiB):60  Free (GiB):29`，这时为何？原来要运行 `heketi-cli device resync <id_device>`，这样磁盘大小就同步了。 然后再次安装回有状态 chart，gluster vm 还是显示两个：tmeta & tdata，但是 `heketi-cli topology info` 显示已经是正常了。不知道是版本问题还是需要运行 resync 命令。 
 
 ### volume 无法删除的问题
-先是在 k8s 中无法删除，`heketi-cli volume delete id` 显示 error，但是没有有用信息。后来发现一个节点有 mount fuse.glusterfs，umount 之，但并没有用。先提了 [issue](https://github.com/heketi/heketi/issues/1538)。
+先是在 k8s 中无法删除，`heketi-cli volume delete id` 显示 error，但是没有有用信息。后来发现一个节点有 mount fuse.glusterfs，umount 之，但并没有用。先提了 [issue](https://github.com/heketi/heketi/issues/1538)。现在发现发送 delete 命令时服务器端日志都显示：
 
+    [negroni] Started GET /volumes/eab0e046b9cdb9a07572d18549be64f2
+    [negroni] Completed 200 OK in 7.151436ms
+
+使用 https://putsreq.com 来查看命令发送的 REST 请求是否是 DELETE，返回`Error: server did not provide a message (status 404: Not Found)`，应该是 URL 有加参数的缘故：`req, err := http.NewRequest("DELETE", c.host+"/volumes/"+id, nil)`，而 pustreq 和 httpbin 都不支持 wildcard matching，可能是安全考虑，后来发现 Postman 本身带有这个功能，检查后发现 heketi-cli 确实发送的 DEL 命令。
+手工用`gluster volume delete id`命令删除卷，成功。但是 heketi 这边还是显示原来的卷，heketi db 只是单向的数据流？k8s 内部的 PV 可以自动删除。祭出命令`tcpdump port 8080 -nA`，对比两者请求，发现问题在`./heketi-cli --server http://192.168.51.187:8080/ volume list` 的请求为 `DEL //volume/id`，这时会返回 `301 Moved Permanently` 并附上正确的 URL `/volume/id`，cli 拿到新的 URL 后统一重发 GET 请求。DELETE is not a safe method，所以 301 跳转时会转换为 GET，这个是 golang http 的[行为](https://github.com/golang/go/issues/13994)。这也是为什么 GET 命令可以成功的原因。
+
+调试发现其请求过程挺有趣，比如创建一个 volume：
+```
+-> POST /volumes
+<- 202 Accepted. Location: /queue/qid
+-> GET /queue/qid
+<- 200 OK
+...keep polling
+-> GET /queue/id
+<- 303 See Other. Location: /volumes/vid
+-> GET /volumes/vid
+<- 200 OK JSON {...}
+```
 ### Odroid HC1
 
 Ubuntu 18.04.1 LTS，两台机器，odroid-1 & odroid-2，各带一机械硬盘，各千兆网线接交换机，heketi 安装在 odroid-1。

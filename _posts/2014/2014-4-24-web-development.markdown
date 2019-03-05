@@ -78,7 +78,7 @@ MVC，MVP 和 MVVM 的图示 http://www.ruanyifeng.com/blog/2015/02/mvcmvp_mvvm.
 ### Tools
 - REST mock <https://github.com/gstroup/apimocker>
 - REST post ui: Postman, it can save rest request for reuse.
-- online code <http://jsfiddle.net/ http://codepen.io/pen>
+- online code <http://jsfiddle.net/> <http://codepen.io/pen>
 - <https://codesandbox.io/s/github/reactjs/redux/tree/master/examples/todos> 这个是最简单的，不过可以在沙盒上面直接玩，体验还不错。这个沙盒可以直接浏览器运行 vs code，也能保存代码到 github。You can deploy a production version of your sandbox using ZEIT Now. 大而全。
 
 cdn http://cdn.code.baidu.com/

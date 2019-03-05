@@ -207,6 +207,8 @@ H2是一个Java编写的关系型数据库，它可以被嵌入Java应用程序�
 
 [360容器平台监控实践](https://mp.weixin.qq.com/s/tZxaSQh3wulL5eHXWHiohg)
 
+[Monitoring and Managing Workflows Across Collaborating Microservices](https://www.infoq.com/articles/monitor-workflow-collaborating-microservices) 把跟踪数据转化为图形化的工作流，更为直观。业务流程模型和标记法（BPMN, Business Process Model and Notation）是一套图形化表示法，用于以业务流程模型详细说明各种业务流程。
+
 ### Think
 1. 基本上配置都是找到各种数据源
 2. 如果日志监控这些基础设施本身就不稳定，出现问题就很尴尬了。需要分开部署和维护
