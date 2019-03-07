@@ -35,7 +35,7 @@ Error: Failed to allocate new volume: No space
 fandeMac:bin fan$ ./heketi-cli --server http://192.168.1.121:8080/ volume delete 83ebfa75567b8b2138dd7df53a53c947 
 Error: Unable to get snapshot information from volume vol_83ebfa75567b8b2138dd7df53a53c947: ssh: handshake failed: ssh: unable to authenticate, attempted methods [none publickey], no supported methods remain 
 ```
-这个命令报错很详细，ssh 有点搞。现在我把 heketi 安装在其他节点上，然后 ssh-copy-id 来拷贝证书。 
+这个命令报错很详细，ssh 有点搞。现在我把 heketi 安装在其他节点上，然后 `ssh-copy-id -i heketi_key.pub new_node` 来拷贝证书到新节点上，这样 heketi 就可以用证书免密登录所有 glusterfs 节点。 
 ```
 fandeMac:bin fan$ ./heketi-cli --server http://vm1:8080/ device add --name="/dev/vdb1" --node "5ef3f8c98a2e7456db1a05f7c60088e1" 
 Error: WARNING: xfs signature detected on /dev/vdb1 at offset 0. Wipe it? [y/n]: [n] 
@@ -194,7 +194,7 @@ Ubuntu 18.04.1 LTS，两台机器，odroid-1 & odroid-2，各带一机械硬盘�
 
 如果以前安装，先 vgdisplay/vgremove清除已有 lvm 分区，否则 add device 时候说磁盘没有初始化。 
 
-    ./bin/heketi-cli --server "[http://192.168.51.187:8080](http://192.168.51.187:8080/)" node add --management-host-name 192.168.51.130 --storage-host-name 192.168.51.130 --zone 1 --cluster foo 
+    heketi-cli --server "http://192.168.51.187:8080" node add --management-host-name 192.168.51.130 --storage-host-name 192.168.51.130 --zone 1 --cluster foo 
 
 这里全部用 IP，否则各种问题。 
 

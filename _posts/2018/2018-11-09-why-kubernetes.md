@@ -6,9 +6,9 @@ date:   2018-11-09 14:20:33
 对于一般开发人员来说，不用了解 Kubernetes 内部机制，为什么要使用 Kubernetes 呢？
 
 1. 微服务
-https://martinfowler.com/articles/microservice-trade-offs.html
+<https://martinfowler.com/articles/microservice-trade-offs.html>
 Strong Module Boundaries, Independent Deployment, Technology Diversity，这三者都能满足，这其实是容器带来的好处。
-隔离：存储、网络、访问 Ingress。Distribution, Eventual Consistency, Operational Complexity，这些问题要如何处理呢？
+隔离：存储、网络、访问 Ingress。代价：Distribution, Eventual Consistency, Operational Complexity。
 
 2. DevOps
 微服务切分后，盒子也打开了。首先是开发部署都很麻烦，有了 Kubernetes + CICD，这个流程才能顺畅的跑起来。
