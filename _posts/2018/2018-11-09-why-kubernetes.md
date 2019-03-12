@@ -7,8 +7,7 @@ date:   2018-11-09 14:20:33
 
 1. 微服务
 <https://martinfowler.com/articles/microservice-trade-offs.html>
-Strong Module Boundaries, Independent Deployment, Technology Diversity，这三者都能满足，这其实是容器带来的好处。
-隔离：存储、网络、访问 Ingress。代价：Distribution, Eventual Consistency, Operational Complexity。
+Strong Module Boundaries, Independent Deployment, Technology Diversity，这三者都能满足，这其实是容器带来的好处。隔离：存储、网络、访问 Ingress。代价：Distribution, Eventual Consistency, Operational Complexity。
 
 2. DevOps
 微服务切分后，盒子也打开了。首先是开发部署都很麻烦，有了 Kubernetes + CICD，这个流程才能顺畅的跑起来。
