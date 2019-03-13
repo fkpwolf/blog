@@ -226,5 +226,5 @@ The `until` and `retries` are really useful for common task. Looks Terraform has
 
 To clear etcd, I have installed etcd package using brew in Mac OS and run script locally. Terraform has etcd plugin and better support for CNCF. Error: "Failed to connect to the host via ssh: WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!" It need to change local(Mac OS) ssh config. So Ansible used local OS command like ssh so it has dependency on external env. Not good.
 
-Code is here <https://github.com/fkpwolf/kubic-kvm>.
+Code is here <https://github.com/fkpwolf/kubic-kvm> & <https://github.com/fkpwolf/kubic-ansible>.
 
