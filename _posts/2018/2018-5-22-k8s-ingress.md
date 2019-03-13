@@ -281,11 +281,7 @@ Ingress 只能作为前端代理，对于 Docker 里面的代码一般是通过 
 
 <https://istio.io/docs/tasks/traffic-management/ingress/> Istio 也提供了 ingress 支持，有自己的模型叫做 Istio Gateway。 
 
-OpenResty最佳实践 <https://moonbingbing.gitbooks.io/openresty-best-practices/content/> 这东西如果只是用来替代Nginx+Tomcat，视乎没有必要，毕竟平时开发还是Java懂的人多些，开发效率也高，也没有必要太讲究性能。 我觉得应用场景在：前段的拦截层，这个层对于后端开发来说是透明的。可以做基于lua的负载均衡、会话校验、缓存的处理。就是说如果这层很轻，用Java footprint太大，则可以使用OpenResty。 
-
-偶遇Lua——在nginx conf中编程 <https://blog.goquxiao.com/posts/2014/12/20/ou-yu-lua-zai-nginx-confzhong-bian-cheng/> 修改 JSON response 的方法。 
-
-Nginx 很快，Lua 就快么？[Top ten things about openresty](http://www.staticshin.com/top-tens/things-about-openresty.html)『Openresty uses luajit to compile lua code. The code compiled with lua jit is damn fast reaching almost c levels of performance.』 
+OpenResty最佳实践 <https://moonbingbing.gitbooks.io/openresty-best-practices/content/> 这东西如果只是用来替代Nginx+Tomcat，似乎没有必要，毕竟平时开发还是Java懂的人多些，开发效率也高，也没有必要太讲究性能。 我觉得应用场景在：前端的拦截层，这个层对于后端开发来说是透明的。可以做基于lua的负载均衡、会话校验、缓存和安全的处理，有较高的编程灵活性和性能。偶遇Lua——在nginx conf中编程 <https://blog.goquxiao.com/posts/2014/12/20/ou-yu-lua-zai-nginx-confzhong-bian-cheng/> 修改 JSON response 的方法。Nginx 很快，Lua 就快么？[Top ten things about openresty](http://www.staticshin.com/top-tens/things-about-openresty.html)『Openresty uses luajit to compile lua code. The code compiled with lua jit is damn fast reaching almost c levels of performance.』Nginx 采用模块化的设计和 master/workers 进程池机制，用事件驱动机制来分阶段的处理请求，这些使得 OpenResty 能完美的嵌入其中运行。更多运行机制可以参考[这里](https://sq.163yun.com/blog/article/215906650517467136)。受限于 nginx，其线程模型是基于 Lua 的协程提出的“轻量级线程”。
 
 [Kubernetes 中使用 API Gateway 替代 Ingress](https://blog.joway.io/ops/kubernetes-gateway/)，介绍了其他的些 ingress 
 
