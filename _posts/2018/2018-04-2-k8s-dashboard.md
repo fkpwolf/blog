@@ -144,13 +144,11 @@ Current date: 2018年12月8日
 PEM encoded chain:
 -----BEGIN CERTIFICATE-----
 MIIBwTCCAWagAwIBAgIQPRWE/kHIbl8xorbl55Pe4zAKBggqhkjOPQQDAjA8MTow
-OAYDVQQDEzFrdWJlcm5ldGVzLWRhc2hib2FyZC04NDZiOGI2ODQ0LW1seGpkLmt1
-OGI2ODQ0LW1seGpkLmt1YmUtc3lzdGVthwQKZB0CMAoGCCqGSM49BAMCA0kAMEYC
-IQD4Ad9IN01Eb/ENdzY1w+oUXo+HXnuAB+zlGuDS/Bz7jQIhAMd+2bWiX0VeR2VW
+......
 F+XikYiQErDOUghEOPwXt2kuF6Bp
 -----END CERTIFICATE-----
 ```
-[这里](https://github.com/kubernetes/dashboard/issues/2954)说要重新生成证书，不过这个本身很奇怪，有的时候怎么可以。
+[这里](https://github.com/kubernetes/dashboard/issues/2954#issuecomment-385354244)说要重新生成证书，不过这个本身很奇怪，有的时候怎么可以，按道理 dashboard 会自动生成证书的。我在 Ubuntu 18.04 下运行 openssl 命令时出现错误 `3069243408:error:0D07A098:asn1 encoding routines:ASN1_mbstring_ncopy:string too short:../crypto/asn1/a_mbstr.c:102:minsize=2`，[去掉](https://github.com/NREL/api-umbrella/issues/408)命令参数 -subj 里面的空值就可以了，应该是 openssl 版本兼容性的问题，然后删除已有 secret，重新导入，最后`kubectl delete pod`重启 pod，启动过程并不会覆盖已有的 secret。这是问题根源么？dashboard 应该不是直接调用 openssl 命令导致这个问题吧。
 
 ### 后端
 主要访问 k8s API Server，做了大量的封装，主要是对 API 进行合并的操作，比如在 pod details 这种页面，包含了多个纬度的信息，每个都要一个独立的 request 才能获取到。合并后前端一个 request 能返回更多内容，大大减少了前端开发量。

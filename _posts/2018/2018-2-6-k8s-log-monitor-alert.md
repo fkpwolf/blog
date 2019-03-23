@@ -179,6 +179,8 @@ Span 是个完整调用链或者跨度，从开始触发到结果返回。
 
 上面的 jaeger-client 通过 UDP 发送报文，这个报文是单个 trace 还是完整的 span？应该是单个的，完整的是分布式环境。这里上传报文应该有 buffer 吧，否则每次调用就发送报文太耗资源。istio 这块是在 mixer 里面做的上传报文，并非每个 pod 中的 proxy (envoy)，proxy 收集数据，所以应该由 proxy 来确定每个 trace 的时间点，proxy 是每个 pod 里面都有，所以这个时间应该相对准确，如果由应用来确定时间则对应用侵入性太大。istio 用的是jaegertracing/all-in-one:1.5，一个 pod 做了 jaeger-agent, jaeger-collector 所有事情，所以并非严格按照上面每个应用/host 上面都安放一个 agent。 
 
+[jaeger-operator](https://github.com/jaegertracing/jaeger-operator) 这个操作起来可能更容易。
+
 thrift 类似 gRPC，Dubbo 也使用这个。 
 
 Control Flow 这种反向控制是做何用？ 
