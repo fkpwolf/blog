@@ -49,7 +49,7 @@ Flutter由C、C++和Dart语言编写，也包含了Skia 2D渲染引擎和Blink�
 * Intel NUC 
 * Google Pixelbook 
 
- 如果这些设备不像树莓派或者安卓机那样便宜，则其无法流行。 
+如果这些设备不像树莓派或者安卓机那样便宜，则其无法流行。最近发现也支持 [arm64](https://fuchsia.googlesource.com/zircon/+/master/kernel/target/arm64/board) 的板子，比如 Khadas VIM2，就是文档太少。
 
 <https://arstechnica.com/gadgets/2018/01/googles-fuchsia-os-on-the-pixelbook-it-works-it-actually-works/> 感觉图形界面复制了一个 Chrome OS。而且界面似乎很多是给手机用的 
 
