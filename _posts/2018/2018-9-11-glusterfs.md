@@ -87,6 +87,8 @@ Heketi 能管理多个cluster，多个node，并非只是简单的 REST API 提�
 ```
 heketi 这么多接口，如果能提供 web ui 就方便多了，不过 heketi 上面没人相应，只有这个 <https://github.com/orachide/heketi-ui> 。heketi 也不提供监控信息吧，这个应该属于商业产品范围了。
 
+常驻运行可以用`nohup ./heketi --config=./heketi.json &`，如果要转换为 systemd 服务，可以参考这里 <https://github.com/heketi/heketi/blob/master/extras/systemd/heketi.service>。
+
 <https://www.redhat.com/zh/technologies/storage/gluster> 这个原来是红帽的技术。这两个产品在 centos/fedora 上面都可以直接安装，适配更好。 
 
 **总的来说**，比 ceph 简单多了：server 配置简单，k8s 里面也简单，申请删除 pv 都很快，也不需要先搞 secret。heketi 也为 k8s 做了适配。而 ceph 现在觉得更多是在 openstack 生态圈里面。 

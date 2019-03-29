@@ -148,6 +148,8 @@ openstack stack resource list foo
 
 所以这里就要看 heat 的设计理念了。heat 创建 stack 时候，需要传入 template-file 和 environment-file，后者其实就是 template 里面定义的各种参数（这种结构和 Helm 很类似）。template 描述了各种预定义资源，那么当 stack 运行起来后，其自生（应用内部）创建的资源是否属于 stack 管理范围呢？这是个很有意思的取舍。创建集群后，如果使用 magnum 动态扩容 - 添加一个新节点，这个节点在 heat 管理范围内么？AWS 是如何处理的？
 
+k8s 由于采用声明式的方式来定义资源，所以删除的时候就很方便，直接`kubectl delete -f files`即可，helm 就是这样做的。当然，如果是用 operator/controller 程序创建的，也需要程序来删除了。
+
 使用命令 `magnum cluster-update foo replace node_count=3` 添加一个节点后，`openstack stack resource show foo kube_minions` 可以在 **links** 属性下面看到有 3 个节点，horizon UI 也可以查看。我猜想删除集群时这个新的节点也可以被删除。
 
 这里添加节点有个小问题：heat 已经显示 Update Complete，k8s 运行正常，但是 magnum 还是 UPDATE_IN_PROGRESS。
