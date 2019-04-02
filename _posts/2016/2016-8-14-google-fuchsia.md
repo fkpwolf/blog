@@ -49,11 +49,11 @@ Flutter由C、C++和Dart语言编写，也包含了Skia 2D渲染引擎和Blink�
 * Intel NUC 
 * Google Pixelbook 
 
-如果这些设备不像树莓派或者安卓机那样便宜，则其无法流行。最近发现也支持 [arm64](https://fuchsia.googlesource.com/zircon/+/master/kernel/target/arm64/board) 的板子，比如 Khadas VIM2，就是文档太少。
+如果这些设备不像树莓派或者安卓机那样便宜，则其无法流行。最近发现也支持 [arm64](https://fuchsia.googlesource.com/zircon/+/master/kernel/target/arm64/board) 的板子，比如 Khadas VIM2，这里有板子论坛的[安装指南](https://forum.khadas.com/t/google-fuchsia-os-on-khadas-vim2/2587)，官方文档 VIM2 [Zircon on Khadas VIM2 Board](https://fuchsia.googlesource.com/zircon/+/master/docs/targets/khadas-vim.md)，可能现阶段 [Intel NUC](https://fuchsia.googlesource.com/zircon/+/master/docs/targets/nuc.md) 更为稳定和方便，可以直接从U盘启动。[许中兴博士演讲：Fuchsia OS 简介及幻灯片下载](https://fuchsia-china.com/fuchsia-os-intro-slide/zh-cn/)，难得的中文介绍。
 
 <https://arstechnica.com/gadgets/2018/01/googles-fuchsia-os-on-the-pixelbook-it-works-it-actually-works/> 感觉图形界面复制了一个 Chrome OS。而且界面似乎很多是给手机用的 
 
-如果 Fuchsia 可以成功，主要在于其高效的界面系统。我想这个是其在开发 Chrome OS 中感受到 X window 的累赘而突发灵感的。对于图形系统，不存在小的重构，因为会复杂到不如推到从来，而这个复杂主要是遗留系统导致，这让人沮丧。那为什么要开发新的内核呢？纯粹配合 UI？ 
+Linux 已经在服务器领域枝深叶茂，难以撼动。如果 Fuchsia 可以成功，主要在于其高效的界面系统。我想这个是其在开发 Chrome OS 中感受到 X window 的累赘而突发灵感的。对于图形系统，不存在小的重构，因为会复杂到不如推到从来，而这个复杂主要是遗留系统导致，这让人沮丧。那为什么要开发新的内核呢？纯粹配合 UI？ 
 
 ### Dart
 
