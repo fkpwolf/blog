@@ -42,7 +42,7 @@ Image come from https://docs.projectcalico.org/v1.6/reference/without-docker-net
 
 ![weave](/images/2017/weave.png)
 
-[Container-Native Networking - Comparison](https://docs.google.com/spreadsheets/d/1polIS2pvjOxCZ7hpXbra68CluwOZybsP1IYfr-HrAXc/edit#gid=0) 这里面说 Weave 不需要 etcd，那他是怎么保存路由表的？https://www.weave.works/docs/net/latest/concepts/ip-addresses/ 这里看还是用 linux ip router 实现，因为他需要每个节点安装 weave-net 容器（非pod里面的sidecar)，所以可以内部管理路由表。
+[Container-Native Networking - Comparison](https://docs.google.com/spreadsheets/d/1polIS2pvjOxCZ7hpXbra68CluwOZybsP1IYfr-HrAXc/edit#gid=0) 这里面说 Weave 不需要 etcd。https://www.weave.works/docs/net/latest/concepts/ip-addresses/ 这里看还是用 linux ip router 实现，因为他需要每个节点安装 weave-net 容器（非pod里面的sidecar)，所以可以内部管理路由表。
 https://www.weave.works/docs/net/latest/concepts/network-topology/ 如何组建整个拓扑，有提 spanning tree，和交换机的路由学习有点像。看看他内部是如何保存的。
 在集群节点上：
 ```
@@ -96,7 +96,7 @@ http://blog.codybunch.com/2016/10/14/KVM-and-OVS-on-Ubuntu-1604/ http://docs.ope
 Currently there is no Open vSwitch support for networks that are managed by libvirt (e.g. NAT). As of now, only bridged networks are supported (those where the user has to manually create the bridge).
 看来 Docker 这种才会有 NAT 模式的(DHCP 获取 IP？)。一般hypervisor 自己也提供 nat，这个和 ovs 有啥区别？
 
-OpenVSwitch 感觉在 openstack 里面会用的比较多，但是对于 docker 而言，容器网络种太多了吧，不得必须用 ovs。
+Open vSwitch 感觉在 openstack 里面会用的比较多，但是对于 Docker 而言，容器网络种太多了吧，不得必须用 ovs。
 
 在 Ubuntu* 上使用 Open vSwitch* 和 DPDK https://software.intel.com/zh-cn/articles/using-open-vswitch-with-dpdk-on-ubuntu DPDK这个太高级了
 

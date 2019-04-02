@@ -68,3 +68,10 @@ XSS 跨站脚本，是指在A 网站上面直接运行脚本。
 解决办法：将用户所提供的内容进行过滤。 
 
 XSS 利用的是用户对指定网站的信任（比如论坛网站，用户信任它，所以 XSS 的责任全在论坛网站），CSRF 利用的是网站对用户网页浏览器的信任(用户并不信任 B 网站，B 网站是黑客站点，但是A 网站信任浏览器发送的请求)。 
+
+证书的生成命令[举例](https://github.com/kubernetes/dashboard/issues/2954#issuecomment-385354244)：
+```
+openssl req -nodes -newkey rsa:2048 -keyout certs/dashboard.key -out certs/dashboard.csr -subj "/C=/ST=/L=/O=/OU=/CN=kubernetes-dashboard"
+openssl x509 -req -sha256 -days 365 -in certs/dashboard.csr -signkey certs/dashboard.key -out certs/dashboard.crt
+```
+这就产生了标准的三个证书文件。

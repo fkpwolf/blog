@@ -147,5 +147,3 @@ glusterfs 倒是很多文档 <https://magazine.odroid.com/article/exploring-soft
 [Banana Pi to Launch a 24-Core Arm Server](https://www.cnx-software.com/2018/12/26/banana-pi-24-core-arm-server/) 规格未知，CPU 据说是 SocioNext SC2A11。[V-Raptor](https://www.cnx-software.com/2019/01/08/v-raptor-24-core-arm-server-socionext-sc2a11/) 也是同样的 CPU，不过似乎是 PCI 接口直接查到主板上。
 
 AWS 现在(2018.12.30)也提供 [Arm 服务器](https://aws.amazon.com/cn/blogs/china/new-ec2-instances-a1-powered-by-arm-based-aws-graviton-processors/)，使用的是 Annapurna Labs Graviton Processors，这种 SOC 个人是无缘接触了。
-
-[Kubernetes on the Edge](https://rancher.com/blog/2018/2018-12-11-kubernetes-on-the-edge/) Rancher 在国内的一个项目，奇葩之处是客户需要每个边缘节点上都要安装一个独立的 k8s 集群，因为网络不稳定，而且客户想用 k8s 方便部署升级的功能（多半类似电信l网关路由器跑 OSGI）。为了能让 k8s 运行在 ARM 4GB 内存节点上（好像一般便宜 ARM 板子都是这个规格😂 ），他们特意搞了个精简版 - <https://github.com/ibuildthecloud/k3s>，问起为什么有这个东东，[作者说](https://github.com/ibuildthecloud/k3s/issues/1)只是想学习下 k8s 的架构... 如果像 Linux Kernel 有个 `make menuconfig` 来模块化的编译 k8s 就好了，这样精简起来更容易，否则一个个 commit 来删除代码将来无法和 upstream 同步。
