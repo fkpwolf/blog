@@ -176,6 +176,8 @@ Devices:
 使用 https://putsreq.com 来查看命令发送的 REST 请求是否是 DELETE，返回`Error: server did not provide a message (status 404: Not Found)`，应该是 URL 有加参数的缘故：`req, err := http.NewRequest("DELETE", c.host+"/volumes/"+id, nil)`，而 pustreq 和 httpbin 都不支持 wildcard matching，可能是安全考虑，后来发现 Postman 本身带有这个功能，检查后发现 heketi-cli 确实发送的 DEL 命令。
 手工用`gluster volume delete id`命令删除卷，成功。但是 heketi 这边还是显示原来的卷，heketi db 只是单向的数据流？k8s 内部的 PV 可以自动删除。祭出命令`tcpdump port 8080 -nA`，对比两者请求，发现问题在`./heketi-cli --server http://192.168.51.187:8080/ volume list` 的请求为 `DEL //volume/id`，这时会返回 `301 Moved Permanently` 并附上正确的 URL `/volume/id`，cli 拿到新的 URL 后统一重发 GET 请求。DELETE is not a safe method，所以 301 跳转时会转换为 GET，这个是 golang http 的[行为](https://github.com/golang/go/issues/13994)。这也是为什么 GET 命令可以成功的原因。
 
+为什么会返回 301 呢？原来 http.ServeMux 在遇到 url 里面带多余的 slash 的时候会做这个处理。
+
 调试发现其请求过程挺有趣，比如创建一个 volume：
 ```
 -> POST /volumes
