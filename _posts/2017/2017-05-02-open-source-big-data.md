@@ -7,9 +7,9 @@ categories:
   - overview
 ---
 
-https://hadoopecosystemtable.github.io/ 英文的，很全面。
+<https://hadoopecosystemtable.github.io/> 英文的，很全面。
 
-https://hortonworks.com/ecosystems/ 整个生态系统
+<https://hortonworks.com/ecosystems/> HDP 整个生态系统
 
 Apache Accumulo 是一个可靠的、可伸缩的、高性能的排序分布式的 Key-Value 存储解决方案，基于单元访问控制以及可定制的服务器端处理。使用 Google BigTable 设计思路，基于 Apache Hadoop、Zookeeper 和 Thrift 构建
 HDP 里面有 web ui，有 table，为什么要这个？给谁用？

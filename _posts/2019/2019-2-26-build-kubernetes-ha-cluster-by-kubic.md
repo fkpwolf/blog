@@ -56,7 +56,7 @@ listen  https_web 192.168.51.230:6443
         server server1 192.168.51.120:6443 weight 1 maxconn 512 check
         server server1 192.168.51.123:6443 weight 1 maxconn 512 check
 ```
-check 表示健康检查，这样就没有必要使用 Keepalived 了。然后再 OpenWrt 里面配置 k8s.api.server DNS IP 为上面的 192.168.51.230，因为要有证书（下面会生成）访问。上面配置我可以使用 hostname，比如 kubic-1，重建后 Hostname 对应的 IP 会变，但是 HAProxy 照样能工作。可以的。这里通过 6443 端口能否访问来判断 api server 是否运行，并没有通过检查响应内容来判断服务是否正常。
+check 表示健康检查，这样就没有必要使用 Keepalived 了。然后再 OpenWrt 里面配置 k8s.api.server DNS IP 为上面的 192.168.51.230，因为要有证书（下面会生成）访问。上面配置我可以改为使用 hostname，比如 kubic-1，重建后 Hostname 对应的 IP 会变，但是 HAProxy 照样能工作。可以的。这里通过 6443 端口能否访问来判断 api server 是否运行，并没有通过检查响应内容来判断服务是否正常。
 
 有一次，kubic-0 上面的api-server pod停止运行，dashboard页面打不开，但是其错误现实似乎是个内部ip的地址。
 
