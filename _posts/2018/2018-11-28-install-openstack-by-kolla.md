@@ -10,18 +10,18 @@ categories:
 
 ### 安装
 
-指导文档：https://docs.openstack.org/kolla-ansible/latest/user/quickstart.html 
+指导文档：<https://docs.openstack.org/kolla-ansible/latest/user/quickstart.html>
 
-CentOS 7.3 多节点Kolla安装 http://www.chenshake.com/kolla-centos-over-more-than-7-3-node-installation/
+CentOS 7.3 多节点Kolla安装 <http://www.chenshake.com/kolla-centos-over-more-than-7-3-node-installation/>
 
 * fatal: [localhost]: FAILED! => {"changed": false, "failed": true, "msg": "Unknown error message: Tag 4.0.1 not found in repository docker.io/kolla/ubuntu-binary-kolla-toolbox"}. → 修改里面的openstack-version，从auto改为4.0.0。这是因为4.0.1没有push到docker hubs上面？
 * deploy后，打开dashboard可以，但是static file都返回404。→ cleanup-containers & cleanup-host in /usr/local/share/kolla-ansible/tools. 这是清空重新部署的常用命令。
 * `fatal: [localhost]: FAILED! => {"failed": true, "msg": "The conditional check ''{{ hostvars[item['item']]['ansible_' + hostvars[item['item']]['api_interface']]['ipv4']['address'] }}' not in '{{ item.stdout }}'' failed. The error was: Invalid conditional detected: EOL while scanning string literal (<unknown>, line 1)\n\nThe error appears to have been in '/usr/local/share/kolla-ansible/ansible/roles/rabbitmq/tasks/precheck.yml': line 54, column 3, but may\nbe elsewhere in the file depending on the exact syntax problem.\n\nThe offending line appears to be:\n\n\n- fail: msg=\"Hostname has to resolve to IP address of api_interface\"\n ^ here\n"}` → 我看安装程序已经设置hostname的ip为api_interface的ip。
 * Docker will not be able to stop the nova_libvirt container with those running. → 自己create的nova instance默认是用libvirt（因为我的host机器不是vm），shutdown后就可以运行cleanup-containers了。
 * Cannot uninstall 'PyYAML'. It is a distutils installed project and thus we cannot accurately determine which files belong to it which would lead to only a partial uninstall. → pip install pip==8.1.2
-* /usr/share/kolla-ansible/init-runonce 文件里面 EXT_NET_CIDR这个是设置浮动IP的范围，必须设置好，这样运行 init-runonce 后，绑定 floating ip可以直接assign外网ip了，否则又得重新部署。http://www.chenshake.com/kolla-installation/ 这个里面有谈到。里面说 这个其实是从 neutron_external_interface 网卡访问的，如何确认？因为在 OpenWrt 是看不到的。`arp -an` 里面返回对应 IP 地址是 fa:16:3e:62:fb:ed，私营 mac，看了下也不是 vm nic mac，ui 里面看了下，是 network:router_gateway public1 的 Mac 地址。
+* /usr/share/kolla-ansible/init-runonce 文件里面 EXT_NET_CIDR这个是设置浮动IP的范围，必须设置好，这样运行 init-runonce 后，绑定 floating ip可以直接assign外网ip了，否则又得重新部署。<http://www.chenshake.com/kolla-installation/> 这个里面有谈到。里面说 这个其实是从 neutron_external_interface 网卡访问的，如何确认？因为在 OpenWrt 是看不到的。`arp -an` 里面返回对应 IP 地址是 fa:16:3e:62:fb:ed，私营 mac，看了下也不是 vm nic mac，ui 里面看了下，是 network:router_gateway public1 的 Mac 地址。
 这次忘了设置，修改再次运行时，报错 This tool should only be run once per deployment.
-不想重新运行，按照这里 https://www.howtoing.com/openstack-networking-guide 在界面上创建网络。But notebook can’t ping floating ip & vm can’t ping 192.168.51.1. `yum install openswitch` then run ovs-vsctl show, otherwise command not found.
+不想重新运行，按照[这里](https://www.howtoing.com/openstack-networking-guide) 在界面上创建网络。But notebook can’t ping floating ip & vm can’t ping 192.168.51.1. `yum install openswitch` then run ovs-vsctl show, otherwise command not found.
 No idea. Re-deploy. tools/cleanup-containers & tools/cleanup-host as https://docs.openstack.org/kolla-ansible/latest/user/operating-kolla.html. cmd is in /usr/share/kolla-ansible/tools.
 
 VM ssh 免密码登录必须要在 root 用户下才能进，密钥在root用户下？是的，安装用的是 root 账户。
@@ -41,7 +41,7 @@ init-runonce 会创建很多初始化的资源，比如网络路由、cirros 磁
 ```
 ERROR: 'NoneType' object has no attribute 'replace' (HTTP 500) (Request-ID: req-6c01fbcf-f883-41e3-a7f9-cecf92c7cf34)
 ```
-[这里](https://stackoverflow.com/questions/52466203/error-nonetype-object-has-no-attribute-replace-http-500-openstack-magnum) 同样问题，说是 GitHub 已经 fix 了。但是我看 /etc/kolla/magnum-conductor 下面还是用的 www_authenticate_uri，什么情况。直接跑到 /usr/share/kolla-ansible/ansible/roles/magnum/templates 下修改 magnum.conf.j2，将 www_authenticate_uri 改为 auth_uri，原来上面的 /etc/kolla 都是根据这个来产生的。这个是已知 bug <https://bugs.launchpad.net/ubuntu/+source/magnum/+bug/1793813>。
+[这里](https://stackoverflow.com/questions/52466203/error-nonetype-object-has-no-attribute-replace-http-500-openstack-magnum) 同样问题，说是 GitHub 已经 fix 了。但是我看 /etc/kolla/magnum-conductor 下面还是用的 www_authenticate_uri，什么情况。直接跑到 /usr/share/kolla-ansible/ansible/roles/magnum/templates 下修改 magnum.conf.j2，将 www_authenticate_uri 改为 auth_uri，原来上面的 /etc/kolla 都是根据这个来产生的。这个是已知 [bug](https://bugs.launchpad.net/ubuntu/+source/magnum/+bug/1793813)。
 
 重新 deploy 后可以看到/etc/kolla 下面被修改了，但是 docker ps 显示对应镜像还是 半小时前的，所以错误还是一样，如何重新生成呢？清空重新部署。现在magnum ui & cli 都可以运行不出错。这个重新部署很要命，有时可以，有时要清空然后重新部署，有地方说重启全部容器就可以。
 

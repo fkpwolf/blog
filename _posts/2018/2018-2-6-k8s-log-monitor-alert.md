@@ -10,20 +10,16 @@ typora-root-url: ../../../blog
 对于一个分布式且微服务化的系统，这块价值是显而易见的。不过一般开发人员都不大重视，各种配置，觉得麻烦。系统出了问题手忙脚乱，希望有这么个系统，没有问题则万事大吉。
 
 * 日志是有约定格式的文本文件，每行为一条记录，各字段用 tab 分开
-* 监控数据则是特殊一种指标(metrics)，比如 cpu 使用率，服务状态和调用次数，随着时间不断发生变化，是一种时间序列数据
+* 监控数据则是特殊一种指标(metrics)，比如 cpu 使用率，服务状态和调用次数，随着时间不断发生变化，是一种时间序列数据（time series data）
 * 跟踪则是程序代码的调用栈，包括开始/结束时间，请求和响应数据
 
 这些是从不同切面和角度对系统进行分析，数据不同，展示和分析方式也不同。
 
 ### EFK
 
-EFK由ElasticSearch、Fluentd和Kiabana三个开源工具组成。其中Elasticsearch是一款分布式搜索引擎，能够用于日志的检索，Fluentd是一个实时开源的数据收集器,而Kibana 是一款能够为Elasticsearch 提供分析和可视化的 Web 平台。 
+EFK由ElasticSearch、Fluentd和Kiabana三个开源工具组成。其中Elasticsearch是一款分布式搜索引擎，能够用于日志的检索，Fluentd是一个实时开源的数据收集器,而Kibana 是一款能够为Elasticsearch 提供分析和可视化的 Web 平台。原来的组合是 ELK: Elasticsearch + Logstash + Kibana。Logstash Java 写的，而 Fluentd 要运行在每个节点上面，原来的不够轻量级，或者说不是 cloud native 的。大数据生态里面的 Flume 也是一款高性能、高可用日志收集系统。
 
-原来的组合是 ELK: Elasticsearch + Logstash + Kibana。Logstash Java 写的，而 Fluentd 要运行在每个节点上面，原来的不够轻量级，或者说不是 cloud native 的。 
-
-试了几个helm chart，都不顺利。尝试这个 <https://medium.com/@timfpark/efk-logging-on-kubernetes-on-azure-4c54402459c4>，他是基于 kubernetes source code [add-on](https://github.com/kubernetes/kubernetes/tree/master/cluster/addons/fluentd-elasticsearch) 里面的代码，较为纯净。 
-
-部署后会看到有个fluentd-es-v2.2.0 daemon set，但是下面没有任何pods，显示为 0/3。一般来说daemon set 会运行在每个node上面，这里是因为要给node 上面打tag 才会运行。 
+试了几个helm chart，都不顺利。尝试[这个](https://medium.com/@timfpark/efk-logging-on-kubernetes-on-azure-4c54402459c4)，他是基于 kubernetes [add-on](https://github.com/kubernetes/kubernetes/tree/master/cluster/addons/fluentd-elasticsearch) 里面的代码，较为纯净。部署后会看到有个fluentd-es-v2.2.0 daemon set，但是下面没有任何pods，显示为 0/3。一般来说daemon set 会运行在每个node上面，这里是因为要给node 上面打tag 才会运行。 
 
     kubectl label nodes vm2 beta.kubernetes.io/fluentd-ds-ready=true 
 
@@ -33,11 +29,7 @@ EFK由ElasticSearch、Fluentd和Kiabana三个开源工具组成。其中Elastics
 
 在这里[浏览和搜索](https://console.cloud.google.com/gcr/images/google-containers/GLOBAL?location=GLOBAL&project=google-containers)google 的仓库，发现只有 2.1.0版本的。看来这个add-on 确实被遗留的项目。 
 
-然后按照文档使用kubectl proxy 访问。我发现使用 NodePort 不能访问，返回一个 json 错误。现在kibana可以运行，但是没有任何数据。我记得公司集群上面还有些logstach 数据的。 
-
-按照文档运行 `curl -XPUT 'http://elasticsearch-logging:9200/_cluster/settings' -d '{ "transient": { "cluster.routing.allocation.enable": "all" } }'  -H 'Content-Type: application/json’`。还是不行。 
-
-后来发现和这里([腾讯云](https://cloud.tencent.com/developer/article/1010578))遇到问题一模一样，因为centos 的日志输出是journald的，而fluentd 默认是扫描 /var/log/containers 下的日志（今天我发现有的在 /var/lib/docker/containers/ 下面），所以没有任何数据，而在ubuntu下就可以。 
+然后按照文档使用 kubectl proxy 访问。我发现使用 NodePort 不能访问，返回一个 json 错误。现在kibana可以运行，但是没有任何数据。我记得公司集群上面还有些logstach 数据的。按照文档运行 `curl -XPUT 'http://elasticsearch-logging:9200/_cluster/settings' -d '{ "transient": { "cluster.routing.allocation.enable": "all" } }'  -H 'Content-Type: application/json’`。还是不行。 后来发现和这里([腾讯云](https://cloud.tencent.com/developer/article/1010578))遇到问题一模一样，因为centos 的日志输出是journald的，而fluentd 默认是扫描 /var/log/containers 下的日志（今天我发现有的在 /var/lib/docker/containers/ 下面），所以没有任何数据，而在ubuntu下就可以。 
 ```shell
 $ vim /etc/sysconfig/docker 
 增加 OPTIONS='--log-driver=json-file --signature-verification=false' 
@@ -46,11 +38,11 @@ $ systemctl restart docker
 ```
 这种方法其实就是[这里说的最优的办法](https://jimmysong.io/kubernetes-handbook/practice/app-log-collection.html)："将所有的Pod的日志都挂载到宿主机上，每台主机上单独起一个日志收集Pod”。这种配置少，但是要求目录和日志格式都要先约定好，而且 log 要输出到 out，这样 Docker 才会截获这些日志。当然现在日志系统比如 log4j 都支持多个输出目的地(appender)。他这里使用Filebeat来代替Fluentd。[Fluent-bit](https://github.com/fluent/fluent-bit-kubernetes-logging) 可以读取更多的类型的日志“ * Read Kubernetes/Docker log files from the file system or through Systemd Journal”。 
 
-Add-on 里面默认es 存储是内存，不知道能存多长时间。es 是基于 JAVA，耗内存，容易导致节点 OOM。 
+Add-on 里面默认es 存储是EmptyDir volume，pod 结束就会消失。es 是基于 JAVA，耗内存，容易导致节点 OOM。 
 
 只能读取非系统容器的 log，这些是安全的限制？如何读取系统内比如 kube-proxy 的 log？kubernetes/cluster/addons/fluentd-elasticsearch/fluentd-es-configmap.yaml 这个里面表面其能读取 kubelet 的日志。 
 
-今天尝试让 office k8s send log -> home k8s，在 office k8s 里面只运行 fluentd-es-configmap.yaml & fluentd-es-ds.yaml，当然更换了 elasticsearch host 地址。kibana 只能看到 weave-net Discovered remote MAC  的日志。查看 fluentd-es 日志，有 [elasticsearch] Could not push logs to Elasticsearch, resetting connection and trying again. read timeout reached。我看 ip 和端口都是对的啊。 curl '<http://192.168.51.11:31954/_search?pretty>’ 运行有返回值。 
+今天尝试让 office k8s send log -> home k8s，在 office k8s 里面只运行 fluentd-es-configmap.yaml & fluentd-es-ds.yaml，当然更换了 elasticsearch host 地址。kibana 只能看到 weave-net Discovered remote MAC  的日志。查看 fluentd-es 日志，有 [elasticsearch] Could not push logs to Elasticsearch, resetting connection and trying again. read timeout reached。我看 ip 和端口都是对的啊，`curl http://192.168.51.11:31954/_search?pretty` 运行有返回值。 
 
 ![es-conf](/images/2018/es-conf.png)
 
@@ -84,7 +76,7 @@ Node exporter <https://prometheus.io/docs/introduction/first_steps/#installing-t
 
 上面 template 会生成 prometheus-node-exporter 和 node-directory-size-metrics 这两个 Daemon Sets，这样每个节点都有，这两个搜刮器直接访问 cAdvisor? 
 
-数据的存储如果时间长了，是不是会很大？<https://prometheus.io/docs/prometheus/1.8/storage/> 这个里面说用的是 LevelDB（只是做索引），但是最新的文档里面没有提及。不知道是否更换了。PromQL queries that involve a high number of time series will make heavy use of the LevelDB-backed indexes. 而生产环境就可以用[各种](https://prometheus.io/docs/operating/integrations/#remote-endpoints-and-storage)时间序列数据库了，比如常用的 [InfluxDB](https://www.jianshu.com/p/d2935e99006e)，能处理时间序、度量、事件。 
+数据的存储如果时间长了，是不是会很大？<https://prometheus.io/docs/prometheus/1.8/storage/> 这个里面说用的是 LevelDB（只是做索引），但是最新的文档里面没有提及。不知道是否更换了。PromQL queries that involve a high number of time series will make heavy use of the LevelDB-backed indexes. 而生产环境就可以用[各种](https://prometheus.io/docs/operating/integrations/#remote-endpoints-and-storage)时间序列数据库了，比如常用的 [InfluxDB](https://www.jianshu.com/p/d2935e99006e)，能处理时序性、度量、事件。 
 
 我试的几个一键安装的都没有看到信息存在哪个 PV，只保存最近一天的 log？ 
 
