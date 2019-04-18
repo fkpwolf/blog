@@ -62,7 +62,7 @@ check 表示健康检查，这样就没有必要使用 Keepalived 了。然后�
 
   Get https://10.96.0.1:443/apis/rbac.authorization.k8s.io/v1/roles: dial tcp 10.96.0.1:443: connect: connection refused
 
-停掉`api server pod: crictl stopp 1a84106e28fb3`，pod 马上变为 running，原来这个 pod 也和普通一样会自动重启，看来要停掉kube-0才能测试了。先找到方法监控haproxy，本身就有带：
+停掉 api server pod: `crictl stopp 1a84106e28fb3`，pod 马上变为 running，原来这个 pod 也和普通一样会自动重启，看来要停掉 kube-0 才能测试了。先找到方法监控 haproxy，本身就有带：
 ```ini
 listen stats
     bind :32700
@@ -70,10 +70,11 @@ listen stats
     stats uri /
     stats hide-version
 ```
-这样就可以看到详细的统计信息，不错！现在停掉kubic-0（libvirt pause），haproxy stats 马上就可以看到效果：
+这样就可以看到详细的统计信息，不错！现在停掉 kubic-0（`libvirt pause`），haproxy stats 马上就可以看到效果：
 ![](/images/2019/haproxy-stats.png)
-因为是master节点，所以并没有发生pod迁移。dashboard用kubic-1:nodeport可以继续访问。
-继续 k8s HA 部署。kubeadm-config.yaml 为：
+因为是 master 节点，所以并没有发生pod迁移。dashboard 用 kubic-1:nodeport 可以继续访问。HAProxy 新版本已经[支持prometheus](https://www.haproxy.com/blog/haproxy-exposes-a-prometheus-metrics-endpoint/)，指标还是这些，但是就能够时间序列数据了。
+
+继续 k8s HA 部署。最终的 kubeadm-config.yaml 为：
 ```yaml
 apiVersion: kubeadm.k8s.io/v1beta1
 kind: ClusterConfiguration
@@ -92,7 +93,7 @@ apiServer:
         certFile: /etc/kubernetes/pki/apiserver-etcd-client.crt
         keyFile: /etc/kubernetes/pki/apiserver-etcd-client.key
 ```
-上面 api server 要设置 dns，etcd endports 我这里是 etcd in k8s cluster 的 server 地址，单个节点似乎没法在 k8s 外部单独访问。拷贝证书后，运行 `kubeadm init --config kubeadm-config.yaml --cri-socket="/var/run/crio/crio.sock"`，错误：
+上面 api server 要设置 DNS，etcd endports 我这里是 etcd in k8s cluster 的 server 地址，单个节点似乎没法在 k8s 外部单独访问。拷贝证书后，运行 `kubeadm init --config kubeadm-config.yaml --cri-socket="/var/run/crio/crio.sock"`，错误：
 
     [ERROR ExternalEtcdVersion]: this version of kubeadm only supports external etcd version >= 3.2.18. Current version: 3.2.13
 

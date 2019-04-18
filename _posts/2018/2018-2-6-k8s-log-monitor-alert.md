@@ -84,7 +84,7 @@ Node exporter <https://prometheus.io/docs/introduction/first_steps/#installing-t
 
 上面 template 会生成 prometheus-node-exporter 和 node-directory-size-metrics 这两个 Daemon Sets，这样每个节点都有，这两个搜刮器直接访问 cAdvisor? 
 
-数据的存储如果时间长了，是不是会很大？<https://prometheus.io/docs/prometheus/1.8/storage/> 这个里面说用的是 LevelDB（只是做索引），但是最新的文档里面没有提及。不知道是否更换了。PromQL queries that involve a high number of time series will make heavy use of the LevelDB-backed indexes. 而生产环境就可以用[各种](https://prometheus.io/docs/operating/integrations/#remote-endpoints-and-storage)时间序列数据库了，比如常用的 [InfluxDB](https://www.jianshu.com/p/d2935e99006e)，能处理时间序、度量、事件。 
+数据的存储如果时间长了，是不是会很大？<https://prometheus.io/docs/prometheus/1.8/storage/> 这个里面说用的是 LevelDB（只是做索引），但是最新的文档里面没有提及。不知道是否更换了。PromQL queries that involve a high number of time series will make heavy use of the LevelDB-backed indexes. 而生产环境就可以用[各种](https://prometheus.io/docs/operating/integrations/#remote-endpoints-and-storage)时间序列数据库了，比如常用的 [InfluxDB](https://www.jianshu.com/p/d2935e99006e)，能处理时间序、度量、事件，高可用方案是收费的。 
 
 我试的几个一键安装的都没有看到信息存在哪个 PV，只保存最近一天的 log？ 
 
