@@ -203,3 +203,5 @@ CDAP 举的例子是把计算一堆点的中心点。
 API 网上算法，按调用付钱，提供了很多例子 <https://algorithmia.com/> 
 
 [Comparison of top data science libraries for Python, R and Scala](https://medium.com/activewizards-machine-learning-company/comparison-of-top-data-science-libraries-for-python-r-and-scala-infographic-574069949267?hss_channel=tw-816825631) 对比了很多框架
+
+NLP：[经典算法·从ELMo、GPT到bert](https://zhuanlan.zhihu.com/p/54578457)，[效果逆天的通用语言模型 GPT 2.0 来了，它告诉了我们什么？](https://www.infoq.cn/article/pW8YaUXjTuhC6d0p*OwX)
