@@ -29,25 +29,25 @@ VM ssh 免密码登录必须要在 root 用户下才能进，密钥在root用户
 
 安装好后，很多服务比如 swift 没有安装。这个我得自己弄么？Just edit /etc/kolla/globals.yml and enable serivce like cinder. Then kolla-ansible deploy -i all-in-one again. Then OK.
 今天又重新装了遍，安装好后，发现horizon没有装（现在默认不装了？），修改global.yaml，enable后重新deploy，居然也没有错，然后可以访问horizon。
-可以额外添加的服务 https://github.com/openstack/kolla-ansible/blob/master/README.rst#openstack-services 注释里面的值就是默认值。比如默认打开了 horizon, heat。但是我看没有 heat 这个命令，仿照 openstackclient 安装方法 pip install python-heatclient，但是运行时报警：WARNING (shell) "heat stack-list" is deprecated, please use "openstack stack list” instead。
+可以额外添加的[服务](https://github.com/openstack/kolla-ansible/blob/master/README.rst#openstack-services)，注释里面的值就是默认值。比如默认打开了 horizon, heat。但是我看没有 heat 这个命令，仿照 openstackclient 安装方法 pip install python-heatclient，但是运行时报警：WARNING (shell) "heat stack-list" is deprecated, please use "openstack stack list” instead。
 
 init-runonce 会创建很多初始化的资源，比如网络路由、cirros 磁盘镜像、虚机类型，但是只能运行一次。
 
 ### Magnum
 
-既然已经有了：enable_horizon_magnum & enable_magnum，启用，然后 kolla-ansible deploy，是很方便，就是似乎每次添加一个组件都挺耗时。
-刷新后界面上已经有了新的菜单项 container Infra，但是会出错误消息：Error: Unable to retrieve the cluster templates. Error: Unable to retrieve the stats.
+既然已经有了：enable_horizon_magnum & enable_magnum，启用，然后`kolla-ansible deploy`，是很方便，就是似乎每次添加一个组件都挺耗时。
+刷新后界面上已经有了新的菜单项 Container Infra，但是访问会出错误消息：Error: Unable to retrieve the cluster templates. Error: Unable to retrieve the stats.
 客户端用命令行安装 `pip install -U python-magnumclient`，这个是想当然猜出来的（现在已经用 `openstack coe` 来代替 magnum 命令了。）。`magnum cluster-list` 报错：
 ```
 ERROR: 'NoneType' object has no attribute 'replace' (HTTP 500) (Request-ID: req-6c01fbcf-f883-41e3-a7f9-cecf92c7cf34)
 ```
-[这里](https://stackoverflow.com/questions/52466203/error-nonetype-object-has-no-attribute-replace-http-500-openstack-magnum) 同样问题，说是 GitHub 已经 fix 了。但是我看 /etc/kolla/magnum-conductor 下面还是用的 www_authenticate_uri，什么情况。直接跑到 /usr/share/kolla-ansible/ansible/roles/magnum/templates 下修改 magnum.conf.j2，将 www_authenticate_uri 改为 auth_uri，原来上面的 /etc/kolla 都是根据这个来产生的。这个是已知 [bug](https://bugs.launchpad.net/ubuntu/+source/magnum/+bug/1793813)。
+[这里](https://stackoverflow.com/questions/52466203/error-nonetype-object-has-no-attribute-replace-http-500-openstack-magnum)同样问题，说是 GitHub 已经 fix 了。但是我看 /etc/kolla/magnum-conductor 下面还是用的 www_authenticate_uri，什么情况。直接跑到 /usr/share/kolla-ansible/ansible/roles/magnum/templates 下修改 magnum.conf.j2，将 www_authenticate_uri 改为 auth_uri，原来上面的 /etc/kolla 都是根据这个来产生的。这个是已知 [bug](https://bugs.launchpad.net/ubuntu/+source/magnum/+bug/1793813)。
 
 重新 deploy 后可以看到/etc/kolla 下面被修改了，但是 docker ps 显示对应镜像还是 半小时前的，所以错误还是一样，如何重新生成呢？清空重新部署。现在magnum ui & cli 都可以运行不出错。这个重新部署很要命，有时可以，有时要清空然后重新部署，有地方说重启全部容器就可以。
 
 然后在界面创建 cluster template，这比命令行方便。但是出现错误（错误都只在 http response 里面才能看到）：`Cluster type (vm, None, kubernetes) not supported (HTTP 400)`
 这个错误在命令行下可以看到，所以 UI 做的不行还不如命令行。这种 hello world 一定要能测试通过，否则就失去了 UI 快速上手的意义。
-上面错误在[这里](https://ask.openstack.org/en/question/116089/cant-create-k8s-cluster-in-magnum-image-issue/) 解释很清楚，原因在于我的 os image 必须带一个属性 **os_distro** 标明其 linux 发行名，属性可以在 ui 里面的 image meta 加（rocky 只能命令行，UI 会报错）。现在[只支持](https://docs.openstack.org/magnum/latest/user/#kubernetes) fedora-atomic, coreos，看来 magnum 知道 k8s 配置对操作系统很敏感。
+上面错误在[这里](https://ask.openstack.org/en/question/116089/cant-create-k8s-cluster-in-magnum-image-issue/)解释很清楚，原因在于我的 os image 必须带一个属性 **os_distro** 标明其 linux 发行名，属性可以在 ui 里面的 image meta 加（rocky 只能命令行，UI 会报错）。现在[只支持](https://docs.openstack.org/magnum/latest/user/#kubernetes) fedora-atomic, coreos，看来 magnum 知道 k8s 搭建对操作系统很敏感。
 
     openstack image set --property os_distro=fedora-atomic foo
 
@@ -64,9 +64,9 @@ Resource CREATE failed: resources[0]: resources.kube_masters.Property error: res
 修改模板 `magnum cluster-template-update fedora add volume_driver=cinder`，还是一样。我在界面创建卷的时候也看到 No Volume type。`openstack volume type list` 也为空。
 好吧，enable_ceph，重新 deploy，没看到啥变化，只是多了两个 ceph 容器。手工创建一个 volume type，然后创建一个该 type 的 volume，失败。看来部署 Cehp 没有那么简单。
 
-下面 Ceph 配置好后，回到这里。现在可以在界面成功创建一个 volume，但是创建 k8s 集群时依然同样错误。[这里](https://ask.openstack.org/en/question/110729/magnum-cluster-create-k8s-cluster-error-resourcefailure/)说缺少一个`default_docker_volume_type` 字段，`docker exec -it magnum_conductor` 进去后直接修改，然后 restart container，后来发现 restart 后值丢失，原来要修改 `/etc/kolla/magnum-*` 下面的对应文件，我猜容器是用 mount /etc 目录的方式来访问配置，这种操作如果放在 k8s 下面做就简单方便很多。这个值原始定义在 `/usr/share/kolla-ansible/ansible/roles/magnum/defaults/main.yml` 中。这个 volume type 没有绑定特定的 volume backend，可能被当做为默认类型。
+安装下面步骤配置好 Ceph 后，回到这里。现在可以在界面成功创建一个 volume，但是创建 k8s 集群时依然同样错误。[这里](https://ask.openstack.org/en/question/110729/magnum-cluster-create-k8s-cluster-error-resourcefailure/)说缺少一个`default_docker_volume_type` 字段，`docker exec -it magnum_conductor` 进去后直接修改，然后 restart container，后来发现 restart 后值丢失，原来要修改 `/etc/kolla/magnum-*` 下面的对应文件，我猜容器是用 mount /etc 目录的方式来访问配置，这种操作如果放在 k8s 下面做就简单方便很多。这个值原始定义在 `/usr/share/kolla-ansible/ansible/roles/magnum/defaults/main.yml` 中。这个 volume type 没有绑定特定的 volume backend，可能被当做为默认类型。
 
-现在开始漫长的创建 k8s 集群了。然后居然就可以了，一个 master，两个 minion，没有出现任何错误。看来已经颇为稳定了。
+现在开始漫长的创建 k8s 集群了。然后特么居然就可以了，一个 master，两个 minion，没有出现任何错误。看来已经颇为稳定了。
 
 尝试创建一个带 load balance 功能的 k8s 集群，失败报错：
 ```
@@ -99,7 +99,7 @@ OpenStack 到此一游。
 
 在 horizon 里面，外网或者内网网络是一个 IP 地址池（子网络），通过路由来连接两个网络，图中路由通过两个接口来连接两个网络。而浮动 ip 是外网子网里面的一个 ip，其和内网子网的某个 ip 做了绑定，这样就能通过浮动 ip 直接访问内网虚拟机。
 
-queens 创建出来 k8s 默认版本是 1.9.3，rocky 的是 1.11.1。暂时没有找到配置 k8s 版本的地方。 
+queens 创建出来 k8s 默认版本是 1.9.3，rocky 的是 1.11.1，暂时没有找到配置 k8s 版本的地方。 
 
 ### k8s 集群删除失败的问题
 
@@ -228,12 +228,12 @@ Kibana 没法起来：`/usr/local/bin/kolla_start: line 18: /usr/share/kibana/bi
 
 ### 虚拟机一直是 scheduling 状态
 
-https://docs.openstack.org/kolla-ansible/latest/user/troubleshooting.html 这里有调试方法，用 docker exec -it 进入 shell，cat /var/log/kolla/nova/nova-scheduler.log，
+<https://docs.openstack.org/kolla-ansible/latest/user/troubleshooting.html> 这里有调试方法，用`docker exec -it` 进入 shell，cat /var/log/kolla/nova/nova-scheduler.log，
 ```
 AMQP server on 192.168.51.247:5672 is unreachable: [Errno 111] ECONNREFUSED. Trying again in 6 seconds. Client port: None: error: [Errno 111] ECONNREFUSED
 ```
 界面显示服务 nova-scheduler down 状态。nova service-list 也显示为 down。
-https://ask.openstack.org/en/question/54526/amqp-server-on-1000115672-is-unreachable/ 同样问题
+[同样问题](https://ask.openstack.org/en/question/54526/amqp-server-on-1000115672-is-unreachable/)
 docker ps 返回里面有  kolla/centos-binary-rabbitmq:queens 这个 docker 运作中，shell 进去，rabbitmqctl status，lsof -i :5672 看到已经有很多连接了。不对，上面unreachable日志是昨天的。docker ps -a 返回所有 docker，发现 kolla/centos-binary-nova-scheduler:queens 已经退出了。
 ```
     b63907bcea6e        kolla/centos-binary-nova-scheduler:queens              "kolla_start"       16 hours ago        Exited (0) 13 hours ago                       nova_scheduler
@@ -430,12 +430,11 @@ Check [Kolla source code](https://github.com/openstack/kolla-ansible). It has br
 
 ### Think
 * Ansible 是幂等的，也就是说反复部署不会对功能造成影响，这个是理想情况。
-* Docker 对宿主机的网络和设备全面接管，和独立运行的程序没啥差别。用容器部署比直接程序更简便么？可能隔离性更好，不需要安装包，对宿主机操作系统影响不大。另外：其配置（/etc/kolla/）和运行时（容器）是隔离开的，符合 12 法则应用理论。
-* Docker 用的不错。那用了 Docker 还用 OpenStack vm 干啥呢？技术变化太快，总的来说：OpenStack plays the role of the overall data center management. KVM as the multi-tenant compute resource management, and Docker containers as the application deployment package. 容器另外一个问题是**强隔离**还不够好，vm 能弥补这个缺点。
-* 直接用 Docker，出了错只能直接操作 Docker 调试，显然用 k8s 更好些，但牵涉到网络、存储这个问题就更复杂了。
+* Docker 对宿主机的网络和设备全面接管，和独立运行的程序没啥差别。用容器部署比直接程序更简便么？可能隔离性更好，不需要安装包，对宿主机操作系统影响不大。再则兼容性更好，安装过程最怕的是各种兼容性问题。另外：其配置（/etc/kolla/）和运行时（容器）是隔离开的，符合 12 法则应用理论。
+* Docker 用的不错。那用了 Docker 还用 OpenStack VM 干啥呢？技术变化太快，总的来说：OpenStack plays the role of the overall data center management. KVM as the multi-tenant compute resource management, and Docker containers as the application deployment package. 容器另外一个问题是**强隔离**还不够好，vm 能弥补这个缺点。
+* 直接用 Docker，出了错只能直接操作 Docker 调试，显然用 k8s 更好些（k8s也能提供高可用性），但牵涉到网络、存储这个问题就更复杂了。
 * 漫长的部署居然没有写日志的地方，我只找到使用管道 `tee` 的方法。
 * kolla 部署了大量镜像，这些镜像有缓存么？`docker images ls` 没有看到任何镜像。
-* kolla 用 Docker 方法部署 OpenStack，目的是为了简化，但是坑也比较多，还要注意各种参数。
 * Python 动态语言虽然开发遍历，但如何保证类型安全，这里感觉 Go 更为合适
 * Heat 设计因为模仿了 AWS CloudFormation，和原来 OpenStack 并不十分吻合，很多地方有拼凑之感，颇为恶心
 * Heat 编排大量依赖 cloud-init/userdata，隔着 vm 在 Linux 上面各种操作，颇有 hack 之感，k8s 则没有 vm 这个屏障，初始化过程看得清清楚楚。如果一个漫长的过程部署失败，出现错误的地方分布在不同平台，调试起来心累。 
