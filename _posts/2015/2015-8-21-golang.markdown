@@ -4,27 +4,52 @@ title:  "GoLang"
 date:   2015-8-21 16:27:00
 ---
 ### 概述
-* Get started https://golang.org/doc/install https://zh.wikipedia.org/wiki/Go
-* 《Go入门指南》 https://zengweigang.gitbooks.io/core-go/content/
-* Go is a general-purpose language designed with systems programming in mind. It is strongly typed and garbage-collected and has explicit support for concurrent programming.  https://golang.org/ref/spec
-* https://github.com/astaxie/build-web-application-with-golang/blob/master/zh/preface.md 中文，提供了很多例子
-* https://github.com/Unknwon/the-way-to-go_ZH_CN Go入门指南，中文翻译
+* Get started <https://golang.org/doc/install https://zh.wikipedia.org/wiki/Go>
+* 《Go入门指南》 <https://zengweigang.gitbooks.io/core-go/content/>
+* Go is a general-purpose language designed with systems programming in mind. It is strongly typed and garbage-collected and has explicit support for concurrent programming. <https://golang.org/ref/spec>
+* <https://github.com/astaxie/build-web-application-with-golang/blob/master/zh/preface.md> 中文，提供了很多例子
+* <https://github.com/Unknwon/the-way-to-go_ZH_CN> Go入门指南，中文翻译
 
 ### 开发环境
-`go get github.com/dmacvicar/terraform-provider-libvirt` 可以直接获取代码、保持目录、编译
+`go get github.com/dmacvicar/terraform-provider-libvirt` 可以直接获取代码、保持目录、编译。You can run `go get -v -d ./...` from a directory of your project to download all go-gettable dependencies. -v will add verbose log.
 
-You can run `go get -v -d ./...` from a directory of your project to download all go-gettable dependencies. -v will add verbose log.
+### 语言
 
-OOP，其不支持一般的对象继承，但是支持method和interface，奇怪的选择。OOP 已有多年没有用。
+OOP，其不支持一般的对象继承，但是支持 method 和 interface，奇怪的选择。OOP 已有多年没有用。
 
-https://blog.golang.org/go-maps-in-action
-字符串替换，有个重量级的 text/template，有没有 JavaScript 轻量级的 `You $name is` 这种。
-
-`strings.split(el, "\n”)` 没有字符串的操作，这不是面向对象了，连 JavaScript 的字符串都有 method。查看数组长度为 len(myArray)，好难看。
+<https://blog.golang.org/go-maps-in-action> 字符串替换，有个重量级的 text/template，有没有 JavaScript 轻量级的 `You $name is` 这种。`strings.split(el, "\n”)` 没有字符串的操作，这不是面向对象了，连 JavaScript 的字符串都有 method。查看数组长度为 len(myArray)，好难看。
  
 `go install hello.go`(or `go build hello.go`) will generate a big file(~2MB). Would be a standalone/distributable program. Use `otool -L hello` or `ldd hello`. No dependency. So “No more C”?(https://golang.org/doc/go1.5#c).
 
 为什么要使用 Go 语言？Go 语言的优势在哪里？ https://www.zhihu.com/question/21409296
+
+defer达到和Java finally一样的效果，用来控制资源的open/close，但是避免了try...catch...finally的这种冗长的代码结构。defer函数属延迟执行，延迟到调用者函数执行 return 命令前被执行。多个defer之间按LIFO先进后出顺序执行。defer 会被编译器插入到末尾的return前执行，故可以在derfer函数中修改返回值。
+
+支持闭包么？https://gobyexample.com/closures https://gobyexample.com/collection-functions 有点迷糊，原来 Go 不是函数式语言。map/reduce 的操作建议用 for-loop 代替。
+
+为什么 Docker 里面大量用 Go ？http://www.slideshare.net/jpetazzo/docker-and-go-why-did-we-decide-to-write-docker-in-go 没有很多依赖（除了libc），这给开发和部署很大的便利。而且方便调用底层，异步原语，标准库，strong duck typing(不是强类型的么？)，跨平台支持。
+
+http://stackoverflow.com/questions/6328679/in-golang-does-it-make-sense-to-write-non-blocking-code 如何写像 Node.js 那样的异步 IO。
+
+Golang 与 duck typing http://zqpythonic.qiniucdn.com/data/20120904000006/index.html 折中的做法
+* 类型 T 不需要显式地声明它实现了接口 I。只要类型 T 实现了所有接口 I 规定的函数，它就自动地实现了接口 I。 这样就像动态语言一样省了很多代码，少了许多限制。
+* 在把 duck 或者 person 传递给 greeting 前，需要显式或者隐式地把它们转换为接口 I 的接口变量 i。这样就可以和其它静态类型语言一样，在编译时检查参数的合法性。
+
+append(sliceA, 4) 这样的代码会导致编译错误 『append() evaluated but not used』，应该使用 a = append(a, x)。很好的提示，如果在自己的代码中获取这种警告呢？[我的问题](https://stackoverflow.com/questions/51649213/golang-how-to-get-error-evaluated-but-not-used/)
+
+range 的一个坑：
+```go
+for index := range deployment.Spec.Template.Spec.Containers {
+    deployment.Spec.Template.Spec.Containers[index].Image = "zzzz:1.13"
+    //log.Printf("will update container %s", container.Name)
+    //container.Image = "wwwww:1.2"
+}
+```
+如果把 Container 在 for 里面提取出来再修改，则数组还是老的值。为什么？[因为](https://studygolang.com/articles/9701)『因为for range创建了每个元素的副本，而不是直接返回每个元素的引用，如果使用该值变量的地址作为指向每个元素的指针，就会导致错误，在迭代时，返回的变量是一个迭代过程中根据切片依次赋值的新变量，所以值的地址总是相同的，导致结果不如预期。』
+
+依赖管理 godep(k8s dashboard，依赖放在 vendor\文件夹), glide(jaeger)，新的版本已经内置 Go modules 来结束包依赖管理混乱的局面。
+
+GC [垃圾回收](http://legendtkl.com/2017/04/28/golang-gc/)采用的是三色标记算法
 
 ### goroutine 
 [这里解释](https://www.zhihu.com/question/20862617/answer/36191625)很白话。大概意思是协程比线程更轻量级，一个线程可以运行多个goroutine，当某个routine运行调用函数/IO操作时，会被调度出来让其他的运行。这样一个线程里面的goroutine其实是顺序执行的，这个是CPS（communicating sequential process）的含义？
@@ -36,18 +61,6 @@ Go语言提供的消息通信机制被称为channel，接下来我们将详细�
 "单个程序拥有数千个goroutine也并不罕见。比如，net/http软件包中的服务器程序针对每个HTTP请求都会创建一个goroutine。"
 "使用“net/http”仅需几行代码即可实现HTTP服务器，并且还支持http/2、TLS和websocket。”
 为什么能有上百万个Goroutines，却只能有上千个Java线程？http://www.infoq.com/cn/articles/a-million-go-routines-but-only-1000-java-threads
-
-defer达到和Java finally一样的效果，用来控制资源的open/close，但是避免了try...catch...finally的这种冗长的代码结构。
-
-支持闭包么？https://gobyexample.com/closures https://gobyexample.com/collection-functions 有点迷糊，原来 Go 不是函数式语言。map/reduce 的操作建议用 for-loop 代替。
-
-为什么 Docker 里面大量用 Go ？http://www.slideshare.net/jpetazzo/docker-and-go-why-did-we-decide-to-write-docker-in-go 没有很多依赖（除了libc），这给开发和部署很大的便利。而且方便调用底层，异步原语，标准库，strong duck typing(不是强类型的么？)，跨平台支持。
-
-http://stackoverflow.com/questions/6328679/in-golang-does-it-make-sense-to-write-non-blocking-code 如何写像 Node.js 那样的异步 IO。
-
-Golang 与 duck typing http://zqpythonic.qiniucdn.com/data/20120904000006/index.html 折中的做法
-* 类型 T 不需要显式地声明它实现了接口 I。只要类型 T 实现了所有接口 I 规定的函数，它就自动地实现了接口 I。 这样就像动态语言一样省了很多代码，少了许多限制。
-* 在把 duck 或者 person 传递给 greeting 前，需要显式或者隐式地把它们转换为接口 I 的接口变量 i。这样就可以和其它静态类型语言一样，在编译时检查参数的合法性。
 
 来自 https://gobyexample.com/atomic-counters 的原子操作的例子（这个网站能根据代码和里面的注释自动生成文档），做了修改：
 ```go
@@ -73,20 +86,7 @@ func main() {
 ```
 func (apiHandler *APIHandler) handleGetDeploymentContainersUpdate (request *restful.Request, response *restful.Response) 
 apiHandler 表示这个是个接口函数？给人错觉为返回值。
-```go
-for index := range deployment.Spec.Template.Spec.Containers {
-    deployment.Spec.Template.Spec.Containers[index].Image = "zzzz:1.13"
-    //log.Printf("will update container %s", container.Name)
-    //container.Image = "wwwww:1.2"
-}
-```
-如果把 Container 在 for 里面提取出来再修改，则数组还是老的值。为什么？
 
-append(sliceA, 4) 这样的代码会导致编译错误 『append() evaluated but not used』，应该使用 a = append(a, x)。很好的提示，如果在自己的代码中获取这种警告呢？[我的问题](https://stackoverflow.com/questions/51649213/golang-how-to-get-error-evaluated-but-not-used/)
-
-依赖管理 godep(k8s dashboard use), glide(jaeger)
-
-GC [垃圾回收](http://legendtkl.com/2017/04/28/golang-gc/)采用的是三色标记算法
 
 ### Context
 Etcd util client MemberAdd 时的代码有些意思：
@@ -118,6 +118,6 @@ func httpDo(ctx context.Context, req *http.Request, f func(*http.Response, error
 如果已经 done 就取消请求并返回数据（都取消了返回啥呢？）。B 要自己处理当 context.Done 的逻辑，如果不处理则 context timeout 就没人尊重了。
 
 ### Web/REST
-* https://gin-gonic.github.io/gin/
-* https://github.com/go-martini/martini/blob/master/translations/README_zh_cn.md
-* https://github.com/urfave/negroni/blob/master/translations/README_zh_CN.md 『在 Go 语言里，Negroni 是一个很地道的 Web 中间件，它是一个具备微型、非嵌入式、鼓励使用原生 net/http 库特征的中间件...Negroni 不是一个框架，它是为了方便使用 net/http 而设计的一个库而已。』monocular & heketi 用的这个。其他流行微服务框架有 go micro 和 kite。
+* <https://gin-gonic.github.io/gin/>
+* <https://github.com/go-martini/martini/blob/master/translations/README_zh_cn.md>
+* <https://github.com/urfave/negroni/blob/master/translations/README_zh_CN.md> 『在 Go 语言里，Negroni 是一个很地道的 Web 中间件，它是一个具备微型、非嵌入式、鼓励使用原生 net/http 库特征的中间件...Negroni 不是一个框架，它是为了方便使用 net/http 而设计的一个库而已。』monocular & heketi 用的这个。其他流行微服务框架有 go micro 和 kite。
