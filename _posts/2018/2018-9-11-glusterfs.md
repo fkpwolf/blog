@@ -113,7 +113,7 @@ Heketi 居然在 centos 里面没包安装，fedora 有，ubuntu 没有。简单
 
 『GlusterFS 架构中没有元数据服务器组件，这是其最大的设计这点，对于提升整个系统的性能、可靠性和稳定性都有着决定性的意义。』和 Ceph 类似，但是 Ceph 有 monitor，这个如何管理数据的分布？根据卷的类型来？比如如果是 Replica volume 类型的，肯定是每个节点都有了。 但是 heketi 呢？这个不是单点故障么？如果 heketi 挂了，volume 级别的 meta 信息应该还在，这本身就由 glusterfs 节点维护，cluster/node 级别的可能就不存在了。
 
-如果一个卷分布在多个磁盘上(replica >2)，samba 客户端读取只能设置一个 Ip 吧，如何提高性能？ 
+如果一个卷分布在多个磁盘上(replica >2)，samba 客户端读取只能设置一个 IP 吧，如何提高性能？ 
 
 Volume 里面有属性： 
 ```
