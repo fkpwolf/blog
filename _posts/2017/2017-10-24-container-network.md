@@ -23,7 +23,8 @@ Comparison of Networking Solutions for Kubernetes http://machinezone.github.io/r
 容器网络插件 Calico 与 Contiv Netplugin深入比较 http://dockone.io/article/1935
 
 ### Calico - 典型的路由网络
-Image come from https://docs.projectcalico.org/v1.6/reference/without-docker-networking/docker-container-lifecycle 一步一步的演示如何让容器可以 ping 通。 网络包没有像 overlay 那样需要封包和解包动作，全靠 kernel 的 iptables 来进行路由。这种基于 IP 三层网络。感觉有点像静态路由。"最新实践 | 将Docker网络方案进行到底” 这个讲了不少Calico。如此一来，每台 host 机器上面的 iptables 会不会很巨大？因为这个要定义一对一的访问路径。"* BGP Route Reflector（BIRD），大规模部署时使用，摒弃所有节点互联的 mesh 模式，通过一个或者多个BGP Route Reflector来完成集中式的路由分发。” 那这种集中式的就需要很高的转发能力了？而且还得是集群模式。route reflector - RR 似乎是交换机领域已有的东西。https://en.wikipedia.org/wiki/Route_reflector
+Image come from https://docs.projectcalico.org/v1.6/reference/without-docker-networking/docker-container-lifecycle 一步一步的演示如何让容器可以 ping 通。 网络包没有像 overlay 那样需要封包和解包动作，全靠 kernel 的 iptables 来进行路由。这种基于 IP 三层网络。感觉有点像静态路由。"最新实践 | 将Docker网络方案进行到底” 这个讲了不少Calico。如此一来，每台 host 机器上面的 iptables 会不会很巨大？因为这个要定义一对一的访问路径。"* 
+ Route Reflector（BIRD），大规模部署时使用，摒弃所有节点互联的 mesh 模式，通过一个或者多个BGP Route Reflector来完成集中式的路由分发。” 那这种集中式的就需要很高的转发能力了？而且还得是集群模式。route reflector - RR 似乎是交换机领域已有的东西。https://en.wikipedia.org/wiki/Route_reflector
 
 ![calico](/images/2017/calico.png)
 
@@ -89,6 +90,8 @@ BGP（Border Gateway Protocol）即边界网关协议，是互联网上一个核
 
 Canal uses Calico for policy and Flannel for networking. 感觉很高级。
 
+
+
 ### Open vSwitch
 http://blog.codybunch.com/2016/10/14/KVM-and-OVS-on-Ubuntu-1604/ http://docs.openvswitch.org/en/latest/howto/libvirt/
 
@@ -114,6 +117,28 @@ Open vSwitch 只有交换功能，没有路由功能？openflow才有路由？
 
 [Docker Reference Architecture: Designing Scalable, Portable Docker Container Networks](https://success.docker.com/article/Docker_Reference_Architecture-_Designing_Scalable,_Portable_Docker_Container_Networks)
 Docker 官方的容器网络模型
+
+调试方法：
+```
+[centos@k8s-1 ~]$ curl 'http://127.0.0.1:6784/status'
+        Version: 2.5.1 (version 2.5.2 available - please upgrade!)
+
+        Service: router
+       Protocol: weave 1..2
+           Name: 16:54:5e:ad:21:d4(k8s-1)
+     Encryption: disabled
+  PeerDiscovery: enabled
+        Targets: 4
+    Connections: 4 (3 established, 1 failed)
+          Peers: 4 (with 12 established connections)
+ TrustedSubnets: none
+
+        Service: ipam
+         Status: ready
+          Range: 10.32.0.0/12
+  DefaultSubnet: 10.32.0.0/12
+```
+
 
 ### Network Policies
 https://kubernetes.io/docs/concepts/services-networking/network-policies/
