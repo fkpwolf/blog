@@ -14,3 +14,5 @@ P6. 创建任务时会反复 repeat（重试），这个机制有利于不稳定
 8. 各种 chart 的组合能帮助我们快速实现原型，确实做到了 Infrastructure as Code.
 9. CLI 精心设计，功能强大。kubectl proxy & kubectl port-forward，方便外部访问，分布式环境下很实用，方便测试、调试和开发。
 10. pod, deployment... 这些资源抽象简化和统一了操作界面，也有助于初学者理解系统
+
+表面看，yaml代替命令式，容器代替进程，并没有很多技术含量，但是使用起来效果却很神奇。
