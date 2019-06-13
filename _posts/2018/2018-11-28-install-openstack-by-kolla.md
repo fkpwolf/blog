@@ -64,7 +64,7 @@ Resource CREATE failed: resources[0]: resources.kube_masters.Property error: res
 修改模板 `magnum cluster-template-update fedora add volume_driver=cinder`，还是一样。我在界面创建卷的时候也看到 No Volume type。`openstack volume type list` 也为空。
 好吧，enable_ceph，重新 deploy，没看到啥变化，只是多了两个 ceph 容器。手工创建一个 volume type，然后创建一个该 type 的 volume，失败。看来部署 Cehp 没有那么简单。
 
-安装下面步骤配置好 Ceph 后，回到这里。现在可以在界面成功创建一个 volume，但是创建 k8s 集群时依然同样错误。[这里](https://ask.openstack.org/en/question/110729/magnum-cluster-create-k8s-cluster-error-resourcefailure/)说缺少一个`default_docker_volume_type` 字段，`docker exec -it magnum_conductor` 进去后直接修改，然后 restart container，后来发现 restart 后值丢失，原来要修改 `/etc/kolla/magnum-*` 下面的对应文件，我猜容器是用 mount /etc 目录的方式来访问配置，这种操作如果放在 k8s 下面做就简单方便很多。这个值原始定义在 `/usr/share/kolla-ansible/ansible/roles/magnum/defaults/main.yml` 中。这个 volume type 没有绑定特定的 volume backend，可能被当做为默认类型。
+按照下面步骤配置好 Ceph 后，回到这里。现在可以在界面成功创建一个 volume，但是创建 k8s 集群时依然同样错误。[这里](https://ask.openstack.org/en/question/110729/magnum-cluster-create-k8s-cluster-error-resourcefailure/)说缺少一个`default_docker_volume_type` 字段，`docker exec -it magnum_conductor` 进去后直接修改，然后 restart container，后来发现 restart 后值丢失，原来要修改 `/etc/kolla/magnum-*` 下面的对应文件，我猜容器是用 mount /etc 目录的方式来访问配置，这种操作如果放在 k8s 下面做就简单方便很多。这个值原始定义在 `/usr/share/kolla-ansible/ansible/roles/magnum/defaults/main.yml` 中。这个 volume type 没有绑定特定的 volume backend，可能被当做为默认类型。
 
 现在开始漫长的创建 k8s 集群了。然后特么居然就可以了，一个 master，两个 minion，没有出现任何错误。看来已经颇为稳定了。
 
@@ -158,14 +158,14 @@ k8s 由于采用声明式的方式来定义资源，所以删除的时候就很�
 
 感觉相关依赖没有做好，后面加 Ceph，前面创建好的 Cinder 容器没有重建，容器里面的配置都没有修改，这怎么能行呢？清除后重建集群。登录到后发现 cinder-api 下面还是没有 /etc/ceph/ceph.conf 文件，cinder-volume 有，ceph status 无法登录。ceph-mgr 容器运行 `ceph osd pool ls` 返回四个已经创建好的 pool：images, volumes, backups, vms。`ceph -s` 返回 0 kB used, 0 kB / 0 kB avail。日。
 
-https://docs.openstack.org/kolla-ansible/latest/reference/storage/ceph-guide.html 这里有详细配置，原来这个需要给硬盘加标签，然后 kolla 才会把这个硬盘分配给 Ceph。我只运行：
+[这里](https://docs.openstack.org/kolla-ansible/latest/reference/storage/ceph-guide.html)有详细配置，原来这个需要给硬盘加标签，然后 kolla 才会把这个硬盘分配给 Ceph。我只运行：
 
     parted /dev/sdb -s -- mklabel gpt mkpart KOLLA_CEPH_OSD_BOOTSTRAP 1 -1
 
 还是不行，`cinder service-list` 显示 cinder-volume  ms1@rbd-1 是 down 的状态。但是我看 kolla/centos-source-cinder-volume:rocky 这个容器已经起来。现在问题是几种方法都没有在 docker ps 中看到 ceph-osd/ceph-rbd 容器。再次细看文档：all-in-one 情况下，需要设置 `osd pool default size = 1`，但是没有 /etc/kolla/config/ceph.conf 这个文件，修改 `/usr/share/kolla-ansible/ansible/roles/ceph/templates/ceph.conf.j2`，重新 deploy 后已经能看到 /etc/kolla/ceph-osd/ceph.conf 里面有我加的配置。但是还是不行，容量还是为 0 ，/dev/sdb 根本没有考虑进去。
 换成 Queens 版本，因为这个没有 Bluestore，也不知道是不是这个原因。再不行得看 ansible 代码了。
-http://docs.ceph.com/docs/master/start/quick-ceph-deploy/ 这里创建 rbd 都是直接命令行，没有放到配置里面。
-不行，/usr/share/kolla-ansible/ansible/roles/ceph/tasks/start_osds.yml 创建 osd 的脚本，但是如何知道运行结果呢？kolla-ansible 运行只输出到屏幕，没有地方看全部日志，可能我没找到。启用 verbose，使用命令 
+[这里](http://docs.ceph.com/docs/master/start/quick-ceph-deploy/)创建 rbd 都是直接命令行，没有放到配置里面。
+不行，`/usr/share/kolla-ansible/ansible/roles/ceph/tasks/start_osds.yml` 创建 osd 的脚本，但是如何知道运行结果呢？kolla-ansible 运行只输出到屏幕，没有地方看全部日志，可能我没找到。启用 verbose，使用命令 
 
     kolla-ansible ...  -v | tee log
 
@@ -228,7 +228,7 @@ Kibana 没法起来：`/usr/local/bin/kolla_start: line 18: /usr/share/kibana/bi
 
 ### 虚拟机一直是 scheduling 状态
 
-<https://docs.openstack.org/kolla-ansible/latest/user/troubleshooting.html> 这里有调试方法，用`docker exec -it` 进入 shell，cat /var/log/kolla/nova/nova-scheduler.log，
+[这里](https://docs.openstack.org/kolla-ansible/latest/user/troubleshooting.html)有调试方法，用`docker exec -it` 进入 shell，`cat /var/log/kolla/nova/nova-scheduler.log`，
 ```
 AMQP server on 192.168.51.247:5672 is unreachable: [Errno 111] ECONNREFUSED. Trying again in 6 seconds. Client port: None: error: [Errno 111] ECONNREFUSED
 ```
@@ -430,14 +430,14 @@ Check [Kolla source code](https://github.com/openstack/kolla-ansible). It has br
 
 ### Think
 * Ansible 是幂等的，也就是说反复部署不会对功能造成影响，这个是理想情况。
-* Docker 对宿主机的网络和设备全面接管，和独立运行的程序没啥差别。用容器部署比直接程序更简便么？可能隔离性更好，不需要安装包，对宿主机操作系统影响不大。再则兼容性更好，安装过程最怕的是各种兼容性问题。另外：其配置（/etc/kolla/）和运行时（容器）是隔离开的，符合 12 法则应用理论。
+* Docker 对宿主机的网络和设备全面接管，和独立运行的程序没啥差别。用容器部署比直接程序更简便么？可能隔离性更好，不需要安装包，对宿主机操作系统影响不大，删除时更加方便。再则兼容性更好，安装过程最怕的是各种兼容性问题。另外：其配置（/etc/kolla/）和运行时（容器）是隔离开的，符合 12 法则应用理论。
 * Docker 用的不错。那用了 Docker 还用 OpenStack VM 干啥呢？技术变化太快，总的来说：OpenStack plays the role of the overall data center management. KVM as the multi-tenant compute resource management, and Docker containers as the application deployment package. 容器另外一个问题是**强隔离**还不够好，vm 能弥补这个缺点。
 * 直接用 Docker，出了错只能直接操作 Docker 调试，显然用 k8s 更好些（k8s也能提供高可用性），但牵涉到网络、存储这个问题就更复杂了。
 * 漫长的部署居然没有写日志的地方，我只找到使用管道 `tee` 的方法。
 * kolla 部署了大量镜像，这些镜像有缓存么？`docker images ls` 没有看到任何镜像。
-* Python 动态语言虽然开发遍历，但如何保证类型安全，这里感觉 Go 更为合适
+* Python 动态语言虽然开发便利，但如何保证类型安全，这里感觉 Go 更为合适，速度更快
 * Heat 设计因为模仿了 AWS CloudFormation，和原来 OpenStack 并不十分吻合，很多地方有拼凑之感，颇为恶心
-* Heat 编排大量依赖 cloud-init/userdata，隔着 vm 在 Linux 上面各种操作，颇有 hack 之感，k8s 则没有 vm 这个屏障，初始化过程看得清清楚楚。如果一个漫长的过程部署失败，出现错误的地方分布在不同平台，调试起来心累。 
+* Heat 编排大量依赖 cloud-init/userdata，隔着 vm 在 Linux 上面各种操作，颇有 hack 之感，k8s 则没有 vm 这个屏障，初始化过程看得清清楚楚。如果一个漫长的过程部署失败，出错的地方分布在不同平台和系统，调试起来心累。 
 
 ### 总的来说
 **太复杂**：功能重合、磨合不稳定、技术演变太快。。。云服务提供商有理由用这种混合模式，企业内部还是直接裸机部署 k8s 好了。或许 OpenStack 上面直接使用 Ansible + kubeadm 会简单些。[这里](https://github.com/kubernetes-sigs/kubespray/tree/master/contrib/terraform/openstack)使用 kubespray + Terraform 在 OpenStack 上面部署 k8s，我原来以为 kubespray 只是裸机部署的。

@@ -47,7 +47,7 @@ for index := range deployment.Spec.Template.Spec.Containers {
 ```
 如果把 Container 在 for 里面提取出来再修改，则数组还是老的值。为什么？[因为](https://studygolang.com/articles/9701)『因为for range创建了每个元素的副本，而不是直接返回每个元素的引用，如果使用该值变量的地址作为指向每个元素的指针，就会导致错误，在迭代时，返回的变量是一个迭代过程中根据切片依次赋值的新变量，所以值的地址总是相同的，导致结果不如预期。』
 
-依赖管理 godep(k8s dashboard，依赖放在 vendor\文件夹), glide(jaeger)，新的版本已经内置 Go modules 来结束包依赖管理混乱的局面。
+依赖管理 godep(k8s dashboard，依赖定义在Gopkg.toml，保存在 vendor 文件夹), glide(jaeger)，新的版本已经内置 Go modules 来结束包依赖管理混乱的局面，[试了下](https://segmentfault.com/a/1190000016703769)，会使用 go.mod 和生成 go.sum 文件，vs code 这两个文件已经可以自动生成。
 
 GC [垃圾回收](http://legendtkl.com/2017/04/28/golang-gc/)采用的是三色标记算法
 
@@ -87,6 +87,8 @@ func main() {
 func (apiHandler *APIHandler) handleGetDeploymentContainersUpdate (request *restful.Request, response *restful.Response) 
 apiHandler 表示这个是个接口函数？给人错觉为返回值。
 
+### 错误处理
+Golang里比较常见的错误处理方法是返回error给调用者，但如果是无法恢复的错误，返回error也没有意义，此时可以选择go die：主动触发panic。panic的函数并不会立刻返回，而是先defer，再返回。这时候（defer的时候），如果有办法将panic捕获到，并阻止panic传递，那就异常的处理机制就完善了。
 
 ### Context
 Etcd util client MemberAdd 时的代码有些意思：
@@ -120,4 +122,4 @@ func httpDo(ctx context.Context, req *http.Request, f func(*http.Response, error
 ### Web/REST
 * <https://gin-gonic.github.io/gin/>
 * <https://github.com/go-martini/martini/blob/master/translations/README_zh_cn.md>
-* <https://github.com/urfave/negroni/blob/master/translations/README_zh_CN.md> 『在 Go 语言里，Negroni 是一个很地道的 Web 中间件，它是一个具备微型、非嵌入式、鼓励使用原生 net/http 库特征的中间件...Negroni 不是一个框架，它是为了方便使用 net/http 而设计的一个库而已。』monocular & heketi 用的这个。其他流行微服务框架有 go micro 和 kite。
+* <https://github.com/urfave/negroni/blob/master/translations/README_zh_CN.md> 『在 Go 语言里，Negroni 是一个很地道的 Web 中间件（也兼容第三方中间件），它是一个具备微型、非嵌入式、鼓励使用原生 net/http 库特征的中间件...Negroni 不是一个框架，它是为了方便使用 net/http 而设计的一个库而已。』monocular & heketi 用的这个。其他流行微服务框架有 go micro 和 kite。
