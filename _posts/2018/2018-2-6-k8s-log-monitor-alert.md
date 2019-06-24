@@ -52,6 +52,10 @@ Add-on 里面默认es 存储是EmptyDir volume，pod 结束就会消失。es 是
 
 按照上图看，fluentd 不需要使用sidecar 的形式运行在每个pod里面，只需运行在每个节点上。
 
+日志收集的场景经常少不了 Kafka，那么 EFK 怎么集成 Kafka 呢？[只要](https://hackernoon.com/distributed-log-analytics-using-apache-kafka-kafka-connect-and-fluentd-303330e478af)在 Filebeat 和 ES 中加入 Kafka：Filebeat 通过 fluent-plugin-kafka 把日志方式到 Kafka 中，然后 Kafka 通过 kafka-connect-elasticsearch 这个 Connector 发送到 ES 中。这样通过水平扩展 Kafka、Elasticsearch 集群能提高系统的吞吐量。
+
+![](/images/2018/efk-kafka.png)
+
 ### Prometheus - 监控告警
 
 和日志系统不同，监控系统实时监控系统运行状况，通过 metrics 和时间序列实时显示指标。 
