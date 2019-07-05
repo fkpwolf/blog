@@ -203,15 +203,16 @@ pipeline{
 ![](/images/2019/jenkins-on-k8s-running.png)
 
 * Jenkins Pod 常驻运行，Agent Pod 动态创建，对应一次构建
+* jnlp-slave 会上报 build 构建状态，如果 Jenkins Pod 和 jnlp-slave 通信没有问题，Jenkins Pod 也可以运行在 k8s 外面，就和一般企业部署方式一样
 * Agent Pod 包含多个容器，在 Kubernetes plugin 中配置或者定义在 pipeline 里面
 
 这种运行模式对已有系统改变很小，Jenkins 也可以直接在操作系统上面运行。
 
 ### 插件
 
-https://wiki.jenkins.io/display/JENKINS/Kubernetes+Plugin
+<https://wiki.jenkins.io/display/JENKINS/Kubernetes+Plugin>
 
-https://github.com/jenkinsci/kubernetes-plugin
+<https://github.com/jenkinsci/kubernetes-plugin>
 
 * src/main/java/org/csanchez/jenkins/plugins/kubernetes/PodTemplate.java 这个是对应 web ui form 的pojo 
 * src/main/java/org/csanchez/jenkins/plugins/kubernetes/KubernetesLauncher.java 启动 pod 
