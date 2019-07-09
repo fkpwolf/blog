@@ -82,9 +82,9 @@ Kaniko is another option for users looking to build containers inside their clus
 
 取消 Jenkins job 的时候还在运行的 Pod 会被 kill 掉，这个不错。 
 
-创建一个 Pod 模板定义： https://github.com/GoogleContainerTools/kaniko#running-kaniko-in-a-kubernetes-cluster [an example of using Kaniko in Jenkins](https://github.com/jenkinsci/kubernetes-plugin/blob/kubernetes-1.14.5/examples/kaniko-declarative.groovy)  
+创建一个 Pod 模板定义： <https://github.com/GoogleContainerTools/kaniko#running-kaniko-in-a-kubernetes-cluster> [an example of using Kaniko in Jenkins](https://github.com/jenkinsci/kubernetes-plugin/blob/kubernetes-1.14.5/examples/kaniko-declarative.groovy)  
 
-push 到哪里去呢？既然这个 kaniko 支持 --insecure --skip-tls-verify，直接自己搭建一个？但是这样后续k8s安装不是也得相应配置。 
+push 到哪里去呢？既然这个 kaniko 支持 `--insecure --skip-tls-verify`，直接自己搭建一个？但是这样后续 k8s 里面 Docker 也得相应配置。 
 
 权限配置可以[通过ConfigMap传入](https://blog.ihypo.net/15487483292659.html)，但是我的一直报错： 
 
@@ -202,7 +202,7 @@ pipeline{
 
 ![](/images/2019/jenkins-on-k8s-running.png)
 
-* Jenkins Pod 常驻运行，Agent Pod 动态创建，对应一次构建
+* Jenkins Pod 常驻运行，Agent Pod 动态创建，对应一次构建。这两者对应 Jenkins 架构里面的 Master/Slave。
 * jnlp-slave 会上报 build 构建状态，如果 Jenkins Pod 和 jnlp-slave 通信没有问题，Jenkins Pod 也可以运行在 k8s 外面，就和一般企业部署方式一样
 * Agent Pod 包含多个容器，在 Kubernetes plugin 中配置或者定义在 pipeline 里面
 
@@ -217,6 +217,6 @@ pipeline{
 * src/main/java/org/csanchez/jenkins/plugins/kubernetes/PodTemplate.java 这个是对应 web ui form 的pojo 
 * src/main/java/org/csanchez/jenkins/plugins/kubernetes/KubernetesLauncher.java 启动 pod 
 * src/main/java/org/csanchez/jenkins/plugins/kubernetes/KubernetesSlave.java 调用 k8s，用的是io.fabric8.kubernetes.client.KubernetesClient 
-* src/main/java/org/csanchez/jenkins/plugins/kubernetes/KubernetesFactoryAdapter.java 连接 k8s，用的是fabric8的ConfigBuilder和DefaultKubernetesClient类，https://github.com/fabric8io/kubernetes-client This client provides access to the full Kubernetes & OpenShift 3 REST APIs via a fluent DSL，Java 的客户端，能和 go-client比较么？ 
+* src/main/java/org/csanchez/jenkins/plugins/kubernetes/KubernetesFactoryAdapter.java 连接 k8s，用的是 fabric8 的ConfigBuilder和DefaultKubernetesClient类，https://github.com/fabric8io/kubernetes-client This client provides access to the full Kubernetes & OpenShift 3 REST APIs via a fluent DSL，Java 的客户端，能和 go-client比较么？ 
 
-[fabric8](http://fabric8.io/) 是一个开源集成开发平台，为基于Kubernetes和Jenkins的微服务提供持续发布，也是一个蛮大的 java 微服务平台，似乎已经停止开发了。也是 RedHat 的项目，可惜了啊。 
+[fabric8](http://fabric8.io/) 是一个开源集成开发平台，为基于 Kubernetes 和 Jenkins 的微服务提供持续发布，也是一个蛮大的 Java 微服务平台，似乎已经停止开发了，也是 RedHat 的项目，可惜了啊。 
