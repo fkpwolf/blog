@@ -147,3 +147,5 @@ glusterfs 倒是很多文档 <https://magazine.odroid.com/article/exploring-soft
 [Banana Pi to Launch a 24-Core Arm Server](https://www.cnx-software.com/2018/12/26/banana-pi-24-core-arm-server/) 规格未知，CPU 据说是 SocioNext SC2A11。[V-Raptor](https://www.cnx-software.com/2019/01/08/v-raptor-24-core-arm-server-socionext-sc2a11/) 也是同样的 CPU，不过似乎是 PCI 接口直接查到主板上。
 
 AWS 现在(2018.12.30)也提供 [Arm 服务器](https://aws.amazon.com/cn/blogs/china/new-ec2-instances-a1-powered-by-arm-based-aws-graviton-processors/)，使用的是 Annapurna Labs Graviton Processors，这种 SOC 个人是无缘接触了。
+
+[PINE64 Plans to Move their Website on a 24-node RockPro64 Cluster](https://www.cnx-software.com/2019/03/29/pine64-website-rockpro64-cluster/) ECC 很重要，但是为什么路由器都用的是普通内存呢？
