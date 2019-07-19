@@ -365,7 +365,19 @@ openssl x509 -noout -text -in /var/lib/kubelet/pki/kubelet-client-current.pem
 ```
 2018/12/07 10:57:09 Error while initializing connection to Kubernetes apiserver. This most likely means that the cluster is misconfigured (e.g., it has invalid apiserver certificates or service accounts configuration) or the --apiserver-host param points to a server that does not exist. Reason: Get https://192.168.1.140:6443/version: x509: certificate has expired or is not yet valid
 ```
-奇怪的是集群内部的 dashboard 正常运行，in-cluster 访问 api server 不校验证书？这个问题有个 [kubeadm issue](https://github.com/kubernetes/kubeadm/issues/581) 解决，就是太麻烦了。[这个 stackoverflow](https://stackoverflow.com/questions/46360361/invalid-x509-certificate-for-kubernetes-master) 的方法不用重启节点。
+有时候运行基本的命令也不行：
+```
+kubectl get nodes
+error: You must be logged in to the server (Unauthorized)
+```
+api-server log一堆这样的错误: Unable to authenticate the request due to an error: x509: certificate has expired or is not yet valid。
+奇怪的是集群内部的 dashboard 正常运行，in-cluster 访问 api server 不校验证书？这个问题有个 [kubeadm issue](https://github.com/kubernetes/kubeadm/issues/581) 解决，就是太麻烦了。[这个 stackoverflow](https://stackoverflow.com/questions/46360361/invalid-x509-certificate-for-kubernetes-master) 的方法不用重启节点。[Certificate Management with kubeadm](https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-certs/)这里显示 kubeadm 1.15 对这个问题做了改进，现在只需要运行 `kubeadm alpha certs renew all` 就可以了，查看证书是否过期 `kubeadm alpha certs check-expiration`，单独的查看命令：
+```
+openssl x509 -in /etc/kubernetes/pki/apiserver-kubelet-client.crt -noout -text |grep ' Not '
+            Not Before: Jul  5 06:40:11 2018 GMT
+            Not After : Jul  5 06:40:12 2019 GMT
+```
+可以看出这个文件证书过期了（现在日期2019/7/19）。那么问题怎么发生的呢？从上面文档看，每次运行`kubeadm upgrade`都会更新证书啊。另外 apiserver 为什么要去主动连接 kubelet？不是 kubelet 到 api server 中注册本身的节点么？双向的？
 
 升级（kubeadm upgrade plan）过程中出现错误：
 

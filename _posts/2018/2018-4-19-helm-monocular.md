@@ -302,6 +302,8 @@ Helm 只是一个命令行工具，Tiller 是一个服务，但是一般有没�
 
 <https://github.com/helm/community/blob/master/helm-v3/000-helm-v3.md> 不分客户端 / 服务器端的单服务架构——无需 Tiller，数据存在 CRD 里面。只要保持简单，其还是能和 operator 竞争的。[恕我直言，对Helm大家还是要三思而后用](https://mp.weixin.qq.com/s/V-ahe76SjEd1LGIE2Vyx4g)。 
 
+[初探云原生应用管理（二）: 为什么你必须尽快转向 Helm v3](https://www.infoq.cn/article/JL6H7bgTy7X*1usthCP0)
+
 ### 添加参数配置功能
 
 Roadmap 里面说要到 1.0 才会有这个功能 Configure values on install 
