@@ -78,7 +78,7 @@ Agent specification [Kubernetes Pod Template] (filled-eagle-jenkins-slave ):
 
 Kaniko is another option for users looking to build containers inside their clusters. Kaniko does not require a Docker daemon to be present in order to build and push images to a remote registry.这个是google推荐的，这个是怎么实现的呢？The kaniko executor image is responsible for building an image from a Dockerfile and pushing it to a registry. Within the executor image, we extract the filesystem of the base image (the FROM image in the Dockerfile). We then execute the commands in the Dockerfile, snapshotting the filesystem in userspace after each one. After each command, we append a layer of changed files to the base image (if there are any) and update image metadata. 直接操作镜像，不知道这样是否有兼容性问题。 
 
-[使用Kaniko进行构建](https://flywzj.com/blog/kaniko/) kaniko不依赖于Docker守护程序，并且在用户空间中完全执行Dockerfile中的每个命令。 在kubernetes上构建还有另外一种选择，就是docker in docker，将宿主机的/var/run/docker.dock挂载到pod，并使用宿主机Docker守护程序执行构建。但是docker in docker必须运行在特权模式下，这会产生安全风险。我不禁想：jenkins X是用的什么技术呢？原来是tektoncd，这个很强，可以用自己格式定义pipeline CRD，[看了下](https://www.infoq.com/presentations/cloud-native-ci-cd-jenkins-knative/)，似乎build docker用的也是kaniko。看来我的方案最终要用的也是这个。jenkin x用这个，那自己的pipeline有啥用呢？感觉只是一个皮而已了。 
+[使用Kaniko进行构建](https://flywzj.com/blog/kaniko/) kaniko不依赖于Docker守护程序，并且在用户空间中完全执行Dockerfile中的每个命令（号外：Docker CE 19.03 已经无需 root 权限）。 在kubernetes上构建还有另外一种选择，就是docker in docker，将宿主机的/var/run/docker.dock挂载到pod，并使用宿主机Docker守护程序执行构建。但是docker in docker必须运行在特权模式下，这会产生安全风险。我不禁想：jenkins X是用的什么技术呢？原来是tektoncd，这个很强，可以用自己格式定义pipeline CRD，[看了下](https://www.infoq.com/presentations/cloud-native-ci-cd-jenkins-knative/)，似乎build docker用的也是kaniko。看来我的方案最终要用的也是这个。jenkin x用这个，那自己的pipeline有啥用呢？感觉只是一个皮而已了。 
 
 取消 Jenkins job 的时候还在运行的 Pod 会被 kill 掉，这个不错。 
 
