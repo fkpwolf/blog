@@ -111,8 +111,11 @@ ALERT NodeCPUUsage
 
 <https://github.com/giantswarm/kubernetes-prometheus/issues/89> How to scrape CAdvsior in Kubernetes 1.8. 加上这个 job 后会有更多的 container 信息。 
 
-[微服务架构下的监控问题应该如何解决？](https://mp.weixin.qq.com/s?__biz=MzIwMzg1ODcwMw==&mid=2247487832&idx=1&sn=6e087b981c83452864acbe4b31b32327&chksm=96c9a738a1be2e2e037c34e46770c2f52ae2823960f829898bacc2d58f11d1e3eba0318d78a6#rd)加了很多的定制。 
+[微服务架构下的监控问题应该如何解决？](https://mp.weixin.qq.com/s?__biz=MzIwMzg1ODcwMw==&mid=2247487832&idx=1&sn=6e087b981c83452864acbe4b31b32327&chksm=96c9a738a1be2e2e037c34e46770c2f52ae2823960f829898bacc2d58f11d1e3eba0318d78a6#rd)加了很多的定制。
 
+如何监控硬盘S.M.A.R.T信息呢？[Textfile Collector](https://github.com/prometheus/node_exporter#textfile-collector) 这种方法是直接让 node exporter 读取目录下文件（*.prom）信息，只要文本符合特定格式就可以。文本由脚本生成，[example scripts](https://github.com/prometheus-community/node-exporter-textfile-collector-scripts)里面有 smartmon.sh 可以直接使用，然后要设置个定时任务来运行脚本生成数据。prom 文件里面并没有时间信息，这说明如果定时任务挂了，最终得到的信息是服务一直在运行，数据没有变化（而不是某个时间段没有数据）。
+
+#### Prometheus Operator
 Stateless is Easy, Stateful is Hard, coreos [Operators](https://coreos.com/blog/introducing-operators.html) design for this. [Prometheus Operator — 為 Kubernetes 設定及管理 Prometheus](https://medium.com/getamis/kubernetes-operators-prometheus-3584edd72275). 没大看懂，还是基于 Helm 么？这里的有状态只是配置，并非都是数据库存储。 
 
 <https://github.com/coreos/prometheus-operator> Target Services via Labels: Automatically generate monitoring target configurations based on familiar Kubernetes label queries; no need to learn a Prometheus specific configuration language. 不仅容易配置，而且还容易使用，这个工作量就大了。 
@@ -164,6 +167,8 @@ kubectl edit prometheusrules.monitoring.coreos.com prometheus-k8s-rules  --names
 这里可以直接编辑，说明这些自定义资源的接口(api, cli)都可以重用。UI 还没看到。里面的 rules 都不是 prometheus 标准的 SQL。而且上面的 coredns 我并没有部署啊，预先设置的？ 
 
 Kubectl get 并不返回这些 CRD，得先自己列出来。以上是对 Service 的监控，我们可能要自己加上对 Helm App 的 CRD。对节点状态呢？ 
+
+如何监控集群外的服务？比如我运行 kvm 的主机，部署了 node exporter 后，怎么加上这个 target 呢？ServiceMonitor 只能定义 k8s 内部服务，外部的要使用[Additional Scrape Configuration](https://github.com/coreos/prometheus-operator/blob/master/Documentation/additional-scrape-config.md)，把外部 target 写在 k8s 的 Secret 里面，为什么不用 ConfigMap？我猜是为了用 base64 解决 yaml(prometheus) in yaml(configmap) 的问题。虽然麻烦，好的地方在于修改后 Prometheus 会自动重启。然后在 Granfa 里面不会自动创建对应 Dashboard，我是复制原来的 k8s Nodes Dashboard，然后修改里面的 job 参数（没有作为变量）。
 
 ### OpenTracing
 
