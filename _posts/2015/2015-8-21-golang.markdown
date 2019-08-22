@@ -9,6 +9,7 @@ date:   2015-8-21 16:27:00
 * Go is a general-purpose language designed with systems programming in mind. It is strongly typed and garbage-collected and has explicit support for concurrent programming. <https://golang.org/ref/spec>
 * <https://github.com/astaxie/build-web-application-with-golang/blob/master/zh/preface.md> 中文，提供了很多例子
 * <https://github.com/Unknwon/the-way-to-go_ZH_CN> Go入门指南，中文翻译
+* [Go语言很好很强大，但我有几个问题想吐槽](https://xueqiu.com/9217191040/124175419)
 
 ### 开发环境
 `go get github.com/dmacvicar/terraform-provider-libvirt` 可以直接获取代码、保持目录、编译。You can run `go get -v -d ./...` from a directory of your project to download all go-gettable dependencies. -v will add verbose log.

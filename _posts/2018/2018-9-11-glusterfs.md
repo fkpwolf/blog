@@ -206,5 +206,6 @@ Ubuntu 18.04.1 LTS，两台机器，odroid-1 & odroid-2，各带一机械硬盘�
 
 我设置了磁盘休眠，这个对系统是否有影响？ 
 
-如何测试个性能？[Accessing Gluster volume via SMB Protocol](https://docs.gluster.org/en/latest/Administrator%20Guide/Accessing%20Gluster%20from%20Windows/)，按照这里建立 samba 共享服务。单独的使用 Samba 挂载 gluster volume 并不能实现High Availability,有了CTDB就可以解决这个问题了。
+如何测试个性能？[Accessing Gluster volume via SMB Protocol](https://docs.gluster.org/en/latest/Administrator%20Guide/Accessing%20Gluster%20from%20Windows/)，按照这里建立 samba 共享服务。单独的使用 Samba 挂载 gluster volume 并不能实现High Availability,有了CTDB就可以解决这个问题了。[使用ctdb+samba+glusterfs搭建NAS集群系统](https://segmentfault.com/a/1190000003005106)这个配置挺复杂。
+
 1. 用 heketi 创建卷，默认 replica 数量为节点数量
