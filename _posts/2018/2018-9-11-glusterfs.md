@@ -202,9 +202,7 @@ Ubuntu 18.04.1 LTS，两台机器，odroid-1 & odroid-2，各带一机械硬盘�
 
 这里全部用 IP，否则各种问题。 
 
-存储(nas)是这个板子最好用途了，装 k8s 集群作为计算节点的话内存太小。 
-
-我设置了磁盘休眠，这个对系统是否有影响？ 
+存储(nas)是这个板子最好用途了，装 k8s 集群作为计算节点的话内存太小。而且这个板子久经考验，虽然性能一般，但稳定使用，Odroid 也在不断更新固件，这个对于 ARM 板子是很难得的。
 
 如何测试个性能？[Accessing Gluster volume via SMB Protocol](https://docs.gluster.org/en/latest/Administrator%20Guide/Accessing%20Gluster%20from%20Windows/)，按照这里建立 samba 共享服务。单独的使用 Samba 挂载 gluster volume 并不能实现High Availability,有了CTDB就可以解决这个问题了。[使用ctdb+samba+glusterfs搭建NAS集群系统](https://segmentfault.com/a/1190000003005106)这个配置挺复杂。
 
