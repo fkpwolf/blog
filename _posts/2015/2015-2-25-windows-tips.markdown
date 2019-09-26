@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Mac Tips"
+title:  "Windows Tips"
 date:   2015-2-25 16:27:00
 ---
 ```
