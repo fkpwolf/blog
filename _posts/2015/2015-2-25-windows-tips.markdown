@@ -44,6 +44,7 @@ Chromebook：按 Alt + Shift + Backspace
 4K问题
 gvim https://github.com/vim/vim/issues/1059 
 set guifont=等距更纱黑体_T_SC:h10
+set guioptions -=T
 
 windows 10 HDR https://www.chiphell.com/thread-1865767-1-1.html 感觉要打开要各种设置啊。
 
