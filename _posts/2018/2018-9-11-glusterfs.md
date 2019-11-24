@@ -21,7 +21,7 @@ gluster volume create gv0 gluster-1:/export/sdb1/brick
 
 <https://github.com/heketi/heketi> RESTful based volume management framework for GlusterFS，独立运行，本身有数据库维护集群的拓扑结构，有点像 ceph monitor，但是只是控制面板，数据面板是直接连各个 GlusterFS 节点，k8s glusterfs plugin 通过这个来和 GlusterFS 交互。
 
-<https://www.cnblogs.com/breezey/p/8849466.html> 这个中文的指导不错，总的思路是 heketi 通过 ssh 证书来添加各个运行中的 glusterfs 节点。
+[这个中文](https://www.cnblogs.com/breezey/p/8849466.html)的指导不错，总的思路是 heketi 通过 ssh 证书来添加各个运行中的 glusterfs 节点。
 
 安装方式有多种，可以安装在 k8s 内部，但是看了下还挺麻烦，我还是单独起个进程吧。 创建卷：
 ```
@@ -190,6 +190,49 @@ Devices:
 -> GET /volumes/vid
 <- 200 OK JSON {...}
 ```
+
+### 节点重新上线
+一个节点出现问题，无法正常启动，只能把 /etc/fstab 里面全部清除才可以，可能是硬盘问题。`heketi-cli device remove` 返回 Device must be offline before remove operation is performed，好的，那就先`heketi-cli device disable`，再次 remove 的时候，返回错误 Failed to remove device, error: Cannot replace brick xxx as only 1 of 2 required peer bricks are online。我的设置是每个 brick 两个副本，集群总共有 3 个节点，这样问题节点上面的 brick 可以迁移到其他正常节点啊？集群资源是够的呀。这个时候运行`heketi-cli volume info`查看 brick 分布：
+```
+Volume Id: 80a20c260f4ca7488651a1eeadf7e6e1
+Cluster Id: 596da7375a1ea5cedd395289cf1f2074
+Mount: 192.168.51.130:vol_80a20c260f4ca7488651a1eeadf7e6e1
+Mount Options: backup-volfile-servers=192.168.51.187,192.168.51.142
+Durability Type: replicate
+Distribute Count: 1
+Replica Count: 2
+```
+192.168.51.130 就是问题节点，因为每个 volume 都是 mount 到这个节点上，导致这个节点读写繁忙而最终磁盘出现错误？为什么有的应用是正常的呢？使用了`Mount Options`作为 failover？查看各个k8s节点上面挂载的卷，使用命令`mount | grep`，确实没有 192.168.51.130 节点的了，不错的👍，不知道这个 failover 是在何时切换的。`device disable`的时候？
+
+既然这些卷还在半正常工作（虽然只有一个副本），恢复就有些意义了。到 GlusterFS 节点上面运行[命令](https://docs.gluster.org/en/latest/Administrator%20Guide/Setting%20Up%20Volumes/)`gluster volume info`：
+```
+Volume Name: vol_80a20c260f4ca7488651a1eeadf7e6e1
+Type: Replicate
+Volume ID: 92cf2b06-9bcc-4798-925b-b97f4f006ebf
+Status: Started
+Snapshot Count: 0
+Number of Bricks: 1 x 2 = 2
+Transport-type: tcp
+Bricks:
+Brick1: 192.168.51.130:/var/lib/heketi/mounts/vg_479769750407fdd6b9a8be8ae0f4868                                                               1/brick_dcdd21ca860756660a442e841d6533bf/brick
+Brick2: 192.168.51.142:/var/lib/heketi/mounts/vg_33e01e645079271d8d8b4b4b0484791                                                               9/brick_f195342426ad2f481564a378a897c040/brick
+Options Reconfigured:
+performance.client-io-threads: off
+nfs.disable: on
+transport.address-family: inet
+```
+这里面内容更多，显示了 bricks 分布，Gluster官方的文档[Replace faulty brick](https://docs.gluster.org/en/latest/Administrator%20Guide/Managing%20Volumes/#replace-faulty-brick)讲述了如何替换 brick，似乎正是我需要的，只是步骤有点多，`heketi-cli device remove`似乎就是简化操作，这个[issue](https://github.com/heketi/heketi/issues/1630)和我问题一样😅，是个[已知问题](https://github.com/heketi/heketi/pull/1653) - Fixed migration logic for replica < 3 volumes。按照操作 master 分支重新编译，运行后问题依然，后来才意识到这个是服务器端的修改。上传到 server 后运行 heketi-cli 命令会出错：Error: Invalid JWT token: Token missing iss claim，[原来](https://github.com/heketi/heketi/issues/1664)要加上认证才可以：
+```
+export HEKETI_CLI_USER=admin
+export HEKETI_CLI_KEY="My Secret"
+```
+密码在 /etc/heketi/heketi.json 里面可以找到。然后再次运行`heketi-cli device remove`，等一段时间就成功了。remove 之后运行`heketi-cli device delete`，再次错误：
+```
+Error: Failed to delete device /dev/sda1 with id 479769750407fdd6b9a8be8ae0f48681 on host 192.168.51.130:   Volume group "vg_479769750407fdd6b9a8be8ae0f48681" not found
+```
+
+出现问题时候，上面操作应该是自动，而不是手工来维护。`backup-volfile-servers=192.168.51.187,192.168.51.142` 表面已经自动 re-balance 了么？[Rebalancing Volumes](https://docs.gluster.org/en/latest/Administrator%20Guide/Managing%20Volumes/#rebalancing-volumes) 这个挺详细。
+
 ### Odroid HC1
 
 Ubuntu 18.04.1 LTS，两台机器，odroid-1 & odroid-2，各带一机械硬盘，各千兆网线接交换机，heketi 安装在 odroid-1。
