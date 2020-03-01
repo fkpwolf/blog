@@ -18,3 +18,4 @@ date:   2015-10-26 16:27:00
 ## 过程
 代码比较简单，主要是各个部件之间如何调试。因为部件比较多，这里要采用隔离测试、分布替换的方法。比如先用 PC 向 Arduino 发送命令来控制马达，成功后再换成 WiFi 控制。
 
+[基于树莓派的自动驾驶小车](https://github.com/Timthony/self_drive)，利用树莓派和tensorflow实现小车在赛道的自动驾驶。（Self-driving car based on raspberry pi（tensorflow））。
