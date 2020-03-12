@@ -25,6 +25,8 @@ HTTPS 图解 <https://tls.ulfheim.net/>
 
 如何用通俗语言解释什么是量子通信？<https://www.zhihu.com/question/20919153> 
 
+给你的web应用上MFA(Multi-Factor Authentication) <https://www.jianshu.com/p/26f1974f60da>
+
 数字签名是什么？ <http://www.ruanyifeng.com/blog/2011/08/what_is_a_digital_signature.html> 
 
 服务器用私钥加密，客户用公钥解密，这样用公钥就可以确认信息确实由某人发出 
