@@ -21,7 +21,10 @@ categories:
 现在RPi有更为成熟的wayland port：Maynard，因为现在VideoCore号称是ARM里面唯一开源GPU，所以动画效果运行起来也是很流畅。
 不知道Ubuntu下面wayland的竞争者Mir能不能移植到RPi上面。
 
+[flutter-pi][5] 直接在RPi上面运行 Flutter，并不依赖 X11，只要支持 DRI 就可以了。看上去很有趣。
+
  [1]: http://www.raspberrypi.org/phpBB3/viewtopic.php?p=201360#p201360
  [2]: http://wayland.freedesktop.org/raspberrypi.html
  [3]: http://wayland.freedesktop.org/clutter.html
  [4]: http://fooishbar.org/tell-me-about/wayland-on-raspberry-pi/
+ [5]: https://github.com/ardera/flutter-pi
