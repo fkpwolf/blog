@@ -7,6 +7,9 @@ categories:
   - devops
 typora-root-url: ../../../blog
 ---
+
+这里只涉及标准版本的 Jenkins，并非开发中的、改变很大的、和 k8s 结合更为紧密的 Jenkins-X。
+
 ### 安装
 
 ```sh
