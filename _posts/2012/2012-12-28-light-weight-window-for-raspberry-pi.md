@@ -23,8 +23,14 @@ categories:
 
 [flutter-pi][5] 直接在RPi上面运行 Flutter，并不依赖 X11，只要支持 DRI 就可以了。看上去很有趣。
 
+[Raspberry Pi 4 Vulkan Source Code Released, More Complex Vulkan Demos Supported][6] 新的驱动
+
+[GNOME Renders on Arm Mali-G31 Bifrost GPU with Fully Open Source Code][7] 在 ODROID Go Advance 上面运行完整的 Wanland Gnome 3。
+
  [1]: http://www.raspberrypi.org/phpBB3/viewtopic.php?p=201360#p201360
  [2]: http://wayland.freedesktop.org/raspberrypi.html
  [3]: http://wayland.freedesktop.org/clutter.html
  [4]: http://fooishbar.org/tell-me-about/wayland-on-raspberry-pi/
  [5]: https://github.com/ardera/flutter-pi
+ [6]: https://www.cnx-software.com/2020/06/10/raspberry-pi-4-vulkan-source-code-released-more-complex-vulkan-demos-supported/
+ [7]: https://www.cnx-software.com/2020/06/09/gnome-renders-on-arm-mali-g31-bifrost-gpu-with-fully-open-source-code/
