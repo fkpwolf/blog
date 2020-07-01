@@ -27,6 +27,8 @@ categories:
 
 [GNOME Renders on Arm Mali-G31 Bifrost GPU with Fully Open Source Code][7] 在 ODROID Go Advance 上面运行完整的 Wanland Gnome 3。
 
+[CutiePi shell][8] A mobile UI for Raspberry Pi OS. "Cutiepi shell is written entirely in Qt using EGLFS QPA, and can be ported to Wayland or other platform and distributions with EGL support." 小型平板设备，带触摸屏，操作看上去很流畅。
+
  [1]: http://www.raspberrypi.org/phpBB3/viewtopic.php?p=201360#p201360
  [2]: http://wayland.freedesktop.org/raspberrypi.html
  [3]: http://wayland.freedesktop.org/clutter.html
@@ -34,3 +36,4 @@ categories:
  [5]: https://github.com/ardera/flutter-pi
  [6]: https://www.cnx-software.com/2020/06/10/raspberry-pi-4-vulkan-source-code-released-more-complex-vulkan-demos-supported/
  [7]: https://www.cnx-software.com/2020/06/09/gnome-renders-on-arm-mali-g31-bifrost-gpu-with-fully-open-source-code/
+ [8]: https://github.com/cutiepi-io/cutiepi-shell
