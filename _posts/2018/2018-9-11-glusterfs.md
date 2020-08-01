@@ -5,10 +5,9 @@ date:   2018-9-11 14:20:33
 typora-root-url: ../../../blog
 ---
 
-### 安装
+### 安装 Heketi
 
 今天想到如果 16GB 内存机器安装这个，会不会比较省资源。 这个比 Ceph 轻，安装也容易，但只支持块设备，对象和文件存储都不支持。好处在 k8s storage 支持范围内。
-
 <https://docs.gluster.org/en/latest/Install-Guide/Overview/>
 ```
 gluster volume info
@@ -18,10 +17,7 @@ systemctl start&enable glusterd.service
 ==>setenforce 0 
 gluster volume create gv0 gluster-1:/export/sdb1/brick 
 ```
-
-<https://github.com/heketi/heketi> RESTful based volume management framework for GlusterFS，独立运行，本身有数据库维护集群的拓扑结构，有点像 ceph monitor，但是只是控制面板，数据面板是直接连各个 GlusterFS 节点，k8s glusterfs plugin 通过这个来和 GlusterFS 交互。
-
-[这个中文](https://www.cnblogs.com/breezey/p/8849466.html)的指导不错，总的思路是 heketi 通过 ssh 证书来添加各个运行中的 glusterfs 节点。
+[Heketi](https://github.com/heketi/heketi) RESTful based volume management framework for GlusterFS，独立运行，本身有数据库维护集群的拓扑结构，有点像 ceph monitor，但是只是控制面板，数据面板是直接连各个 GlusterFS 节点，k8s glusterfs plugin 通过这个来和 GlusterFS 交互。[这个中文](https://www.cnblogs.com/breezey/p/8849466.html)指导不错，Heketi 是通过 ssh 来远程管理各个 GlusterFS 节点，其本身是一个 client-server 架构，client 通过 REST API 连接到 server 来创建 GlusterFS Cluster 和卷，而 server 则连接真正的 GlusterFS。
 
 安装方式有多种，可以安装在 k8s 内部，但是看了下还挺麻烦，我还是单独起个进程吧。 创建卷：
 ```
@@ -32,10 +28,10 @@ Error: Failed to allocate new volume: No space
 ```
 这种可以，假假的。
 ```
-fandeMac:bin fan$ ./heketi-cli --server http://192.168.1.121:8080/ volume delete 83ebfa75567b8b2138dd7df53a53c947 
+$ ./heketi-cli --server http://192.168.1.121:8080/ volume delete 83ebfa75567b8b2138dd7df53a53c947 
 Error: Unable to get snapshot information from volume vol_83ebfa75567b8b2138dd7df53a53c947: ssh: handshake failed: ssh: unable to authenticate, attempted methods [none publickey], no supported methods remain 
 ```
-这个命令报错很详细，ssh 有点搞。现在我把 heketi 安装在其他节点上，然后 `ssh-copy-id -i heketi_key.pub new_node` 来拷贝证书到新节点上，这样 heketi 就可以用证书免密登录所有 glusterfs 节点。 
+这个命令报错很详细，ssh 有点搞。现在我把 heketi server 安装在其他节点上，然后 `ssh-copy-id -i heketi_key.pub new_node` 来拷贝证书到新节点上，这样 heketi 就可以用证书免密登录所有 glusterfs 节点。 
 ```
 fandeMac:bin fan$ ./heketi-cli --server http://vm1:8080/ device add --name="/dev/vdb1" --node "5ef3f8c98a2e7456db1a05f7c60088e1" 
 Error: WARNING: xfs signature detected on /dev/vdb1 at offset 0. Wipe it? [y/n]: [n] 
