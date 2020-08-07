@@ -1,5 +1,5 @@
 ---
-title: 关于
+title: About
 author: Fan Fan
 layout: page
 aktt_notify_twitter:
