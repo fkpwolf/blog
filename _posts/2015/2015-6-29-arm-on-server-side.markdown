@@ -132,17 +132,15 @@ POE <https://www.kickstarter.com/projects/pisupply/pi-poe-switch-hat-power-over-
 
 <https://www.cnx-software.com/2019/01/07/nanopi-neo4-build-farm-rk3399-overclocking/> 这个是 NanoPi NEO4 RK3399，CPU 颇有优势，而且内核和文档都很成熟。
 
-ARM Server 这块高通已经放弃，我也觉得优势不大，在大规模形成的性价比上。只能用来教学用用。
-
-MAAS 启动和安装，这些都要自动化的控制。raspberry pi 可以么？这种小设备上不可能安装
-
-机箱/外壳也是很重要的，多个主板/开发板需要放在一个盒子里面，外接一个电源。
+MAAS 启动和安装，这些都要自动化的控制。raspberry pi 可以么？这种小设备上不可能安装。机箱/外壳也是很重要的，多个主板/开发板需要放在一个盒子里面，外接一个电源。
 
 <https://github.com/rook/rook/issues/1411> 从这里看不支持 arm docker image，arm64似乎支持但也不成熟，这个主要看ceph 上游是否支持。但是我看 ubuntu apt cache 里面有 ceph 包，只是客户端？ 
 
-<https://www.cnx-software.com/2017/08/10/hardkernel-to-launch-stackable-49-odroid-hc1-home-cloud-200-odroid-mc1-cluster-solutions/>
+<https://www.cnx-software.com/2017/08/10/hardkernel-to-launch-stackable-49-odroid-hc1-home-cloud-200-odroid-mc1-cluster-solutions/> glusterfs 倒是很多文档 <https://magazine.odroid.com/article/exploring-software-defined-storage-glusterfs-odroid-hc1-part-1-server-setup/> 
 
-glusterfs 倒是很多文档 <https://magazine.odroid.com/article/exploring-software-defined-storage-glusterfs-odroid-hc1-part-1-server-setup/> 
+<https://www.cnx-software.com/2020/10/21/turing-pi-2-mini-itx-cluster-board-takes-four-raspberry-pi-compute-modules-4/> 基于Raspberry Pi CM4 module，可以在小板子上面插很多 module。
+
+如果要搭建给Glusterfs这种分布式文件系统服务器，这些 SOM 板子必须各自包含存储接口，比如SATA，但是这种一般都很少。
 
 [Banana Pi to Launch a 24-Core Arm Server](https://www.cnx-software.com/2018/12/26/banana-pi-24-core-arm-server/) 规格未知，CPU 据说是 SocioNext SC2A11。[V-Raptor](https://www.cnx-software.com/2019/01/08/v-raptor-24-core-arm-server-socionext-sc2a11/) 也是同样的 CPU，不过似乎是 PCI 接口直接查到主板上。
 
