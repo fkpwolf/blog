@@ -138,7 +138,7 @@ POE <https://www.kickstarter.com/projects/pisupply/pi-poe-switch-hat-power-over-
 
 <https://www.cnx-software.com/2017/08/10/hardkernel-to-launch-stackable-49-odroid-hc1-home-cloud-200-odroid-mc1-cluster-solutions/> glusterfs 倒是很多文档 <https://magazine.odroid.com/article/exploring-software-defined-storage-glusterfs-odroid-hc1-part-1-server-setup/> 
 
-<https://www.cnx-software.com/2020/10/21/turing-pi-2-mini-itx-cluster-board-takes-four-raspberry-pi-compute-modules-4/> 基于Raspberry Pi CM4 module，可以在小板子上面插很多 module。<https://www.pine64.org/clusterboard/> 这个也一样，都是用了交换机来连接各个小板，都是集中供电供冷。如果要搭建给Glusterfs这种分布式文件系统服务器，这些 SOM 板子必须各自包含存储接口，比如SATA，但是这种一般都很少，如果pci-e转sata则增加了成本，如果弄个pci-e nvme硬盘似乎可选的就多了。
+<https://www.cnx-software.com/2020/10/21/turing-pi-2-mini-itx-cluster-board-takes-four-raspberry-pi-compute-modules-4/> 基于Raspberry Pi CM4 module，可以在小板子上面插很多 module。<https://www.pine64.org/clusterboard/> 这个也一样，都是用了交换机来连接各个小板，都是集中供电和散热，所以成品看上去看简洁。[Turing Pi Cluster - 7-node K3s Raspberry Pi Cluster](https://github.com/geerlingguy/turing-pi-cluster)这个在第一代上面搭建K3s集群。如果要搭建给Glusterfs这种分布式文件系统服务器，这些 SOM 板子必须各自包含存储接口，比如SATA，但是这种一般都很少，如果pci-e转sata则增加了成本，如果弄个pci-e nvme硬盘似乎可选的就多了。
 
 [Banana Pi to Launch a 24-Core Arm Server](https://www.cnx-software.com/2018/12/26/banana-pi-24-core-arm-server/) 规格未知，CPU 据说是 SocioNext SC2A11。[V-Raptor](https://www.cnx-software.com/2019/01/08/v-raptor-24-core-arm-server-socionext-sc2a11/) 也是同样的 CPU，不过似乎是 PCI 接口直接查到主板上。
 
