@@ -6,19 +6,16 @@ typora-root-url: ../../../blog
 ---
 
 ### 概述
-http://events.linuxfoundation.org/sites/events/files/slides/Container%20Networking%20Deep%20Dive.pdf
-
-https://blogs.vmware.com/cloudnative/2017/05/19/video-series-deep-dive-container-networking-2/
-
-Kubernetes OpenVSwitch GRE/VxLAN networking http://kubernetes.io/docs/admin/ovs-networking/
-
-Comparison of Networking Solutions for Kubernetes http://machinezone.github.io/research/networking-solutions-for-kubernetes/
-最新实践 | 将Docker网络方案进行到底 http://blog.shurenyun.com/shurenyun-docker-133/ 写的不错，对比了各种不同网络。可以看出 ovs 和 flannel 都是隧道网络(Overlay)，还有一种是“路由网络”。
-[Container-Native Networking - Comparison](https://docs.google.com/spreadsheets/d/1polIS2pvjOxCZ7hpXbra68CluwOZybsP1IYfr-HrAXc/edit#gid=0)，很细致，有谈网络 feature 比如 ingress/engress，但是 ovs 谈的不多，暂时看不出来容器网络和 ovs 有啥很大区别。
+- <http://events.linuxfoundation.org/sites/events/files/slides/Container%20Networking%20Deep%20Dive.pdf>
+- <https://blogs.vmware.com/cloudnative/2017/05/19/video-series-deep-dive-container-networking-2/>
+- [Kubernetes OpenVSwitch GRE/VxLAN networking](http://kubernetes.io/docs/admin/ovs-networking/)
+- [Comparison of Networking Solutions for Kubernetes](http://machinezone.github.io/research/networking-solutions-for-kubernetes/)
+- [最新实践 | 将Docker网络方案进行到底](http://blog.shurenyun.com/shurenyun-docker-133/) 写的不错，对比了各种不同网络。可以看出 ovs 和 flannel 都是“隧道网络(Overlay)”，还有一种是“路由网络”。前者是 L2 路由，后者是 L3 路由。
+- [Container-Native Networking - Comparison](https://docs.google.com/spreadsheets/d/1polIS2pvjOxCZ7hpXbra68CluwOZybsP1IYfr-HrAXc/edit#gid=0)，很细致，有谈网络 feature 比如 ingress/engress，但是 ovs 谈的不多，暂时看不出来容器网络和 ovs 有啥很大区别。
 
 ### Calico - 典型的路由网络
-Image come from https://docs.projectcalico.org/v1.6/reference/without-docker-networking/docker-container-lifecycle 一步一步的演示如何让容器可以 ping 通。 网络包没有像 overlay 那样需要封包和解包动作，全靠 kernel 的 iptables 来进行路由。这种基于 IP 三层网络。感觉有点像静态路由。"最新实践 | 将Docker网络方案进行到底” 这个讲了不少Calico。如此一来，每台 host 机器上面的 iptables 会不会很巨大？因为这个要定义一对一的访问路径。"* 
- Route Reflector（BIRD），大规模部署时使用，摒弃所有节点互联的 mesh 模式，通过一个或者多个BGP Route Reflector来完成集中式的路由分发。” 那这种集中式的就需要很高的转发能力了？而且还得是集群模式。route reflector - RR 似乎是交换机领域已有的东西。https://en.wikipedia.org/wiki/Route_reflector
+Image come from https://docs.projectcalico.org/v1.6/reference/without-docker-networking/docker-container-lifecycle 一步一步的演示如何让容器可以 ping 通。 网络包没有像 overlay 那样需要封包和解包动作，全靠 kernel 的 iptables 来进行路由。这种基于 IP 三层网络。感觉有点像静态路由。"最新实践 | 将Docker网络方案进行到底” 这个讲了不少 Calico。如此一来，每台 host 机器上面的 iptables 会不会很巨大？因为这个要定义一对一的访问路径。"* 
+ Route Reflector（BIRD），大规模部署时使用，摒弃所有节点互联的 mesh 模式，通过一个或者多个 BGP Route Reflector 来完成集中式的路由分发。” 那这种集中式的就需要很高的转发能力了？而且还得是集群模式。route reflector - RR 似乎是交换机领域已有的东西。https://en.wikipedia.org/wiki/Route_reflector
 
 ![calico](/images/2017/calico.png)
 
@@ -84,8 +81,6 @@ BGP（Border Gateway Protocol）即边界网关协议，是互联网上一个核
 
 Canal uses Calico for policy and Flannel for networking. 感觉很高级。
 
-
-
 ### Open vSwitch
 http://blog.codybunch.com/2016/10/14/KVM-and-OVS-on-Ubuntu-1604/ http://docs.openvswitch.org/en/latest/howto/libvirt/
 
@@ -102,7 +97,7 @@ OpenvSwitch实现Docker容器跨宿主机互联 http://orangebrain.blog.51cto.co
 
 ![openvswitch](/images/2017/openvswitch.png)
 
-这两篇文章都是通过remote_ip来建立路由。如果新加节点，每台机器就得配置 N-1条隧道了？Open vSwitch 只有交换功能，没有路由功能？openflow才有路由？
+这两篇文章都是通过remote_ip来建立路由。如果新加节点，每台机器就得配置 N-1 条隧道了？Open vSwitch 只有交换功能，没有路由功能？openflow 才有路由？
 
 ![docker](/images/2017/docker-network.png)
 
@@ -144,3 +139,8 @@ From https://github.com/ahmetb/kubernetes-network-policy-recipes 有很多例子
 ### Contiv
 [苏宁容器云Kubernetes + Contiv网络架构技术实现](http://www.sohu.com/a/246377951_804130) 京东也用 Contiv，感觉这帮人都是从 OpenStack 出来的吧。[部署kubernetes1.8.4+contiv高可用集群](https://www.cnblogs.com/keithtt/p/8136289.html)，[容器网络插件 Calico 与 Contiv Netplugin深入比较](http://dockone.io/article/1935)。[苏宁容器云基于Kubernetes和Contiv的网络架构技术实现](https://mp.weixin.qq.com/s/G5me12pkKjmmK7BnsjKAQA)，
 > 实现了Pod-IP固定、网络双向限速、支持租户隔离、支持多种虚拟网络加速等需求进行定制。
+
+### Cilium
+L3 路由，但是特殊的地方是使用eBPF/XDP 处理数据包，这个性能比较强。[最Cool Kubernetes网络方案Cilium入门](https://cilium.io/blog/2020/05/04/guest-blog-kubernetes-cilium)，官方介绍，居然有中文。原来最新Calico也支持BPF。
+[具备 API 感知的网络和安全性管理的开源软件 Cilium](https://jimmysong.io/kubernetes-handbook/concepts/cilium.html)
+[Cilium使用 (Cilium 3)](https://www.cnblogs.com/charlieroro/p/12728984.html)
