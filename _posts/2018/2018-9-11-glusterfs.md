@@ -11,14 +11,7 @@ typora-root-url: ../../../blog
 
 [Heketi](https://github.com/heketi/heketi) - RESTful based volume management framework for GlusterFS，独立运行，本身有数据库维护集群的拓扑结构，有点像 Ceph monitor，但是只是控制面板，数据面板是直接连各个 GlusterFS 节点，k8s GlusterFS plugin 通过这个来和 GlusterFS 交互。[这个中文](https://www.cnblogs.com/breezey/p/8849466.html)指导不错，Heketi 是通过 ssh 来远程管理各个 GlusterFS 节点，其本身是一个 client-server 架构，client 通过 REST API 连接到 server 来创建 GlusterFS Cluster 和卷，而数据访问则直接连真正的 GlusterFS。
 
-安装方式有多种，可以作为 pod 安装在 k8s 内部，但是看了下还挺麻烦，我还是单独起个进程吧。创建卷：
-```
-failed to create volume: failed to create volume: Failed to allocate new volume: No space 
-./heketi-cli --server http://heketi-server:8080/ volume create --size=1 
-Error: Failed to allocate new volume: No space 
-./heketi-cli --server http://heketi-server:8080/ volume create --size=1 --durability=none 
-```
-这种可以，假假的。
+安装方式有多种，可以作为 pod 安装在 k8s 内部，但是看了下还挺麻烦，我还是单独起个进程吧。
 ```sh
 $ ./heketi-cli --server http://192.168.1.121:8080/ volume delete 83ebfa75567b8b2138dd7df53a53c947 
 Error: Unable to get snapshot information from volume vol_83ebfa75567b8b2138dd7df53a53c947: ssh: handshake failed: ssh: unable to authenticate, attempted methods [none publickey], no supported methods remain 
@@ -78,6 +71,8 @@ heketi 这么多接口，如果能提供 web ui 就方便多了，不过 heketi 
 常驻运行可以用`nohup ./heketi --config=./heketi.json &`，如果要转换为 systemd 服务，可以参考这里 <https://github.com/heketi/heketi/blob/master/extras/systemd/heketi.service>。
 
 <https://www.redhat.com/zh/technologies/storage/gluster> 这个原来是红帽的技术。这两个产品在 centos/fedora 上面都可以直接安装，适配更好。 
+
+如果要查看 Volume usage，运行`gluster volume status vol_id detail`，Heketi 似乎没有提供类似接口。感觉查看磁盘剩余空间这种命令 Kubernetes 也应该提供啊。
 
 **总的来说**，比 Ceph 简单多了：server 配置简单，k8s 里面也简单，申请删除 pv 都很快，也不需要先搞 secret。heketi 也为 k8s 做了适配。而 Ceph 现在觉得更多是在 openstack 生态圈里面。 
 
