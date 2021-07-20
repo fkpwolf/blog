@@ -150,4 +150,7 @@ Istio 在这个里面做了路由的功能，但是并没有暴露给用户。 �
 ### Think
 
 1. Serverless 如何使用、意义何在比其技术本身更为重要，这也是解决其请求延迟的关键
-2. 这个和 CI/CD 结合很紧密
+2. 这个和 CI/CD 结合很紧密，开发者体验很重要
+3. [新的各种框架](https://www.vshn.ch/en/blog/a-very-quick-comparison-of-kubernetes-serverless-frameworks/)
+4. 已经有了 k8s，还需要 Serverless 么？使用 Serverless 好处在于一则节约资源，二则方便扩展，这两者在 k8s 小规模私有云环境中似乎意义不大，更多是个快速开发的编程模型。这个编程模型的益处和消息驱动模型基本是一样的。
+5. 支持广泛的 trigger 对这个编程模型至关重要，支持种类越多，则适用越广泛。[Azure Function](https://docs.microsoft.com/en-us/azure/azure-functions/functions-triggers-bindings?tabs=csharp) 支持有 18 种之多。
