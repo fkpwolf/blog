@@ -34,6 +34,9 @@ mkdir -p ~/.kube, then cp -i /etc/kubernetes/admin.conf ~/.kube/config
 和 ssh-copy-id 或者 ssh -i id_rsa 这种免密登录不一样么？
 ![](/images/2019/kubeadm-ha-topology-external-etcd.svg)
 我的 external etcd cluster 使用的是用 etcd operator 已经创建的好的集群，和上面图有些不同，我画了[一张](https://www.draw.io/#G10QhTMozFQsEaGQFEpVEH4mqu7-ALYcyC)。
+
+#### etcd operator
+
 用 external etcd mode，需要三个证书来访问 etcd，etcd operator 配置[文档](https://github.com/coreos/etcd-operator/blob/master/doc/user/cluster_tls.md)，有点麻烦，不好搞。准备转为 stack 模式前，看了下其源代码里面的 `example/tls/example-tls-cluster.yaml`，居然有这么好的例子, 可以直接用。创建 CRD 前要先执行命令 `kubectl create secret`（无法放到 yaml 里面？）。访问的时候必须用 DNS hostname。先设置 service 为 NodePort，这时候打开 https://192.168.51.11:30373/，浏览器报错 NET::ERR_CERT_AUTHORITY_INVALID，合理。上面文档说『To access the cluster, use the service example-client.default.svc, which matches the SAN of its certificates.』，我看证书生成过程中也指名了 host，这个是证书的必填项，不能为*（dashboard自己生成证书似乎可以匹配任何host），于是在 OpenWrt /etc/dnsmasq.conf 中添加：
 ```conf
 address=/.example.default.svc/192.168.51.11
@@ -73,6 +76,8 @@ listen stats
 这样就可以看到详细的统计信息，不错！现在停掉 kubic-0（`libvirt pause`），haproxy stats 马上就可以看到效果：
 ![](/images/2019/haproxy-stats.png)
 因为是 master 节点，所以并没有发生pod迁移。dashboard 用 kubic-1:nodeport 可以继续访问。HAProxy 新版本已经[支持prometheus](https://www.haproxy.com/blog/haproxy-exposes-a-prometheus-metrics-endpoint/)，指标还是这些，但是就能够时间序列数据了。
+
+#### HA k8s nodes (control and worker)
 
 继续 k8s HA 部署。最终的 kubeadm-config.yaml 为：
 ```yaml
