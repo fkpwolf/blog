@@ -7,19 +7,18 @@ categories:
 typora-root-url: ../../../blog
 ---
 
-指导文章：<https://kubernetes.io/docs/setup/independent/ha-topology/>
+总的指导文章：<https://kubernetes.io/docs/setup/independent/ha-topology/>
 
-### 简单测试
+### 创建虚拟机
 
-想试下 terraform + kvm 来搭建，感觉自己用 cloud-init 还是太慢。为什么不用 OpenStack？还是少生一事吧。
-
-使用 <https://github.com/dmacvicar/terraform-provider-libvirt> terraform-provider-libvirt-Fedora-28，binary 现在区分 provider OS 下载。还是有点懒，<https://github.com/kubic-project/automation/tree/master/kubic-kvm> 这个有，为什么要自己创建呢？代码里面的地址有点老，改成 <https://download.opensuse.org/repositories/devel:/kubic:/images/openSUSE_Tumbleweed/> 这个下面的。我用的是 openSUSE-Tumbleweed-Kubic.x86_64-15.0-kubeadm-cri-o-OpenStack-Cloud-Build4.5.qcow2。另外一个 <https://github.com/kubic-project/automation/tree/master/caasp-kvm> 可以创建多 master，但是要企业账号。运行完后会显示 3 个 vm 的地址：
+想试下 terraform + kvm 来搭建，感觉手工用 cloud-init 还是太慢。使用 <https://github.com/dmacvicar/terraform-provider-libvirt> terraform-provider-libvirt-Fedora-28，binary 现在区分 provider OS 下载。还是有点懒，<https://github.com/kubic-project/automation/tree/master/kubic-kvm> 这个有，为什么要自己创建呢？代码里面的地址有点老，改成 <https://download.opensuse.org/repositories/devel:/kubic:/images/openSUSE_Tumbleweed/> 这个下面的。我用的是 openSUSE-Tumbleweed-Kubic.x86_64-15.0-kubeadm-cri-o-OpenStack-Cloud-Build4.5.qcow2。另外一个 <https://github.com/kubic-project/automation/tree/master/caasp-kvm> 可以创建多 master，但是要企业账号。运行完后会显示 3 个 vm 的地址：
 ```
 ips = [
     [192.168.122.122], [192.168.122.174], [192.168.122.244]
 ]
 ```
-不知道 terraform 有没有可以查询已生成虚机 ip 的命令，否则得先记下来（使用 `terraform show` 命令即可）。我没有用 micro-os 的，用的是 kubic-kubeadm，这个 vm 起来后啥都没有，只是 vm image 预先包含了 kubeadm/kubelet 包，容器引擎用的是 cri-o，集群还要自己初始化：
+现在上面 repo 都已经消失，改成 <https://github.com/kubic-project/kubic-terraform-kvm>。
+如果要查询已生成虚机 IP，使用 `terraform show` 命令。我没有用 micro-os，改成 kubic-kubeadm，这个 vm 起来后啥都没有，只是 image 预先包含了 kubeadm/kubelet 包，容器引擎用的是 cri-o。集群还要自己初始化：
 ```sh
 kubeadm init --cri-socket="/var/run/crio/crio.sock" --pod-network-cidr=10.244.0.0/16
 mkdir -p ~/.kube, then cp -i /etc/kubernetes/admin.conf ~/.kube/config
@@ -136,7 +135,7 @@ Unable to create storage backend: config (&{ /registry [https://example-client.d
 kubic-0:/usr/lib/cni # cp -r /opt/cni/bin/weave-plugin-2.5.1 ./
 cp: cannot create regular file './weave-plugin-2.5.1': readonly filesystem
 ```
-WTF. So the OpenSuse release should be like Fedora Atomic(Transactional Updates). It is too later to change weave to another CNI like flannel because I didn't add CIDR parameter. The dir /usr/lib/cni has this cni. So the kubic image didn’t add other cni by default? No other way. Switch to flannel. But the pod can’t start:
+WTF. So the OpenSuse release should be like Fedora Atomic/CoreOS(Transactional Updates). It is too later to change weave to another CNI like flannel because I didn't add CIDR parameter. The dir /usr/lib/cni has this cni. So the kubic image didn’t add other cni by default? No other way. Switch to flannel. But the pod can’t start:
 ```
 Failed to create SubnetManager: error retrieving pod spec for 'kube-system/kube-flannel-ds-amd64-5nklv': Get https://10.96.0.1:443/api/v1/namespaces/kube-system/pods/kube-flannel-ds-amd64-5nklv: dial tcp 10.96.0.1:443: i/o timeout
 ```
@@ -171,10 +170,9 @@ overlay       /etc                    overlay  defaults,lowerdir=/sysroot/var/li
 
 Transactional Updates comes from Leap 15 & Tumbleweed, so it was provied by OpenSuse. Try to install a package: `transactional-update pkg in wget`. Need to reboot machine after installation finished. `transactional-update rollback last` will rollback to latest snapshot.
 
-So why not use Fedora Atomic? Because it didn't provided Terraform script to build k8s with KVM.
-<http://www.projectatomic.io/docs/gettingstarted/> Here use virt-manager to deploy k8s with atomic. But It build vm manually.
+So why not use Fedora Atomic/CoreOS? Because it didn't provided Terraform script to build k8s with KVM. <http://www.projectatomic.io/docs/gettingstarted/> Here use virt-manager to deploy k8s with atomic. But It builds vm manually. This [Libvirt Provider](https://registry.terraform.io/providers/dmacvicar/libvirt/latest/docs) for Terraform supports CoresOS and PCI passthrough. Cool!
 
-<https://github.com/kubernetes-sigs/kubespray> look like all-in-one solution. Support lots of linux distribution and different k8s component. Kubic just provide a container linux and still need extra works to build a HA cluster. Kubespray will install k8s cluster automatically, just like Magnum.
+<https://github.com/kubernetes-sigs/kubespray> all-in-one solution. Support lots of linux distribution and different k8s component. Kubic just provide a container linux and still need extra works to build a HA cluster. Kubespray will install k8s cluster automatically, just like Magnum.
 
 ### add Terraform KVM provider SR-IOV support
 
@@ -208,13 +206,13 @@ terraform is good if we can finish task by existing task and I can accept the st
 
 `git push fan pci-passthough:pci-passthough`. This command will: 1) submit to my remote branch; 2) create PR to original branch.
 
-Code is here <https://github.com/fkpwolf/terraform-provider-libvirt>.
+Code is here <https://github.com/fkpwolf/terraform-provider-libvirt>. Now the original repo has supported this feature.
 
 ### Ansible to bring up HA
 
 tf 是声明式的，需要大量的plugin，似乎 [KubeSpray](https://github.com/kubernetes-sigs/kubespray) 这种更简单，但是 kubespray 不创建节点，所以结合使用 Terraform 更好。
 
-Ok. Now turn above kubic image to common os image since kubic has too much package like kubelet which would be conflict with kubespray. Reuse kubic-kvm and just change os image, failed. Ubuntu can't boot. Turn into Fedora-Cloud-Base-28-1.1.x86_64.qcow2 since Fedora will automatically bring up NIC even it is SR-IOV. Boot ok and can get dhcp ip. But hostname not work. Same as Cenots-7. Use command 'hostnamectl set-hostname ${hostname}' as here in commoninit.cfg still not work. hostname changed in hostnamectl but DHCP name still localhost.
+Ok. Now switch above kubic image to common os image since kubic has too much package like kubelet which would be conflict with kubespray. Reuse kubic-kvm and just change os image, failed. Ubuntu can't boot. Turn into Fedora-Cloud-Base-28-1.1.x86_64.qcow2 since Fedora will automatically bring up NIC even it is SR-IOV. Boot ok and can get dhcp ip. But hostname not work. Same as Cenots-7. Use command 'hostnamectl set-hostname ${hostname}' as here in commoninit.cfg still not work. hostname changed in hostnamectl but DHCP name still localhost.
 
 Try Centos. It can get IP by dhcp but no hostname. But if reboot, ip lost because nic MAC changed. This NIC 82576 SR-IOV will change mac randomly? But If I use kubic, everything works well and MAC didn't changed. Really strange. I should give up kubespray and just use Ansible maybe.
 
