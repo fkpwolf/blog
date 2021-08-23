@@ -49,9 +49,13 @@ same as <https://wikidevi.com/wiki/ASUS_RT-AC1200GP> asus提供了源码下载 <
 
 <https://forum.openwrt.org/viewtopic.php?id=65275> still no patch. Now it support AC9! Check <https://downloads.lede-project.org/releases/17.01.0-rc1/targets/bcm53xx/generic/> (still not backport to OpenWrt)I will try. 
 
-后来发现 github 也可以搜索 commit 了：[https://github.com/lede-project/source/search?q=ac9&type=Commits&utf8=%E2%9C%93](https://github.com/lede-project/source/search?q=ac9&type=Commits&utf8=%E2%9C%93)，用起来更方便。 
+后来发现 github 也可以搜索 commit 了：[https://github.com/lede-project/source/search?q=ac9&type=Commits&utf8=%E2%9C%93](https://github.com/lede-project/source/search?q=ac9&type=Commits&utf8=%E2%9C%93)，用起来更方便。
 
-TTL开始狂按ctl+c可以进入CFE console，可以打开cfe miniweb server。也会显示upgrade wait time is 3s，可能能用tftp直接刷机。 
+刷了最新的 OpenWrt 19.07.7，启动成功，但是似乎交换芯片无法启动，导致ping失败。
+Failed to connect to the switch. Use the "list" command to see which switches are available.
+自从 LEDE 后这个设备就没人测试了么？
+
+TTL开始狂按ctl+c可以进入CFE console，可以打开cfe miniweb server。也会显示upgrade wait time is 3s，可能能用tftp直接刷机。戳 reset 按钮也可以进入cfe miniweb。
 
 cfe web直接上传asus trx固件，The file transferred is not a valid firmware image.日啊。需要asus的cfe boot loader？ 
 
