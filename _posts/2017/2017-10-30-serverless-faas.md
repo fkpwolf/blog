@@ -33,7 +33,7 @@ categories:
 
 <https://aws.amazon.com/cn/dynamodb/> 这个客户端也不能直接访问啊，换成 mysql 也可以么，针对 Lambda 有什么特殊优化？ 
 
-![faas-aws](../../images/2017/faas-aws.png)
+![faas-aws](/images/2017/faas-aws.png)
 
 ### Oracle Fn
 
@@ -41,7 +41,7 @@ categories:
 
 他还有个界面监控调用过程 <https://github.com/fnproject/ui> Vue 写的，cool，而且依赖也相当简洁，没有重量级的东西，UI 用 bootstrap，监控用的是轮询。一个小应用确实也应该这样简单。 
 
-![faas-oracle-fn](../../images/2017/faas-oracle-fn.png)
+![faas-oracle-fn](/images/2017/faas-oracle-fn.png)
 
 如果设置为 Async，则返回一个 call_id，后续可能根据这个 call_id 能获取返回值。Headers 是对返回的 HTTP Headers 进行定制。 
 
@@ -49,31 +49,31 @@ categories:
 
 就起来了两个 Docker，真的是调用的时候才运行起来？这样是否会会有点慢？
 
-![faas-docker](../../images/2017/faas-docker.png)
+![faas-docker](/images/2017/faas-docker.png)
 
 总台来说这个 Oracle 的产品很容易上手，整个搭建过程体现了对 PaaS 平台易用性的改进。
 
-![faas-rook](../../images/2017/faas-rook.png)
+![faas-rook](/images/2017/faas-rook.png)
 
 这个网站右上角的功能都是其他网站提供的，也是 serverless 的一种形式。 
 
 The Comprehensive Guide to Serverless Architecture <https://www.simform.com/serverless-architecture-guide/> 
 
-![faas-arch](../../images/2017/faas-arch.png)
+![faas-arch](/images/2017/faas-arch.png)
 
 k8s 能创建 fn 服务么？Fission <https://kubernetes.io/blog/2017/01/fission-serverless-functions-as-service-for-kubernetes/>
 
-![faas-fission](../../images/2017/faas-fission.png)
+![faas-fission](/images/2017/faas-fission.png)
 
 如果每次调用都起一个容器，速度太慢，如果直接运行代码，则依赖没法处理。Fission 采用了混合的办法，预先运行一些容器比如 Node.js & Python，然后让用户代码直接运行在这些容器上面。也可以自己定制运行时的容器。感觉和 cloud foundry 有点像，预先准备 runtime，不怎么纯粹啊。
 
 ### OpenWhisk
 
-![faas-openwhisk-1](../../images/2017/faas-openwhisk-1.png)
+![faas-openwhisk-1](/images/2017/faas-openwhisk-1.png)
 
 <http://dockone.io/article/2416> 这个底层是运行在 OpenShift 上面？否则简单的 Docker 没有集群啊。
 
-![faas-openwhisk-2](../../images/2017/faas-openwhisk-2.png)
+![faas-openwhisk-2](/images/2017/faas-openwhisk-2.png)
 
 <https://github.com/apache/incubator-openwhisk/blob/master/docs/about.md> CouchDB 只是用来存储结果？ 
 
@@ -99,7 +99,7 @@ k8s 能创建 fn 服务么？Fission <https://kubernetes.io/blog/2017/01/fission
 
 <http://www.infoq.com/cn/news/2018/07/knative-kubernetes-serverless> 谷歌发布Knative：用于构建、部署和管理Serverless工作负载的Kubernetes框架 『他首先说谷歌团队看到serverless在软件开发领域推动了两个方向的重要转变：运维模型和编程模型。serverless运维模型涉及到付费使用、扩展、安全补丁以及无维护。serverless编程模型则涉及到源驱动部署、微服务、可重用的原始组件以及事件驱动/反应模型。』
 
-![faas-knative](../../images/2017/faas-knative.jpg)
+![faas-knative](/images/2017/faas-knative.jpg)
 
 这个包含了 CI/CD 功能，能直接从源码到运行。 
 * Build：从源到容器的构建编排； 
@@ -150,4 +150,7 @@ Istio 在这个里面做了路由的功能，但是并没有暴露给用户。 �
 ### Think
 
 1. Serverless 如何使用、意义何在比其技术本身更为重要，这也是解决其请求延迟的关键
-2. 这个和 CI/CD 结合很紧密
+2. 这个和 CI/CD 结合很紧密，开发者体验很重要
+3. [新的各种框架](https://www.vshn.ch/en/blog/a-very-quick-comparison-of-kubernetes-serverless-frameworks/)
+4. 已经有了 k8s，还需要 Serverless 么？使用 Serverless 好处在于一则节约资源，二则方便扩展，这两者在 k8s 小规模私有云环境中似乎意义不大，更多是个快速开发的编程模型。这个编程模型的益处和消息驱动模型基本是一样的。
+5. 支持广泛的 trigger 对这个编程模型至关重要，支持种类越多，则适用越广泛。[Azure Function](https://docs.microsoft.com/en-us/azure/azure-functions/functions-triggers-bindings?tabs=csharp) 支持有 18 种之多。

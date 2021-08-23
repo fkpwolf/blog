@@ -33,13 +33,15 @@ Lookup Method Injection was added to Spring to overcome the problems encountered
 显然，如果A(Singletons) depends B(Propotype)，使用这种方式可以避免A对B的访问并发和争用的问题。  
 <pro spring>这本书（强于spring in action，后者感觉是本reference book）也对Singletons＝“true/false&#8221;的选择做了个小结：  
 使用Singletons的情况有：  
-1.Shared objects with no state;  
-2.Shared object with read-only state;  
-3.Shared object with shared state;  
-4.High throughput objects with writable state. (synchronizing is need)  
+1. Shared objects with no state;  
+2. Shared object with read-only state;  
+3. Shared object with shared state;  
+4. High throughput objects with writable state. (synchronizing is need)  
+
 使用propotype的情况有：  
-1.Objects with writable stat;  
-2.Objects with private state.  
+1. Objects with writable stat;  
+2. Objects with private state.  
+
 与Spring的高度灵活不同，EJB的规范将同步作为一个服务（one of primary services），开发者开编写bean时不必考虑（也不能）线程相关的问题。session bean其分为两类，也有同步上的考虑。  
 虽然thread-safe的问题总是存在，EJB也没有从本质上解决这个问题，但是其提出了这个问题，并给出了规范。
 
