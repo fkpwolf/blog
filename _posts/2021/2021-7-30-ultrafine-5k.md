@@ -77,7 +77,7 @@ https://fedoramagazine.org/thunderbolt-how-to-use-keyboard-during-boot-time/
 
 如果type-c或者雷电线支持视频，USB和声音传输，这就有点像KVM功能了。
 
-“对于5k，此显示器同时支持MST和SST。用雷电卡，将双路DP1.2合并到USB-C形状的雷电，直接MST方式驱动即可；另外新款N卡，支持DP1.4输出即采用SST方式驱动，因WIN10同时支持MST和SST，所以两种方式很容易驱动。但是HACKINTOSH驱动5k只能采取MST方式，系统原生不支持SST驱动5k，所以只能采取win10的第一种方式，即利用雷电卡将两路DP1.2合并到USB-C形状的雷电，驱动显示器。” Come from [here](https://www.chiphell.com/forum.php?mod=redirect&goto=findpost&ptid=2327490&pid=47599622) 
+“对于5k，此显示器同时支持MST和SST。用雷电卡，将双路DP1.2合并到USB-C形状的雷电，直接MST方式驱动即可；另外新款N卡，支持DP1.4输出即采用SST方式驱动，因WIN10同时支持MST和SST，所以两种方式很容易驱动。但是HACKINTOSH驱动5k只能采取MST方式，系统原生不支持SST驱动5k，所以只能采取win10的第一种方式，即利用雷电卡将两路DP1.2合并到USB-C形状的雷电，驱动显示器。” Come from [here](https://www.chiphell.com/forum.php?mod=redirect&goto=findpost&ptid=2327490&pid=47599622). 从[这里](https://www.futureplus.com/displayport-multi-steam-versus-single-stream-what-is-the-difference/)解释来看，SST 是最简单的形式，MST 一般用在DP菊链中。
 
 贝尔金CV10 线(DP转 TYPEC) 据说可以直接搞定，不过不是雷电方案，要拖几根usb线，感觉违背了雷电初衷。Moshi USB C to DisplayPort Cable 这跟线也支持 5K，但是就没有USB通道了。
 
