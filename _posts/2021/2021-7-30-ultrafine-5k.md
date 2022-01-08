@@ -15,13 +15,12 @@ Windows HiDPI 支持算是最好的：
 对于 27 寸 5K 显示器，Windows 下面 250% 的放大比例最为完美。Gnome 下面 5K 200% 放大比在 4k 下表现好很多，4k 下 200% 放大会让窗口组件过大而显得不够精细， 而 [Linux Fractional Scaling](https://wiki.archlinux.org/title/HiDPI#Fractional_scaling) 还不成熟。
 
 ### 主板
-- [MEG Z590I UNIFY](https://www.msi.com/Motherboard/MEG-Z590I-UNIFY) 有两个 DP IN 接口，只支持 11 代CPU，不支持 MacOS。但是两个 DP IN 算是雷电主板里面最高规格了，[BIOS](https://www.chiphell.com/portal.php?mod=view&aid=25543&page=4) 里面也有雷电相关的详细配置。[MEG Z590 ACE](https://www.msi.com/Motherboard/MEG-Z590-ACE)也有两个 DP IN。
-- [ProArt B550-Creator](https://www.asus.com/Motherboards-Components/Motherboards/ProArt/ProArt-B550-CREATOR/), one DP-IN. [BIOS](https://dlcdnets.asus.com/pub/ASUS/misc/Manual/PRIME_TUF_GAMING_B550_Series_BIOS_EM_WEB_EN.pdf)里面雷电选项还挺丰富。"PCIe 3.0 x4 will be switched from Thunderbolt™ 4 to PCIEX16_3 if the slot is populated; by then Thunderbolt™ 4 will have no output" Z490也是这样，因为没有足够的 PCI 通道数。
+- [MEG Z590I UNIFY](https://www.msi.com/Motherboard/MEG-Z590I-UNIFY) 有两个 DP IN 接口，只支持 11 代CPU，不支持 MacOS。但是两个 DP IN 算是雷电主板里面最高规格了，[BIOS](https://www.chiphell.com/portal.php?mod=view&aid=25543&page=4) 里面也有雷电相关的详细配置。[MEG Z590 ACE](https://www.msi.com/Motherboard/MEG-Z590-ACE)也有两个 DP IN。MSI MEG Z690 ACE 雷电也是一样配置。
+- [ProArt B550-Creator](https://www.asus.com/Motherboards-Components/Motherboards/ProArt/ProArt-B550-CREATOR/), one DP-IN. [BIOS](https://dlcdnets.asus.com/pub/ASUS/misc/Manual/PRIME_TUF_GAMING_B550_Series_BIOS_EM_WEB_EN.pdf)里面雷电选项还挺丰富。"PCIe 3.0 x4 will be switched from Thunderbolt™ 4 to PCIEX16_3 if the slot is populated; by then Thunderbolt™ 4 will have no output" Z490也是这样，因为没有足够的 PCI 通道数。这种情况下我猜显示通道还是可以的，因为显示和PCIe是分开的。
 - [B550 VISION D-P](https://www.gigabyte.com/Motherboard/B550-VISION-D-P-rev-10#kf) all has one DP-IN. 2k. But not mATX board. [Manual](https://download.gigabyte.com/FileList/Manual/mb_manual_b550-vision-d-p_1001_e.pdf) doesn't show thunderbolt menu in detail - same as B550M AORUS. tonymacx86 [details guide](https://www.tonymacx86.com/threads/gigabyte-b550-vision-d-thunderbolt-3-amd-ryzen-7-3700x-amd-rx-5600-xt.304553/) on this board.
 - [ASRock X570 Phantom Gaming-ITX/TB3](https://www.gigabyte.com/Motherboard/X299X-DESIGNARE-10G-rev-10#kf) amazon.cn 1700¥. BIOS [Manual](https://download.asrock.com/Manual/X570%20Phantom%20Gaming-ITXTB3.pdf) has no thunderbolt info. 只有一个DP IN，似乎只能支持最高4K显示。
 - [PRIME X299-DELUXE II](https://www.asus.com/us/motherboards-components/motherboards/all-series/prime-x299-deluxe-ii/), 技嘉 [X299X AORUS Designare](https://www.gigabyte.com/Motherboard/X299X-DESIGNARE-10G-rev-10#kf) 都有两个 DP IN，两个雷电口。就是板子太贵，平台有点老，CPU 似乎还可以，7940x/7960x/7980xe 价格不贵。
-- Z490主板里面支持 2 DP IN 的只有华硕 [PROART Z490-CREATOR 10G](https://www.asus.com/Motherboards-Components/Motherboards/ProArt/ProArt-Z490-CREATOR-10G/)，而且 [BIOS](https://dlcdnets.asus.com/pub/ASUS/mb/13MANUAL/PRIME_PRO_PROART_TUF_GAMING_Intel_400_Series_BIOS_EM_WEB_EN.pdf) 里面的功能也很全。[完整](https://www.olarila.com/topic/13305-olarila-hackbeast-proart-z490-creator-10g-with-thunderbolt-full-dsdt-patches-clover-or-opencore-guide-and-discussion/)的OpenCore文件，看来已经被研究的很透彻了。可惜规格这么高的z490大板只有少的可怜的 PCI 通道 & CPU 太老，真实使用起来和我的 B460m 差不多吧。
-- 10代Intel CPU 中 10850k 比较有性价比，10核心20线程，2400¥。
+- Z490主板里面支持 2 DP IN 的只有华硕 [PROART Z490-CREATOR 10G](https://www.asus.com/Motherboards-Components/Motherboards/ProArt/ProArt-Z490-CREATOR-10G/)，而且 [BIOS](https://dlcdnets.asus.com/pub/ASUS/mb/13MANUAL/PRIME_PRO_PROART_TUF_GAMING_Intel_400_Series_BIOS_EM_WEB_EN.pdf) 里面的功能也很全。[完整](https://www.olarila.com/topic/13305-olarila-hackbeast-proart-z490-creator-10g-with-thunderbolt-full-dsdt-patches-clover-or-opencore-guide-and-discussion/)的OpenCore文件，看来已经被研究的很透彻了。可惜规格这么高的z490大板只有少的可怜的 PCI 通道 & CPU 太老，真实使用起来和我的 B460m 差不多吧。10代Intel CPU 中 10850k 比较有性价比，10核心20线程，2400¥。
 - 超微[X11SRA](https://www.supermicro.com/en/products/motherboard/X11SRA)有雷电 header，但是 BIOS 不支持，这么多PCI，真是可惜了。[这里说](https://www.chiphell.com/forum.php?mod=viewthread&tid=2153615&extra=page%3D1&mobile=1)可以在没有 header 的超微 X11DPH-T 上面实验成功，奇怪了，多半是默认开启，但是 pre-boot 肯定是没有了。
 - [Pro WS W480-ACE](https://www.asus.com/Motherboards-Components/Motherboards/Workstation/Pro-WS-W480-ACE/)，两 DP IN，支持 CPU 有 10 代，11 代和 Xeon W，不过 PCI 通道数似乎没啥亮点，有点尴尬。
 
@@ -78,8 +77,9 @@ https://fedoramagazine.org/thunderbolt-how-to-use-keyboard-during-boot-time/
 
 如果type-c或者雷电线支持视频，USB和声音传输，这就有点像KVM功能了。
 
-对于5k，此显示器同时支持MST和SST。用雷电卡，将双路DP1.2合并到USB-C形状的雷电，直接MST方式驱动即可；另外新款N卡，支持DP1.4输出即采用SST方式驱动，因WIN10同时支持MST和SST，所以两种方式很容易驱动。但是HACKINTOSH驱动5k只能采取MST方式，系统原生不支持SST驱动5k，所以只能采取win10的第一种方式，即利用雷电卡将两路DP1.2合并到USB-C形状的雷电，驱动显示器。
-https://www.chiphell.com/forum.php?mod=redirect&goto=findpost&ptid=2327490&pid=47599622 贝尔金CV10 线(DP转 TYPEC) 据说可以直接搞定。不过不是雷电方案，要拖几根usb线，感觉违背了雷电初衷。
+“对于5k，此显示器同时支持MST和SST。用雷电卡，将双路DP1.2合并到USB-C形状的雷电，直接MST方式驱动即可；另外新款N卡，支持DP1.4输出即采用SST方式驱动，因WIN10同时支持MST和SST，所以两种方式很容易驱动。但是HACKINTOSH驱动5k只能采取MST方式，系统原生不支持SST驱动5k，所以只能采取win10的第一种方式，即利用雷电卡将两路DP1.2合并到USB-C形状的雷电，驱动显示器。” Come from [here](https://www.chiphell.com/forum.php?mod=redirect&goto=findpost&ptid=2327490&pid=47599622) 
+
+贝尔金CV10 线(DP转 TYPEC) 据说可以直接搞定，不过不是雷电方案，要拖几根usb线，感觉违背了雷电初衷。Moshi USB C to DisplayPort Cable 这跟线也支持 5K，但是就没有USB通道了。
 
 ### 雷电扩展坞
 OWC Thunderbolt 3 Pro 配有 10 Gb 以太网连接
