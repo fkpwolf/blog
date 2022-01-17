@@ -16,8 +16,9 @@ Windows HiDPI 支持算是最好的：
 
 ### 主板
 - [MEG Z590I UNIFY](https://www.msi.com/Motherboard/MEG-Z590I-UNIFY) 有两个 DP IN 接口，只支持 11 代CPU，不支持 MacOS。但是两个 DP IN 算是雷电主板里面最高规格了，[BIOS](https://www.chiphell.com/portal.php?mod=view&aid=25543&page=4) 里面也有雷电相关的详细配置。[MEG Z590 ACE](https://www.msi.com/Motherboard/MEG-Z590-ACE)也有两个 DP IN。MSI MEG Z690 ACE 雷电也是一样配置。
-- [ProArt B550-Creator](https://www.asus.com/Motherboards-Components/Motherboards/ProArt/ProArt-B550-CREATOR/), one DP-IN. [BIOS](https://dlcdnets.asus.com/pub/ASUS/misc/Manual/PRIME_TUF_GAMING_B550_Series_BIOS_EM_WEB_EN.pdf)里面雷电选项还挺丰富。"PCIe 3.0 x4 will be switched from Thunderbolt™ 4 to PCIEX16_3 if the slot is populated; by then Thunderbolt™ 4 will have no output" Z490也是这样，因为没有足够的 PCI 通道数。这种情况下我猜显示通道还是可以的，因为显示和PCIe是分开的。
+- [ProArt B550-Creator](https://www.asus.com/Motherboards-Components/Motherboards/ProArt/ProArt-B550-CREATOR/), one DP-IN，不知道是否支持5K。 [BIOS](https://dlcdnets.asus.com/pub/ASUS/misc/Manual/PRIME_TUF_GAMING_B550_Series_BIOS_EM_WEB_EN.pdf)里面雷电选项还挺丰富。"PCIe 3.0 x4 will be switched from Thunderbolt™ 4 to PCIEX16_3 if the slot is populated; by then Thunderbolt™ 4 will have no output" Z490也是这样，因为没有足够的 PCI 通道数。这种情况下我猜显示通道还是可以的，因为显示和PCIe是分开的。
 - [B550 VISION D-P](https://www.gigabyte.com/Motherboard/B550-VISION-D-P-rev-10#kf) all has one DP-IN. 2k. But not mATX board. [Manual](https://download.gigabyte.com/FileList/Manual/mb_manual_b550-vision-d-p_1001_e.pdf) doesn't show thunderbolt menu in detail - same as B550M AORUS. tonymacx86 [details guide](https://www.tonymacx86.com/threads/gigabyte-b550-vision-d-thunderbolt-3-amd-ryzen-7-3700x-amd-rx-5600-xt.304553/) on this board.
+- [ProArt Z690-CREATOR WIFI](https://www.asus.com/Motherboards-Components/Motherboards/ProArt/ProArt-Z690-CREATOR-WIFI/techspec/)，两个 DP IN，PCIe 3.0 x4 和雷电并没有共享带宽，这个是比Z590强的地方。
 - [ASRock X570 Phantom Gaming-ITX/TB3](https://www.gigabyte.com/Motherboard/X299X-DESIGNARE-10G-rev-10#kf) amazon.cn 1700¥. BIOS [Manual](https://download.asrock.com/Manual/X570%20Phantom%20Gaming-ITXTB3.pdf) has no thunderbolt info. 只有一个DP IN，似乎只能支持最高4K显示。
 - [PRIME X299-DELUXE II](https://www.asus.com/us/motherboards-components/motherboards/all-series/prime-x299-deluxe-ii/), 技嘉 [X299X AORUS Designare](https://www.gigabyte.com/Motherboard/X299X-DESIGNARE-10G-rev-10#kf) 都有两个 DP IN，两个雷电口。就是板子太贵，平台有点老，CPU 似乎还可以，7940x/7960x/7980xe 价格不贵。
 - Z490主板里面支持 2 DP IN 的只有华硕 [PROART Z490-CREATOR 10G](https://www.asus.com/Motherboards-Components/Motherboards/ProArt/ProArt-Z490-CREATOR-10G/)，而且 [BIOS](https://dlcdnets.asus.com/pub/ASUS/mb/13MANUAL/PRIME_PRO_PROART_TUF_GAMING_Intel_400_Series_BIOS_EM_WEB_EN.pdf) 里面的功能也很全。[完整](https://www.olarila.com/topic/13305-olarila-hackbeast-proart-z490-creator-10g-with-thunderbolt-full-dsdt-patches-clover-or-opencore-guide-and-discussion/)的OpenCore文件，看来已经被研究的很透彻了。可惜规格这么高的z490大板只有少的可怜的 PCI 通道 & CPU 太老，真实使用起来和我的 B460m 差不多吧。10代Intel CPU 中 10850k 比较有性价比，10核心20线程，2400¥。
@@ -25,8 +26,7 @@ Windows HiDPI 支持算是最好的：
 - [Pro WS W480-ACE](https://www.asus.com/Motherboards-Components/Motherboards/Workstation/Pro-WS-W480-ACE/)，两 DP IN，支持 CPU 有 10 代，11 代和 Xeon W，不过 PCI 通道数似乎没啥亮点，有点尴尬。
 
 ### 雷电扩展卡
-https://www.gigabyte.com/Motherboard/GC-TITAN-RIDGE-rev-20#kf https://www.gigabyte.com/Motherboard/GC-TITAN-RIDGE-rev-10#kf
-居然连 AMD B550 也支持，[B550M AORUS PRO](https://www.gigabyte.com/Motherboard/B550M-AORUS-PRO-rev-10/sp#sp) 感觉这个还可以，DP 接口支持 5K，如果配个 APU 就可以省下显卡钱了。
+虽然御三家都有雷电控制卡，做的比较好的是[GC-TITAN-RIDGE v2](https://www.gigabyte.com/Motherboard/GC-TITAN-RIDGE-rev-20#kf)和[GC-TITAN-RIDGE](https://www.gigabyte.com/Motherboard/GC-TITAN-RIDGE-rev-10#kf)。居然连 AMD B550 也支持，[B550M AORUS PRO](https://www.gigabyte.com/Motherboard/B550M-AORUS-PRO-rev-10/sp#sp) 感觉这个还可以，DP 接口支持 5K，如果配个 APU 就可以省下显卡钱了。
 https://www.chiphell.com/thread-1955259-1-1.html TITAN RIDGE 不需要雷电header就可以，有时候需要短接。
 Z490支持DP IN的，也就是支持5k输出的是[Z490 VISION D](https://www.gigabyte.com/Motherboard/Z490-VISION-D-rev-1x#kf)。
 https://cn.msi.com/Motherboard/Z490M-S1/Specification 这个主板规格比较完美，不过是微星的，技嘉的扩展卡不知道是否兼容。或者[MAG B460M MORTAR](https://www.msi.com/Motherboard/MAG-B460M-MORTAR) 迫击炮感觉也行，有雷电口5pin JTBT1，这个OC支持的更多 https://heipg.cn/tutorial/b460m-install-big-sur.html。好玩是的从[规格书](https://download.msi.com/archive/mnu_exe/mb/E7C82v1.1.pdf)上看是微星这个板子有两个thunderbolt接口:
@@ -66,9 +66,9 @@ https://www.gigabyte.com/Motherboard/GC-MAPLE-RIDGE-rev-10#kf 这个表明支持
 Kensington Thunderbolt 4 有 4 个雷电口，看上去不错，有点像交换机了。
 
 ### 连接显卡
-https://superuser.com/questions/845302/what-specs-must-a-graphics-card-have-to-power-a-5k-monitor
-https://images.nvidia.com/aem-dam/en-zz/Solutions/design-visualization/quadro-product-literature/NV-DS-NVS-310-May12-US-NV.pdf
-https://www.nvidia.com/content/dam/en-zz/Solutions/design-visualization/quadro-product-literature/NVS_510_DS_Oct12_NVIDIA_LR.pdf
+<https://superuser.com/questions/845302/what-specs-must-a-graphics-card-have-to-power-a-5k-monitor>
+<https://images.nvidia.com/aem-dam/en-zz/Solutions/design-visualization/quadro-product-literature/NV-DS-NVS-310-May12-US-NV.pdf>
+<https://www.nvidia.com/content/dam/en-zz/Solutions/design-visualization/quadro-product-literature/NVS_510_DS_Oct12_NVIDIA_LR.pdf>
 都支持MST，但是记得安装最新驱动。安装后直接显示一个5k显示器，否则会显示两个屏幕。
 
 以前是ultrafine的声音设备只有先进入windows，然后重启进入macOS后，macos可以认识声音设备，但是刷bios后这个问题消失了。
@@ -88,7 +88,7 @@ HP雷电扩展坞 [HP Elite 65W Thunderbolt 3 Dock](https://support.hp.com/us-en
 为什么 ultrafine 的usb键盘可以操作呢？usb 2.0 hub？ultrafine也不是所有情况都可以：只有windows关机和重启后才可以。如果是linux关机后开机，一样问题。
 上面的ASM1042A要到HP官网上才能下载驱动，Windows 默认没有带驱动，真是辣鸡啊，VGA 口也很唐突，后来出了。
 
-Belkin Thunderbolt 3 Express Dock HD, F4U095，https://www.belkin.com/th/support-article?articleNum=216428 没有windows驱动和固件更新下载，据说Windows下面没法PD输出电流，买的有点唐突。
+Belkin Thunderbolt 3 Express Dock HD, F4U095，<https://www.belkin.com/th/support-article?articleNum=216428> 没有windows驱动和固件更新下载，据说Windows下面没法PD输出电流，买的有点唐突。
 
 ### 总结
 总的看来，[雷电](https://zh.wikipedia.org/wiki/Thunderbolt)的理念确实不错：一根线能传输电和数字信号，这对桌面的整洁至关重要，特别适合某些场景：
