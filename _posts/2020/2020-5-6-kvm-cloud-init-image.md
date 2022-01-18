@@ -46,7 +46,9 @@ $ qemu-img create -f qcow2 -b disk.qcow2 disk-new.img
 ## Boot a kvm 
 $ kvm -net nic -net user -hda disk.img -hdb my-seed.img -m 512
 ```
-密码似乎不能用123123这种简单的。完整的 user-data spec 可以参考 http://cloudinit.readthedocs.io/en/latest/topics/examples.html，更多操作指南参考 KVM / libvirt。
+密码似乎不能用 123123 这种简单的。完整的 user-data spec 可以参考 http://cloudinit.readthedocs.io/en/latest/topics/examples.html，更多操作指南参考 KVM / libvirt。
+
+对于 Centos Steam，上面配置无法 login，[这里](https://github.com/cockpit-project/bots/tree/main/machine) 的 cloud-init.iso 可以用。
 
 上面配置要是能设置 static IP 和 hostname 就好了，有点怀念 Vagrant。
 
