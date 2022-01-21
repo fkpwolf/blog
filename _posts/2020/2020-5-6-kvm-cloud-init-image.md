@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "直接在 KVM 上面使用 cloud-init image"
+title: "手动在 KVM 上面使用 cloud-init image"
 date: 2020-5-6
 categories:
   - cloud
@@ -48,7 +48,7 @@ $ kvm -net nic -net user -hda disk.img -hdb my-seed.img -m 512
 ```
 密码似乎不能用 123123 这种简单的。完整的 user-data spec 可以参考 http://cloudinit.readthedocs.io/en/latest/topics/examples.html，更多操作指南参考 KVM / libvirt。
 
-对于 Centos Steam，上面配置无法 login，[这里](https://github.com/cockpit-project/bots/tree/main/machine) 的 cloud-init.iso 可以用。
+对于 Centos Steam，上面配置无法 login，[这里](https://github.com/cockpit-project/bots/tree/main/machine) 的 cloud-init.iso 可以用。原因未知。
 
 上面配置要是能设置 static IP 和 hostname 就好了，有点怀念 Vagrant。
 
