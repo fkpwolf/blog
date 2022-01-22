@@ -37,6 +37,7 @@ GC-TITAN-RIDGE-20的[规格书](https://download.gigabyte.com/FileList/Manual/mb
 技嘉Titan ridge v1.0使用：固件要升级，否则无法视频输出。主板没有thunderbolt header，1//3要短接，USB 接口要连接，否则难以激活。
 
 确实，我修改NUC BIOS后为“无安全性(SL0)”，但是我也没法在技嘉主板BIOS里面修改。https://github.com/ameyrupji/thunderbolt-macpro-5-1/blob/master/GC-TitanRidge.md 这里有刷机的步骤。后来发现这个技嘉板子里面可以修改，修改后进入thunderbolt controller center也能看到security level改变了，我改为none。但是启动后发现雷电下面usb无法链接，重启也不行，只有热拔插雷电线可以，只能改回默认的 user auth。似乎这个如果bios里面修改了值，bios启动时会修改雷电扩展卡配置，但是不知道是因为和主板不兼容，还是我没有连接header，导致启动后OS虽然能看到修改后的安全级别，但是功能出现问题。这个是我的猜测。
+
 B550M AORUS BIOS 没有pre-boot acl支持怎么办？可以试试去掉mortar的雷电header改为短接，如果pre-boot还是可以工作，那说明这个功能完全是由bios控制。
 用AMIBCP看了b550m vision d板子的Bios，选项也很少。不是说技嘉的雷电支持是最好的么？
 这个板子问题也挺多：
@@ -47,6 +48,7 @@ B550M AORUS BIOS 没有pre-boot acl支持怎么办？可以试试去掉mortar的
 5. 使用"测试架PCB夹子治具夹具探针"接上thb 5pin口，问题依然，和短接没区别，只是可以正常关机了。看来要pre-boot 键盘支持的话必须bios支持
 6. user auth下，发现关机后无法连接，后来还是必须关掉windows的快速启动
 7. Linux 下suspend会导致机器风扇狂转，无法通过关机键关机，只能关掉电源按钮。试过不同Linux版本同样的问题。Windows下可以休眠。感觉还是和雷电卡有关系，将来升级BIOS可能会修复这个问题。
+8. 今天发现 F4 版本 BIOS 已经出现 pre-boot 菜单，但是设置后并不起效，甚至连 no security 也不能生效（Thunderbolt控制中心还是显示用户身份认证），更难以忍受的是BIOS启动速度超慢。只能换回F2版本。
 
 ### MAG B460M MORTAR
 v11 BIOS菜单里面有雷电，虽然问题多多（雷电设备能看到，但是USB和PCI网卡都看不到）。但是 v14 居然去掉了。v13 changelog 我看还有改进 Thunderbolt functional patch. 换成 v13，问题解决。
