@@ -204,7 +204,7 @@ performance.client-io-threads: off
 nfs.disable: on
 transport.address-family: inet
 ```
-这里面内容更多，显示了 bricks 分布，Gluster官方的文档[Replace faulty brick](https://docs.gluster.org/en/latest/Administrator%20Guide/Managing%20Volumes/#replace-faulty-brick)讲述了如何替换 brick，似乎正是我需要的，只是步骤有点多，`heketi-cli device remove`似乎就是简化操作，这个[issue](https://github.com/heketi/heketi/issues/1630)和我问题一样😅，是个[已知问题](https://github.com/heketi/heketi/pull/1653) - Fixed migration logic for replica < 3 volumes。按照操作 master 分支重新编译，运行后问题依然，后来才意识到这个是服务器端的修改。上传到 server 后运行 heketi-cli 命令会出错：Error: Invalid JWT token: Token missing iss claim，[原来](https://github.com/heketi/heketi/issues/1664)要加上认证才可以：
+这里面内容更多，显示了 bricks 分布，Gluster官方的文档[Replace faulty brick](https://docs.gluster.org/en/latest/Administrator-Guide/Managing-Volumes/#replace-faulty-brick)讲述了如何替换 brick，似乎正是我需要的，只是步骤有点多，`heketi-cli device remove`似乎就是简化操作，这个[issue](https://github.com/heketi/heketi/issues/1630)和我问题一样😅，是个[已知问题](https://github.com/heketi/heketi/pull/1653) - Fixed migration logic for replica < 3 volumes。按照操作 master 分支重新编译，运行后问题依然，后来才意识到这个是服务器端的修改。上传到 server 后运行 heketi-cli 命令会出错：Error: Invalid JWT token: Token missing iss claim，[原来](https://github.com/heketi/heketi/issues/1664)要加上认证才可以：
 ```
 export HEKETI_CLI_USER=admin
 export HEKETI_CLI_KEY="My Secret"
