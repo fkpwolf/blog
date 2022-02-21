@@ -65,6 +65,7 @@ Added support for PRE-BOOT ACL feature (deprecating previous implementation from
 
 ### ProArt Z690-Creator
 挺完美的主板，从[这里](https://www.computerdiy.com.tw/asus-proart-z690-creator-wifi_unbox/)的Block diagram看，其雷电口是可以输出集显DP显示的，如果同时接上DP IN，如何切换显示源呢？还是默认接上外接显卡集显就被屏蔽了？
+![](/images/2021/paroart-z690.png)
 
 ### 雷电 4
 https://www.gigabyte.com/Motherboard/GC-MAPLE-RIDGE-rev-10#kf 这个表明支持5k，我看也是Display Port 1.4。[这个](https://www.asrock.com/MB/Intel/Z590%20Phantom%20Gaming-ITXTB4/index.asp#Specification)也可以。https://www.msi.com/Motherboard/MAG-B560M-MORTAR/Specification 微星这个性价比的选择1x TBT connector (Supports RTD3) 。这个B560M AORUS PRO AX[白雕](https://www.gigabyte.com/Motherboard/B560M-AORUS-PRO-AX-rev-10)也挺好看。
