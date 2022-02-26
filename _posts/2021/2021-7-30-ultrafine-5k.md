@@ -89,6 +89,8 @@ https://fedoramagazine.org/thunderbolt-how-to-use-keyboard-during-boot-time/
 
 贝尔金CV10 线(DP转 TYPEC) 据说可以直接搞定，不过不是雷电方案，要拖几根usb线，感觉违背了雷电初衷。Moshi USB C to DisplayPort Cable 这跟线也支持 5K，但是就没有USB通道了。
 
+[Type-C 扩展器 方案参考（Thunderbolt Alternative Mode 篇）](https://zhuanlan.zhihu.com/p/390425571) 专业的雷电分析，作者雷电系列和拆解也不错。
+
 ### 雷电扩展坞
 * OWC Thunderbolt 3 Pro 配有 10 Gb 以太网连接
 * startech.com thunderbolt 3 DOCK 感觉就这个便宜点
