@@ -50,6 +50,7 @@ BIOS 没有pre-boot acl支持怎么办？可以试试去掉mortar的雷电header
 6. Linux 下suspend会导致机器风扇狂转，无法通过关机键关机，只能关掉电源按钮。试过不同Linux版本同样的问题。Windows下可以休眠。感觉还是和雷电卡有关系，将来升级BIOS可能会修复这个问题 (确实，会好点，现在是suspend变成poweroff)。
 7. 今天发现 F4 版本 BIOS 已经出现 pre-boot 菜单，太棒了！但是设置后并不起效，甚至连 no security 也不能生效（Thunderbolt控制中心还是显示用户身份认证），更难以忍受的是更新后BIOS，开机自检到显示BIOS画面中间要等半天。只能换回F2版本。
 8. 闲鱼买了个B550m Aorus Pro-P，带 THB 接口。接上去后和上面 Aorus AX 总体表现一致。开机会快点。刷最新 BIOS 后，贝尔金雷电扩展坞总可以正常工作，但是 Ultrafine 显示器自带的 USB 设备总是不没法正常工作，而这个显示器的声音设备对于我来说是必须的。而且 Windows 下面还会有 Cache Hierarchy Error，会随机重启，这个很恐怖，网上说这个大概和 CPU 电压配置有关。换成低版本的 BIOS 后表现和 AX 一致。看来这个设备 BIOS 对于不同雷电设备还是有兼容性问题。
+9. B550m Aorus Pro-P最新的F15a版本离上个版本只有一个月，像紧急修复。首先稳定提高，不会出现Windows随机启动的问题。然后bios设置雷电no security也能在windows中生效，所以上面两个问题得到修复。
 
 ### MAG B460M MORTAR
 v11 BIOS菜单里面有雷电，虽然问题多多（雷电设备能看到，但是USB和PCI网卡都看不到）。但是 v14 居然去掉了。v13 changelog 我看还有改进 Thunderbolt functional patch. 换成 v13，问题解决。
