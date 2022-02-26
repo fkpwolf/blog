@@ -51,12 +51,13 @@ typora-root-url: ../../../blog
 他这个得有个优联主控，多半是从已有的键盘上面拆下来的。然后PC端也有个把优联接受装置转为普通USB的转换器，这个转换做的是把原来主控对应键盘的布局转为现在键盘的布局。 注意这个电路板有很多线连接到各个键盘，一般的 MCU 可能没有这么多的针脚/GPIO。
 
 ### 小键盘 keypad
-* https://www.cnx-software.com/2021/08/07/arduino-powered-5-key-keypad-rotary-encoder/  小键盘，包含旋钮。感觉挺好，不过有没有2.4G 无线的？旋钮是“EC11编码开关”
-* https://www.linchenguang.com/2020/10/23/Stroll-keyboard-fan-community-Selection/
-* https://github.com/mattdibi/redox-w-firmware
-* https://www.youtube.com/watch?v=GuQxLqAc5GE 这个好像连pcb也不需要
-* https://github.com/LeafCutterLabs/bigKNOB 这个很简洁，但是没有开放pcb
-* https://www.youtube.com/watch?v=IDlcxLQ1SbY base on Arduino Pro Micro, so PCB is simple. But it not open source neither.
+一般多媒体键盘都包含音量控制键，很方便控制音量大小。而且对于我来说，PC上有Windows+Linux，使用蓝牙键盘后，开机时无法连接而进入BIOS里选择启动操作系统。
+* <https://www.cnx-software.com/2021/08/07/arduino-powered-5-key-keypad-rotary-encoder/>  小键盘，包含旋钮。感觉挺好，不过有没有2.4G 无线的？旋钮是“EC11编码开关”
+* <https://www.linchenguang.com/2020/10/23/Stroll-keyboard-fan-community-Selection/>
+* <https://github.com/mattdibi/redox-w-firmware>
+* <https://www.youtube.com/watch?v=GuQxLqAc5GE> 这个好像连pcb也不需要
+* <https://github.com/LeafCutterLabs/bigKNOB> 这个很简洁，但是没有开放pcb
+* <https://www.youtube.com/watch?v=IDlcxLQ1SbY> base on Arduino Pro Micro, so PCB is simple. But it not open source neither.
 
 ### 按键延时
 从算法上，并不是每个键都连了一个GPIO，而是每排和每列连接一个GPIO，键盘每排的按键是并连的，也就是说任何一个接通都会设置这个GPIO为接通，然后算法先遍历每排，然后遍历每列。这种叫矩阵扫描。
