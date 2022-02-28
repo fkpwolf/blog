@@ -7,7 +7,7 @@ categories:
 typora-root-url: ../../../blog
 ---
 ### Image list
-- Ubuntu <https://cloud-images.ubuntu.com/releases/16.04/release/> .img是给QEUM和KVM用，.vhd是给Azure用，vmdk是给Vmware用。一般这些是在 OpenStack 这样的 IaaS 平台上面使用。这里描述如何在安装有 KVM 的普通 Linux 机器上面使用这些 Image。
+- Ubuntu <https://cloud-images.ubuntu.com/> .img是给QEUM和KVM用，.vhd是给Azure用，vmdk是给Vmware用。一般这些是在 OpenStack 这样的 IaaS 平台上面使用。这里描述如何在安装有 KVM 的普通 Linux 机器上面使用这些 Image。
 - Fedora <https://cloud.fedoraproject.org/> Fedora cloud image，比 Ubuntu 兼容性好。
 - OpenSuse <https://get.opensuse.org/leap/> Jeos is for cloud. Leap is normal version, Tumbleweed is rolling update. openSUSE MicroOS is a variant of openSUSE Tumbleweed and serves as a base of openSUSE Kubic, a Container as a Service platform. Guide of kubeadm’s installation container runtimes uses Tumbleweed. `KVM and XEN` version of JeOS image is cool: need interactive installation and it is fast. Doesn’t need extra disk for OS so boot image is enough. `OpenStack-Cloud` filesystem is xfs and 1G size. `KVM and XEN` filesystem is btrfs and 26G size. But Tumbleweed `KVM` version didn't have igbvf driver. Crazy! Need `zypper install kernel-default`. It is 5.11.11. So what is stock or default kernel version?
 - Centos Stream <https://cloud.centos.org/centos/>
