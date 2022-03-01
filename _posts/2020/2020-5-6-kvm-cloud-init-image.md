@@ -66,15 +66,17 @@ Kernel driver name, corresponding to the DRIVER udev property. Globs are support
 为什么每次启动 vm 后其virtual function mac地址会变呢？算了，最后我还是自己修改 os 配置为静态 ip 地址。对于 Centos，要删除 /etc/sysconfig/network-scripts/ifcfg-ens3 文件里面的 HWADDR=xxx 和 BOOTPROTO=dhcp。
 
 ### Resize image
-Ubuntu cloud image default size is 2GB, you can use ‘qemu-img info a.img’ to check details. To resize it:
+Ubuntu cloud image's default size is 2GB. You can use `qemu-img info a.img` to check details. To resize it:
 
-1. You need to convert the qcow2 image to raw
-qemu-img convert -O raw guest.img guest.raw
-2. Then resize the raw file
-qemu-img resize guest.raw 10G
-3. Then convert it back to qcow2(this will create 1G file, 1G = 10G * 0.10)
-qemu-img convert -O qcow2 -o compat=0.10 guest.raw guest.img.10g
-4. Then run the guest and resize your file system
+1. Convert the qcow2 image to raw format
+`qemu-img convert -O raw guest.img guest.raw`
+2. Resize the raw file
+`qemu-img resize guest.raw 10G`
+3. Convert it back to qcow2(this will create 1G file, 1G = 10G * 0.10)
+`qemu-img convert -O qcow2 -o compat=0.10 guest.raw guest.img.10g`
+4. Power on vm and resize file system within the vm
+    * run `parted /dev/vda` to edit the partition. set resize = "-1" (minus 1 means 1 sector from end of disk)
+    * run `resize2fs /dev/vda1`
 
 Using this way, ubuntu need lots of time to boot. It hang on “ systemd:started journal service”. I thought it was because I used virtIO disk or a small virtual image as disk. But at last it turn out
 Centos use xfs filesystem, after reboot, disk was enlarged.
