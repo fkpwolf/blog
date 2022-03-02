@@ -48,6 +48,8 @@ badger https://github.com/dgraph-io/badger separating values from keys, signific
 [如何评价 Badger (fast key-value storage)？](https://www.zhihu.com/question/59895275) "基本思路是RocksDB基于LevelDB为SSD优化，但不是为SSD尤其是目前超高随机读写能力的NVME SSD设计．"
 [badger 事务过程笔记](https://zhuanlan.zhihu.com/p/395229054)
 
+MyRocks: MariaDB将MyRocks作为一个alpha阶段的存储引擎 <https://mariadb.com/kb/en/about-myrocks-for-mariadb/>
+
 ### LeanStore
 a high-performance OLTP storage engine optimized for many-core CPUs and NVMe SSDs. https://dbis1.github.io/leanstore.html
 Talk https://twitter.com/andy_pavlo/status/1389042478796492800
