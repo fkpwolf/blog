@@ -8,36 +8,37 @@ categories:
 typora-root-url: ../../../blog
 ---
 
-企业上云系列之开源数据库的现状 http://www.infoq.com/cn/articles/situation-of-the-open-source-database
+[企业上云系列之开源数据库的现状](http://www.infoq.com/cn/articles/situation-of-the-open-source-database)
 对于很多应用来说，其领域对象模型并不适合于转换成关系数据库形式来存储。这也是非关系型数据库（NoSQL）得以流行的原因。NoSQL 数据库的种类很多，包括键值对数据库、面向文档数据库和图形数据库等。
 
-http://nosql-database.org/ 所有的 nosql 数据库
+<http://nosql-database.org/> 所有的 nosql 数据库
 
-https://db-engines.com/en/ranking DB-Engines Ranking
+<https://db-engines.com/en/ranking> DB-Engines Ranking
 
-https://use-the-index-luke.com/ Use The Index, Luke!
+<https://use-the-index-luke.com/> Use The Index, Luke!
 
 SQLite Is Serverless
-* https://www.sqlite.org/serverless.html
-* https://www.sqlite.org/whentouse.html
+* <https://www.sqlite.org/serverless.html>
+* <https://www.sqlite.org/whentouse.html>
 
 为什么数据库不应该使用外键 https://draveness.me/whys-the-design-database-foreign-key/
 为什么 MySQL 使用 B+ 树 https://draveness.me/whys-the-design-mysql-b-plus-tree/
 
 国内的数据库博主
-* https://www.zhihu.com/people/fuyufjh/posts
-* https://www.zhihu.com/column/c_1037748468491689984
-* https://draveness.me
+* <https://www.zhihu.com/people/fuyufjh/posts>
+* <https://www.zhihu.com/column/c_1037748468491689984>
+* <https://draveness.me>
 
 ### Leveldb 和 RocksDB
-Leveldb 和 RocksDB 在大 value 场景下的一些问题 http://idning.github.io/leveldb-rocksdb-on-large-value.html
-获得PCC性能大赛第一名方案背后的 RocksDB 引擎:5分钟全面了解其原理 http://weibo.com/ttarticle/p/show?id=2309404088129911940161 RocksDB 是基于levedb，借鉴了hbase思想。据说为 SSD 这种存储做了优化。
+[Leveldb 和 RocksDB 在大 value 场景下的一些问题](http://idning.github.io/leveldb-rocksdb-on-large-value.html)
+
+[获得PCC性能大赛第一名方案背后的 RocksDB 引擎:5分钟全面了解其原理](http://weibo.com/ttarticle/p/show?id=2309404088129911940161) RocksDB 是基于levedb，借鉴了hbase思想。据说为 SSD 专门做了优化。
 
 [小米分布式 Key-Value 存储系统](https://www.oschina.net/p/xiaomi-pegasus) 基于 RocksDB 对比了 HBase 的缺点
 
 [既生 Redis 何生 LevelDB ？](https://zhuanlan.zhihu.com/p/53299778)
 
-几款主流 NoSql 数据库的对比 http://www.cnblogs.com/vajoy/p/5471308.html
+[几款主流 NoSql 数据库的对比](http://www.cnblogs.com/vajoy/p/5471308.html)
 leveldb 和 mongodb 很像，但是作为一个数据库后者功能更全面，前者性能是好，但只是一个库。
 浅析 Bigtable 和 LevelDB 的实现 http://draveness.me/bigtable-leveldb.html 实现和hbase比较像，但是leveldb用了memtable作为磁盘table的中介和缓存，性能会提高，而hbase则偏向大数据情况下的处理。主要是 Leveldb 不支持分布式。
 
@@ -110,6 +111,7 @@ https://apple.github.io/foundationdb/getting-started-linux.html 安装挺容易�
 * openGauss 华为开源的数据库  https://opengauss.org/zh/
 * ZNBase 浪潮的分布式数据库 http://www.znbase.com/
 * 淘宝 [OceanBase](https://www.zhihu.com/question/19841579) 融合了 mysql 的事务并且兼容 mysql，以及用了 leveldb 类似的内存写的技术，不过虽然开源但是 commit 特别少，现在已经成为阿里云上面的一个产品了。
+* 阿里云 [PolarDB for PostgreSQL](https://github.com/ApsaraDB/PolarDB-for-PostgreSQL) "数据库由传统的 Share-Nothing 架构，转变成了 Shared-Storage 架构。由原来的 N 份计算 + N 份存储，转变成了 N 份计算 + 1 份存储。"
 
 ### 比较传统数据库
 CAP理论十二年回顾："规则”变了 http://www.infoq.com/cn/articles/cap-twelve-years-later-how-the-rules-have-changed
@@ -127,7 +129,7 @@ https://aws.amazon.com/cn/products/databases/ AWS 产品很多，类似的似乎
 - 原生实现：如CockroachDB、YugaByteDB
 - NoSQL+ACID+SQL：如TiDB、Trafodion
 
-cockroachdb和 tidb 一样是基于 rocksdb 啊，为什么不同呢？这个参考是 tidb 老版本基于 hbase 的？[刘奇：如何使用HBase构建NewSQL？](https://cloud.tencent.com/developer/article/1041887) 老版本的 tidb 是基于 hbase 的吧，现在应该已经换了。[HBase进化之从NoSQL到NewSQL，凤凰涅槃成就Phoenix](https://yq.aliyun.com/articles/680772) 用的还是官方项目phoenix。可惜 hbase 是 java 的并且运行在 hadoop 上面，依赖带笨重了。
+cockroachdb和 tidb 一样是基于 rocksdb，为什么不同呢？这个参考是 tidb 老版本基于 hbase 的？[刘奇：如何使用HBase构建NewSQL？](https://cloud.tencent.com/developer/article/1041887) 老版本的 tidb 是基于 hbase 的吧，现在应该已经换了。[HBase进化之从NoSQL到NewSQL，凤凰涅槃成就Phoenix](https://yq.aliyun.com/articles/680772) 用的还是官方项目phoenix。可惜 hbase 是 java 的并且运行在 hadoop 上面，依赖太笨重。
 
 [一分钟搞懂列式与行式数据库](http://zhuanlan.51cto.com/art/201703/535729.htm)
 行式更适合OLTP，比如传统的基于增删改查操作的应用。列式更适合OLAP，非常适合于在数据仓库领域发挥作用，比如数据分析、海量存储和商业智能;涉及不经常更新的数据。
