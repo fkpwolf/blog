@@ -65,8 +65,9 @@ Added support for PRE-BOOT ACL feature (deprecating previous implementation from
 但是 NUC BIOS 里面没有看到对应的配置。看看其thunderbolt nvm version is just 33.0，但是 NUC 官网也没有新的版本。我猜测进入windows系统后动态的启用和批准设备的pre boot，这样重启后启动就能在启动阶段使用键盘。后来测试这个NUC对pre-boot支持的已经挺好了，虽然bios里面没有显示的支持，默认似乎是已经开启了。
 
 ### ProArt Z690-Creator
-挺完美的主板，从[这里](https://www.computerdiy.com.tw/asus-proart-z690-creator-wifi_unbox/)的Block diagram看，其雷电口是可以输出集显DP显示的，如果同时接上DP IN，如何切换显示源呢？还是默认接上外接显卡集显就被屏蔽了？[这里开箱](http://enterbox.tw/8882)显示主控为 JHL8540 ThunderBolt4 控制器。
+挺完美的主板，从[这里](https://www.computerdiy.com.tw/asus-proart-z690-creator-wifi_unbox/)的Block diagram看，其雷电口是可以输出集显DP显示的，如果同时接上DP IN，如何切换显示源呢？还是默认接上外接显卡集显就被屏蔽了？
 ![](/images/2021/paroart-z690.png)
+[这里开箱](http://enterbox.tw/8882)显示主控为 JHL8540 ThunderBolt4 控制器。tonymacx86 已经有 macOS 安装[方法](https://www.tonymacx86.com/threads/asus-z690-proart-creator-wifi-thunderbolt-4-i7-12700k-amd-rx-6800-xt.318311/)，虽然我不是很想试。
 
 ### 雷电 4
 https://www.gigabyte.com/Motherboard/GC-MAPLE-RIDGE-rev-10#kf 这个表明支持5k，我看也是Display Port 1.4。[这个](https://www.asrock.com/MB/Intel/Z590%20Phantom%20Gaming-ITXTB4/index.asp#Specification)也可以。https://www.msi.com/Motherboard/MAG-B560M-MORTAR/Specification 微星这个性价比的选择1x TBT connector (Supports RTD3) 。这个B560M AORUS PRO AX[白雕](https://www.gigabyte.com/Motherboard/B560M-AORUS-PRO-AX-rev-10)也挺好看。
