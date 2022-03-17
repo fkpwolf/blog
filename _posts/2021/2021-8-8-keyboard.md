@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "键盘"
+title: "客制化键盘"
 date: 2021-8-8
 categories:
   - DIY
@@ -44,8 +44,12 @@ typora-root-url: ../../../blog
 
 ### 开源软件
 * QMK <https://qmk.fm/> 大多数有线键盘都基于这个方案，支持挺多MCU，但是缺少对无线/蓝牙的支持。
-* ZMK <https://zmk.dev/> ZMK Firmware is an open source (MIT) keyboard firmware built on the Zephyr™ Project Real Time Operating System (RTOS). 
-* VIA <https://caniusevia.com/> 修改键盘配列的一个图形界面软件。这个软件强的地方在于修改后立即生效，没有保存的动作。而且下次修改的时候会加载键盘里面的配置，所以是无缝连接。如果能让一款成品键盘，比如IKBC的支持VIA，那是极好的。不过为什么要改标准布局的键盘的布局呢？因为每个人键盘使用和常用按键都不同，对于我来说，有个能让电脑sleep/suspend组合键就很好，这个用VIA layer很容易做到。
+* ZMK <https://zmk.dev/> ZMK Firmware is an open source (MIT) keyboard firmware built on the Zephyr™ Project Real Time Operating System (RTOS). Wireless First.
+* VIA <https://caniusevia.com/> 修改键盘配列的一个图形界面软件。这个软件强的地方在于修改后立即生效，没有保存的动作。而且下次修改的时候会加载键盘里面的配置，所以是无缝连接。如果能让一款成品键盘，比如IKBC的支持VIA，那是极好的。
+
+为什么要改标准布局的键盘的布局呢？因为每个人键盘使用和常用按键都不同，对于我来说，最迫切需求是：
+1. 能够快速让电脑待机
+2. 声音控制
 
 ### DIY无线优联机械键盘
 这种方式是拿罗技的主控板，加上定制PCB来实现键盘。因为罗技的无线技术还是很牛的：省电、稳定，这两点对于无线键盘来说都很重要。
@@ -82,4 +86,5 @@ typora-root-url: ../../../blog
 
 ### Think
 * 客制化键盘的市场超出我的想象，各种开车组团，大大小小商家不计其数
-* 更多买家似乎更关心轴体外壳这种硬件，我更关心能不能刷机。很多定制键盘价格已经破千，这对于我来说说已经超出了极客/垃圾佬的精神。
+* 更多买家似乎更关心轴体外壳这种硬件，我更关心能不能刷机。很多定制键盘价格已经破千，这对于我来说已经超出了极客/垃圾佬的精神
+* keymap、键帽和轴体，这些特别能体现个人喜好，而做出选择却很容易：keymap 直接图形化修改，即使生效；轴体可以热拔插；价格范围也很大。而这些眼花缭乱的选择却不影响键盘基本功能的稳定性。技术上不管是开源还是键盘出厂固件都能很容易的处理键盘的输入要求。

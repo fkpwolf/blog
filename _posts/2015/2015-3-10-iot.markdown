@@ -5,44 +5,13 @@ date:   2015-3-10 14:20:33
 typora-root-url: ../../../blog
 ---
 
-<http://www.cnx-software.com/2015/03/10/tessel-2-javascript-node-js-iot-board-features-atmel-samd21-mcu-and-mediatek-mt7620n-wisoc/>
-
-<http://www.cnx-software.com/2015/03/05/donglepi-is-a-usb-dongle-with-a-raspberry-pi-header-for-your-pc/>
-
-Both of them are SOC(rpi or mt7620) + Atmel SAMD21 MCU.  The new Arduino Zero also use this MCU.
-
-1. why choose this MCU?
-2. how SOC talk with MCU? Can I use other MCU since it is quite new in taobao?
-
-wikipedia <http://zh.wikipedia.org/wiki/%E7%89%A9%E8%81%94%E7%BD%91>  
-
+wikipedia [物联网](http://zh.wikipedia.org/wiki/%E7%89%A9%E8%81%94%E7%BD%91>)
 Ashton最初的定义是: “就是当今的电脑以及互联网几乎完全依赖于人类来提供讯息。互联网上大约有50 petabytes (一个petabyte为1,024 terabytes) 的数据，其中大部分最初由人来获取和创建的，通过打字、录音、照相或扫描条码等方式。传统的互联网蓝图中忽略了为数最多并且最重要的节点——人。 而问题是，人的时间、精力和准确度都是有限的，他们并不适于从真实世界中截获讯息。这是一个大问题。我们生活于一个物质世界中，我们不能把虚拟的讯息当做粮食吃，也不能当做柴火来烧。想法和讯息很重要，但物质世界是更本质的。当今的讯息技术如此依赖于人产生的讯息，以至于我们的电脑更了解思想而不是物质。如果电脑能不借助我们的帮助，就获知物质世界中各种可以被获取的讯息，我们将能够跟踪和计量那些物质，极大地减少浪费、损失和消耗。我们将知晓物品何时需要更换、维修或召回，他们是新的还是过了有效期。物联网有改变世界的潜能，就像互联网一样，甚至更多。”
 
-ESP8266 Add Wi-Fi to Arduino Boards <http://www.cnx-software.com/2014/11/17/add-wi-fi-to-arduino-boards-for-3-with-esp8266-wi-fi-serial-module/> 
+小米智能插座（zigbee版本需要搭配小米多功能网关）响应还是很快的，3G->home wifi->plug socket都在一秒内。MQTT是IBM在WebSocket上面提出的方案。WebSocket对客户端要求比较高吧？能通过防火墙么？小米插座的[拆解](http://www.leikeji.com/article/841)可以看出其方案为"Marvell EZ-Connect Wi-Fi 微控制器IoT平台采用强大的Cortex-M3微控制器（88MC200）和一流的802.11n无线射频88W8801”，两个芯片+电源管理卖49￥还是很超值的。但是Cortex-M3如何做到http push呢？如何穿透家里的防火墙？插座主动和小米的云服务器建立的 web socket 连接？里面有很多http网页请求，这个是给谁用的？
 
-WiPy Wi-Fi Board for IoT Runs MicroPython on Texas Instruments CC3200
-
-Read more: <http://www.cnx-software.com/2015/04/24/wipy-wi-fi-board-for-iot-runs-micropython-on-texas-instruments-cc3200-crowdfunding/#ixzz3YEf7gJkl>  
-
-CC3200 is more powerful than CC3000.
-
-Windwos 10 IOT <http://www.cnx-software.com/2015/04/30/windows-10-iot-preview-for-raspberry-pi-2-and-minnowboard-max/> 
-
-<http://blog.csdn.net/qianrushizaixian/article/details/46536005> 
-
-<http://www.cnx-software.com/2016/08/20/realtek-rtl8710-witty-like-wifi-iot-board-with-micro-usb-port-sells-for-8-82-35-rmb/> Cortex M3
-
-<http://www.cnx-software.com/2016/11/28/pine64-padi-iot-stamp-rtl8710af-wifi-kit-review-part-2-serial-console-gcc-sdk-flashing-debugging-code/>
-
-小米智能插座（zigbee版本需要搭配小米多功能网关）响应还是很快的，3G->home wifi->plug socket都在一秒内。MQTT是IBM在WebSocket上面提出的方案。WebSocket对客户端要求比较高吧？能通过防火墙么？
-
-小米插座的[拆解](http://www.leikeji.com/article/841)可以看出其方案为"Marvell EZ-Connect Wi-Fi 微控制器IoT平台采用强大的Cortex-M3微控制器（88MC200）和一流的802.11n无线射频88W8801”，两个芯片+电源管理卖49￥还是很超值的。但是Cortex-M3如何做到http push呢？如何穿透家里的防火墙？插座主动和小米的云服务器建立的 web socket 连接？
-
-里面有很多http网页请求，这个是给谁用的？
-
-<https://github.com/cesanta/mongoose-os/tree/master/fw/examples/c_mqtt>
-
-This example demonstrates how to perform remote device control over MQTT protocol. ESP8266.
+### MQTT
+<https://github.com/cesanta/mongoose-os/tree/master/fw/examples/c_mqtt> This example demonstrates how to perform remote device control over MQTT protocol. ESP8266.
 
 [初识 MQTT](https://www.ibm.com/developerworks/cn/iot/iot-mqtt-why-good-for-iot/index.html)，[英文版](https://www.ibm.com/developerworks/library/iot-mqtt-why-good-for-iot/index.html)，解释了为什么不实用 HTTP：
 * HTTP 是一种同步协议，在 IoT 领域，大量设备以及很可能不可靠或高延迟的网络使得同步通信成为问题，异步消息协议更适合 IoT 应用程序
@@ -55,8 +24,6 @@ MQTT 也可以在 WebSocket 上面传输。
 Google CLOUD IOT CORE 也是用的 MQTT <https://cloud.google.com/iot-core/> 基于 Google 的云平台，但是加了很多设备的管理的东西。具体参考 <https://cloud.google.com/iot/docs/concepts/overview> Cloud Pub/Sub 可以触发 Cloud Functions，也可以触发自己的代码吧，但这里 serverless 更适合点吧。
 
 支持设备列表 <https://cloud.google.com/solutions/iot/kit/> 似乎没有提供 SDK，都是标准 REST，比阿里云不知道高明到哪里去了。 
-
-![google-iot](/images/2015/google-iot.png)
 
 [阿里云的物联网方案](https://iot.aliyun.com/) 不过他们的品牌商接入和模组商接入浓浓的商业气息，不够人性化。SDK - Alink 基于freertos。
 
@@ -108,10 +75,6 @@ If Arduino is strong enough, why use mbed? Just because for ARM?
 
 <https://developer.mbed.org/handbook/Firmware-FRDM-K64F> 下载bin文件后没有必要重命名。Mac下必须用命令行模式拷贝文件，文件拖放的方式不能工作。 
 
-**FreeRTOS** 
-
-<https://mcuoneclipse.com/2014/11/08/tutorial-freertos-with-the-kinetis-sdk-and-processor-expert/>
-
 OpenSDA串行调试适配器 <http://www.nxp.com/zh-Hans/products/software-and-tools/run-time-software/kinetis-software-and-tools/ides-for-kinetis-mcus/opensda-serial-and-debug-adapter:OPENSDA> 
 
 <http://usbdm.sourceforge.net/USBDM_V4.12/html/index.html> USBDM is a debugger hardware interface for a range of Freescale microcontrollers. 
@@ -121,26 +84,6 @@ OpenSDA串行调试适配器 <http://www.nxp.com/zh-Hans/products/software-and-t
 MT7628具备路由器及物联网网关两种运作模式，可见该平台拥有高性能和多元化应用。物联网网关模式支持SD-XC、eMMC、PWM、 SPI slave、三个 UART及更多 GPIOs；路由器模式可以使用PCIe界面连接至802.11ac芯片组，成为入门型的2x2 802.11ac 双频路由器, 参考设计使用了两层PCB版的精简设计。
 
 新浪手机讯 6月3日下午消息，联发科技今日在2014台北电脑展期间推出两款智能家居系统芯片MT7688及MT7681。MT7688是目前业界功耗最低的系统芯片，采用Linux系统，支持802.11n。而MT7681则适用于灯泡、门锁与插座等小型家电。
-
-<http://vonger.cn/?p=1861#comments> VoCore 2 use mt7628. 
-
-更换内置陶瓷天线，mac 上面脸上这个 ap测试型号强度为： 
-```
-  PHY 模式：    802.11n 
-  BSSID：    b8:d8:12:67:44:a0 
-  网络类型：    基础结构 
-  安全性：    无 
-  信号/噪声：    -52 dBm / -88 dBm 
-  传输速率：    73 
-  MCS 索引：    7 
-OpenWrt: 
-10%    SSID: VoCore2 
-Mode: Master 
-Channel: 2 (2.417 GHz) 
-Bitrate: 150 Mbit/s 
-BSSID: B8:D8:12:67:44:A0 
-Encryption: - 
-```
 
  MT7688内建MIPS24KEc/580MHz处理器，256MB内存以及AES128/256加密引擎，可处理更为复杂或数据密集型的智能家居设备，比如IP投影机及家庭监控系统。其超低功耗相较于之前产品能耗下降四成，并且支持联发科技发布的Smart Connection智能手机应用程序。
 
@@ -156,10 +99,6 @@ Windwos 10 IOT <http://www.cnx-software.com/2015/04/30/windows-10-iot-preview-fo
 
 <https://wikidevi.com/wiki/MediaTek>
 
-小米WiFi放大器  <http://bbs.xiaomi.cn/thread/index/tid/11541070> 爆力强拆解芯片篇 MT7688KN, 64Mb内存.小米路由器青春版 <http://news.mydrivers.com/1/442/442576.htm> 配置方面搭载的是MTK MT7628NN处理器，内存64MB，闪存16MB，Wi-Fi速率300M。刷openwrt <http://www.shouji56.com/snews/85077.html> 极路由1S也是同样CPU <http://www.right.com.cn/forum/thread-168290-1-1.html> use ttl. But looks only read, can't write to ttl. 
-
-ralink ap sdk 4.3 has supported this SOC.
-
 LinkIt Smart 7688 Duo, [link](http://www.seeedstudio.com/depot/LinkIt-Smart-7688-Duo-p-2574.html),  [wiki](http://www.seeedstudio.com/wiki/LinkIt_Smart_7688_Duo). Openwrt has supported it. 
 
 MT7688AN. 128MB DDR2, 32MB flash. ATmega32U4. Jtag port. Use tty to talk with arduion. Compatiable with arduion yun.
@@ -168,13 +107,9 @@ PWM <https://dev.openwrt.org/changeset/46474> <http://blog.csdn.net/qianrushizai
 
 <https://www.hackster.io/colinodell/diy-alarm-control-panel-for-home-assistant-ac1813> A simple touchscreen interface, powered by a Raspberry Pi Zero, which controls the alarm in Home Assistant over MQTT. 
 
-![iot-scree](/images/2015/iot-screen.png)
-
 ittlevGL is a free and open-source graphics library providing everything you need to create embedded GUI with easy-to-use graphical elements, beautiful visual effects and low memory footprint.
 
-![iot-scree](/images/2015/iot-screen-2.png)
-
-nRF52840 蓝牙5设备。优点是什么？现在蓝牙在物联网里面用的不多。 
+nRF52840 蓝牙5.0 设备。优点是什么？现在蓝牙在物联网里面用的不多。 
 
 <https://www.bnext.com.tw/article/34770/BN-ARTICLE-34770> Beacom 应用，主要用来做室内定位 
 
@@ -182,10 +117,31 @@ Nordic nRF52840 Arm Cortex-M4F WiSoC with 1 MB FLASH and 256 kB RAM，但是没�
 
 [这个](https://www.cnx-software.com/2018/02/14/particle-unveils-three-nrf52840-bluetooth-5-boards-argon-wifi-boron-lte-and-xenon-particle-mesh-technology/#particle-xenon-bluetooth-5-mesh)有额外添加 wifi 或者 3G 模块 
 
-![nRF52840](/images/2015/iot-nRF52840.jpg)
-
 Makerdiary nRF52840 Micro Development Kit Works with OpenThread, Arm Mbed OS, Zephyr OS, Mynewt 
 
 <https://www.cnx-software.com/2018/07/08/makerdiary-nrf52840-micro-development-kit-openthread-arm-mbed-os-zephyr-os-mynewt/> 
 
 <https://cloud.google.com/solutions/iot/kit/> Google 与合作伙伴携手打造了多款入门套件，让开发者能够轻松通过 Cloud IoT Core 连接 Google Cloud Platform。
+
+### OS
+LinkIt ONE
+http://wukcsoft.blogspot.com/2014/10/mediatek-linkit-ubuntu.html
+has SIM/microSD combo
+http://labs.mediatek.com/site/global/developer_tools/mediatek_linkit/whatis_linkit/index.gsp
+
+FreeRTOS
+<https://mcuoneclipse.com/2014/11/08/tutorial-freertos-with-the-kinetis-sdk-and-processor-expert/>
+
+rtos used is Nucleus 
+http://labs.mediatek.com/forums/posts/list/60.page 
+http://www.mentor.com/embedded-software/nucleus/ 
+
+Intel Edison
+http://www.cnx-software.com/2014/09/10/50-intel-edison-board-for-wearables-features-an-soc-with-a-dual-core-atom-processor-and-a-quark-mcu/ It can run on Linux
+http://www.intel.com/content/www/us/en/do-it-yourself/edison.html 
+
+Linux基金会宣布了微内核项目Zephyr。Zephyr微内核将被用于开发针对物联网设备的实时操作系统（RTOS)。Zephyr项目得到了英特尔、 NXP半导体、Synopsys和UbiquiOS等公司的支持，英特尔子公司Wind River向Zephyr项目捐赠了它的Rocket RTOS内核。
+https://docs.zephyrproject.org/latest/boards/index.html 支持还挺广泛，甚至包括 RISC-V。
+
+Apache NuttX https://nuttx.apache.org/
+https://nuttx.apache.org/docs/latest/platforms/risc-v/esp32c3/index.html
