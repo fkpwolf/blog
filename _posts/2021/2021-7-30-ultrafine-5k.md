@@ -20,7 +20,7 @@ Windows HiDPI 支持算是最好的：
 - [B550 VISION D-P](https://www.gigabyte.com/Motherboard/B550-VISION-D-P-rev-10#kf) all has one DP-IN. 2k. But not mATX board. [Manual](https://download.gigabyte.com/FileList/Manual/mb_manual_b550-vision-d-p_1001_e.pdf) doesn't show thunderbolt menu in detail - same as B550M AORUS. tonymacx86 [details guide](https://www.tonymacx86.com/threads/gigabyte-b550-vision-d-thunderbolt-3-amd-ryzen-7-3700x-amd-rx-5600-xt.304553/) on this board.
 - [ProArt Z690-CREATOR WIFI](https://www.asus.com/Motherboards-Components/Motherboards/ProArt/ProArt-Z690-CREATOR-WIFI/techspec/)，两个 DP IN，PCIe 3.0 x4 和雷电并没有共享带宽，这个是比Z590强的地方。
 - [ASRock X570 Phantom Gaming-ITX/TB3](https://www.gigabyte.com/Motherboard/X299X-DESIGNARE-10G-rev-10#kf) amazon.cn 1700¥. BIOS [Manual](https://download.asrock.com/Manual/X570%20Phantom%20Gaming-ITXTB3.pdf) has no thunderbolt info. 只有一个DP IN，似乎只能支持最高4K显示。
-- [ASRock X570 Creator](http://www.asrock.com/mb/AMD/X570%20Creator/index.cn.asp#Overview)，这个板子神奇的地方在于后部面板有一个DP IN，这个和一般主板一样，但是板载上面有另外一个DP IN（有的显卡内置一个mini DP），华擎果真出妖板！网上有不少用这个板子接 Ultrafine 5k运行黑苹果的，比如[这里](https://forum.amd-osx.com/index.php?threads/asrock-x570-creator-ryzen-9-3900x-rx6900xt-lg-ultrafine-5k-2x-thunderbolt-3-opencore-0-7-1-working.1984/)和[这里](https://www.reddit.com/r/hackintosh/comments/djgulk/asrock_x570_creator_ryzen_3400g_ati_radeon_rx_570/)。
+- [ASRock X570 Creator](http://www.asrock.com/mb/AMD/X570%20Creator/index.cn.asp#Overview)，这个板子妖的地方在于后部面板有一个DP IN，板载另外一个DP IN（有的显卡内置一个mini DP），华擎果真出妖板！网上有不少用这个板子接 Ultrafine 5k运行黑苹果的，比如[这里](https://forum.amd-osx.com/index.php?threads/asrock-x570-creator-ryzen-9-3900x-rx6900xt-lg-ultrafine-5k-2x-thunderbolt-3-opencore-0-7-1-working.1984/)和[这里](https://www.reddit.com/r/hackintosh/comments/djgulk/asrock_x570_creator_ryzen_3400g_ati_radeon_rx_570/)。
 - [PRIME X299-DELUXE II](https://www.asus.com/us/motherboards-components/motherboards/all-series/prime-x299-deluxe-ii/), 技嘉 [X299X AORUS Designare](https://www.gigabyte.com/Motherboard/X299X-DESIGNARE-10G-rev-10#kf) 都有两个 DP IN，两个雷电口。就是板子太贵，平台有点老，CPU 似乎还可以，7940x/7960x/7980xe 价格不贵。
 - Z490主板里面支持 2 DP IN 的只有华硕 [PROART Z490-CREATOR 10G](https://www.asus.com/Motherboards-Components/Motherboards/ProArt/ProArt-Z490-CREATOR-10G/)，而且 [BIOS](https://dlcdnets.asus.com/pub/ASUS/mb/13MANUAL/PRIME_PRO_PROART_TUF_GAMING_Intel_400_Series_BIOS_EM_WEB_EN.pdf) 里面的功能也很全。[完整](https://www.olarila.com/topic/13305-olarila-hackbeast-proart-z490-creator-10g-with-thunderbolt-full-dsdt-patches-clover-or-opencore-guide-and-discussion/)的OpenCore文件，看来已经被研究的很透彻了。可惜规格这么高的z490大板只有少的可怜的 PCI 通道 & CPU 太老，真实使用起来和我的 B460m 差不多吧。10代Intel CPU 中 10850k 比较有性价比，10核心20线程，2400¥。
 - 超微[X11SRA](https://www.supermicro.com/en/products/motherboard/X11SRA)有雷电 header，但是 BIOS 不支持，这么多PCI，真是可惜了。[这里说](https://www.chiphell.com/forum.php?mod=viewthread&tid=2153615&extra=page%3D1&mobile=1)可以在没有 header 的超微 X11DPH-T 上面实验成功，奇怪了，多半是默认开启，但是 pre-boot 肯定是没有了。
@@ -73,6 +73,10 @@ Added support for PRE-BOOT ACL feature (deprecating previous implementation from
 https://www.gigabyte.com/Motherboard/GC-MAPLE-RIDGE-rev-10#kf 这个表明支持5k，我看也是Display Port 1.4。[这个](https://www.asrock.com/MB/Intel/Z590%20Phantom%20Gaming-ITXTB4/index.asp#Specification)也可以。https://www.msi.com/Motherboard/MAG-B560M-MORTAR/Specification 微星这个性价比的选择1x TBT connector (Supports RTD3) 。这个B560M AORUS PRO AX[白雕](https://www.gigabyte.com/Motherboard/B560M-AORUS-PRO-AX-rev-10)也挺好看。
 [Asus Thunderbolt EX3-TR](https://www.asus.com.cn/support/FAQ/1043485/)，新版本，居然不支持mATX的板子。14-1 pin Thunderbolt，这个只有asus板子才有这个规格吧。
 
+雷电4对比3虽然带宽一样，但是：
+* 带宽动态分配。雷电3给5K图像传输预留了固定得18Gb，其他数据只有22Gb，这个划分是固定的。而雷电4/USB4采用了隧道的方式，包含USB 3.2 隧道，DisplayPort 1.4a 隧道和PCIe 隧道，因为是动态分配，当其他两个隧道关闭时PCIe 隧道最大可以达32Gb，而雷电3时这个速度最大只有16Gb。
+* CPU集成雷电4控制器，这能降低通信延迟。但是上面ProArt Z690-Creator架构图里面好像还是在PCH里面？只有在笔记本里面才是这样？
+
 ### 连接显卡
 <https://superuser.com/questions/845302/what-specs-must-a-graphics-card-have-to-power-a-5k-monitor>
 <https://images.nvidia.com/aem-dam/en-zz/Solutions/design-visualization/quadro-product-literature/NV-DS-NVS-310-May12-US-NV.pdf>
@@ -92,16 +96,12 @@ https://fedoramagazine.org/thunderbolt-how-to-use-keyboard-during-boot-time/
 [Type-C 扩展器 方案参考（Thunderbolt Alternative Mode 篇）](https://zhuanlan.zhihu.com/p/390425571) 专业的雷电分析，作者雷电系列和拆解也不错。
 
 ### 雷电扩展坞
-* OWC Thunderbolt 3 Pro 配有 10 Gb 以太网连接
-* startech.com thunderbolt 3 DOCK 感觉就这个便宜点
-* HP雷电扩展坞 [HP Elite 65W Thunderbolt 3 Dock](https://support.hp.com/us-en/drivers/selfservice/hp-elite-thunderbolt-3-65w-dock/9822172)，如果接usb键盘鼠标，冷启动OpenCore中无法操作键盘鼠标，重启可以操作。这个扩展坞在 x86 Mac下面无法免驱，但是在 m1 Mac mini下面是免驱的。
-为什么 ultrafine 的usb键盘可以操作呢？usb 2.0 hub？ultrafine也不是所有情况都可以：只有windows关机和重启后才可以。如果是linux关机后开机，一样问题。
-上面的ASM1042A要到HP官网上才能下载驱动，Windows 默认没有带驱动，真是辣鸡啊，VGA 口也很唐突，后来出了。
+* HP雷电扩展坞 [HP Elite 65W Thunderbolt 3 Dock](https://support.hp.com/us-en/drivers/selfservice/hp-elite-thunderbolt-3-65w-dock/9822172)，如果接usb键盘鼠标，冷启动OpenCore中无法操作键盘鼠标，重启可以操作。这个扩展坞在 x86 Mac下面无法免驱，但是在 m1 Mac mini下面是免驱的。为什么 ultrafine 的usb键盘可以操作呢？usb 2.0 hub？ultrafine也不是所有情况都可以：只有windows关机和重启后才可以。如果是linux关机后开机，一样问题。上面的ASM1042A要到HP官网上才能下载驱动，Windows 默认没有带驱动，真是辣鸡啊，VGA 口也很碍眼，后来出了。
 * Belkin Thunderbolt 3 Express Dock HD, F4U095，<https://www.belkin.com/th/support-article?articleNum=216428> 没有windows驱动和固件更新下载，据说Windows下面没法PD输出电流，买的有点唐突。
-* Kensington Thunderbolt 4 有 4 个雷电口，看上去不错，有点像交换机了。
+* Kensington Thunderbolt 4，4 个雷电 4 口，看上去不错，有点像交换机了。
 
 ### 总结
-总的看来，[雷电](https://zh.wikipedia.org/wiki/Thunderbolt)的理念确实不错：一根线能传输电和数字信号，这对桌面的整洁至关重要，特别适合某些场景：
+总的看来，[雷电](https://zh.wikipedia.org/wiki/Thunderbolt)的理念确实不错：一根线能传输电源和多种不同数字信号，这对桌面的整洁至关重要，特别适合某些场景：
 
 1. 笔记本接显示器工作模式，可以说雷电的最早就是为 MacBook 设计的。
 2. 多个台式机共享显示器。一般用 KVM 切换来解决这个问题，但是如果接高分辨率显示器，KVM 价格就很贵了。
