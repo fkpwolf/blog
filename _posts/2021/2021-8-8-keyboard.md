@@ -71,6 +71,8 @@ typora-root-url: ../../../blog
 * <https://www.youtube.com/watch?v=IDlcxLQ1SbY> base on Arduino Pro Micro, so PCB is simple. But it not open source neither.
 
 ### 按键延时
+测试网站 <https://en.key-test.ru/>
+
 从算法上，并不是每个键都连了一个GPIO，而是每排和每列连接一个GPIO，键盘每排的按键是并连的，也就是说任何一个接通都会设置这个GPIO为接通，然后算法先遍历每排，然后遍历每列。这种叫矩阵扫描。
 
 机械键盘矩阵扫描并不是延时的最大问题，而是去抖比较耗时。
