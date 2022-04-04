@@ -100,6 +100,9 @@ https://fedoramagazine.org/thunderbolt-how-to-use-keyboard-during-boot-time/
 * Belkin Thunderbolt 3 Express Dock HD, F4U095，<https://www.belkin.com/th/support-article?articleNum=216428> 没有windows驱动和固件更新下载，据说Windows下面没法PD输出电流，买的有点唐突。
 * Kensington Thunderbolt 4，4 个雷电 4 口，看上去不错，有点像交换机了。
 
+### Linux
+Linux suspend 后 resume，雷电下的 USB 鼠标键盘无法工作，重新连接雷电设备也不起作用。B660m AORUS还有suspend后马上resume的问题，需要运行命令`echo GPP0 | sudo tee /proc/acpi/wakeup`来禁用[GPP0](https://forums.linuxmint.com/viewtopic.php?p=2117343)作为resume的事件触发源。
+
 ### 总结
 总的看来，[雷电](https://zh.wikipedia.org/wiki/Thunderbolt)的理念确实不错：一根线能传输电源和多种不同数字信号，这对桌面的整洁至关重要，特别适合某些场景：
 
