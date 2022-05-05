@@ -17,7 +17,7 @@ typora-root-url: ../../../blog
 ### Create VM
 * <https://people.redhat.com/mskinner/rhug/q3.2014/cloud-init.pdf>
 * cloud-init 工作原理 - 每天5分钟玩转 OpenStack [IBM DW](https://www.ibm.com/developerworks/community/blogs/132cfa78-44b0-4376-85d0-d3096cd30d3f/entry/cloud_init_%E5%8E%9F%E7%90%86_%E6%AF%8F%E5%A4%A95%E5%88%86%E9%92%9F%E7%8E%A9%E8%BD%AC_OpenStack_171?lang=en).
-* 手工要专门的办法做cloud-init <http://ubuntu-smoser.blogspot.com/2013/02/usooing-ubuntu-cloud-images-without-cloud.html> 如何把用户信息注入到里面
+* 如何把用户信息注入到里面
 
 ```sh
 ## Install a necessary packages 
@@ -36,19 +36,19 @@ ssh_pwauth: True
 ssh_authorized_keys: 
   - ssh-rsa AAAAB3NzaC1yc2EAAAADABUB... fan@fandeiMac.lan
 EOF 
-## Convert the compressed qcow file downloaded to a uncompressed qcow2 
+## convert the compressed qcow file downloaded to a uncompressed qcow2 
 $ qemu-img convert -O qcow2 download-disk.img disk.qcow2 
 ## create the disk with NoCloud data on it. 
 $ cloud-localds my-seed.img my-user-data 
-If not the command, run: genisoimage  -output seed.iso -volid cidata -joliet -rock user-data meta-data 
+## if command not exist, run: genisoimage  -output seed.iso -volid cidata -joliet -rock user-data meta-data 
 ## Create a delta disk to keep our .orig file pristine 
 $ qemu-img create -f qcow2 -b disk.qcow2 disk-new.img 
-## Boot a kvm 
+## boot a kvm 
 $ kvm -net nic -net user -hda disk.img -hdb my-seed.img -m 512
 ```
 密码似乎不能用 123123 这种简单的。完整的 user-data spec 可以参考 http://cloudinit.readthedocs.io/en/latest/topics/examples.html，更多操作指南参考 KVM / libvirt。
 
-对于 Centos Steam，上面配置无法 login，[这里](https://github.com/cockpit-project/bots/tree/main/machine) 的 cloud-init.iso 可以用。原因未知。
+对于 Centos Steam 和 Kubic，上面配置无法 login，[这里](https://github.com/cockpit-project/bots/tree/main/machine) 的 cloud-init.iso 可以用，原因未知。
 
 上面配置要是能设置 static IP 和 hostname 就好了，有点怀念 Vagrant。
 

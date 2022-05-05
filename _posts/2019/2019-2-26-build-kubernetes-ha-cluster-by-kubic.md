@@ -174,6 +174,8 @@ So why not use Fedora Atomic/CoreOS? Because it didn't provided Terraform script
 
 <https://github.com/kubernetes-sigs/kubespray> all-in-one solution. Support lots of linux distribution and different k8s component. Kubic just provide a container linux and still need extra works to build a HA cluster. Kubespray will install k8s cluster automatically, just like Magnum.
 
+If Kubic supports upgrading of OS, how about the pods which have been installed on it? Need provision again? For common cloud image like Fedora Cloud image, the pain point is it takes long time to do release upgrade and soon a release reaches EOL.
+
 ### add Terraform KVM provider SR-IOV support
 
 Error creating libvirt domain: virError(Code=1, Domain=10, Message='internal error: process exited while connecting to monitor: 2019-02-12T10:20:45.293085Z qemu-system-x86_64: -drive file=/home/fan/go/src/github.com/dmacvicar/terraform-provider-libvirt/libvirt/testdata/tcl.iso,format=raw,if=none,id=drive-ide0-0-0,readonly=on: Could not open '/home/fan/go/src/github.com/dmacvicar/terraform-provider-libvirt/libvirt/testdata/tcl.iso': Permission denied')
