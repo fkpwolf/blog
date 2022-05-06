@@ -11,13 +11,13 @@ typora-root-url: ../../../blog
 
 ### 创建虚拟机
 
-想试下 terraform + kvm 来搭建，感觉手工用 cloud-init 还是太慢。使用 <https://github.com/dmacvicar/terraform-provider-libvirt> terraform-provider-libvirt-Fedora-28，binary 现在区分 provider OS 下载。还是有点懒，<https://github.com/kubic-project/automation/tree/master/kubic-kvm> 这个有，为什么要自己创建呢？代码里面的地址有点老，改成 <https://download.opensuse.org/repositories/devel:/kubic:/images/openSUSE_Tumbleweed/> 这个下面的。我用的是 openSUSE-Tumbleweed-Kubic.x86_64-15.0-kubeadm-cri-o-OpenStack-Cloud-Build4.5.qcow2。另外一个 <https://github.com/kubic-project/automation/tree/master/caasp-kvm> 可以创建多 master，但是要企业账号。运行完后会显示 3 个 vm 的地址：
+想试下 terraform + kvm 来搭建，感觉手工用 cloud-init 还是太慢。使用 <https://github.com/dmacvicar/terraform-provider-libvirt> terraform-provider-libvirt-Fedora-28，binary 现在区分 provider OS 下载。还是有点懒，<https://github.com/kubic-project/automation/tree/master/kubic-kvm> 这个有，为什么要自己创建呢？代码里面的地址有点老，改成 <https://download.opensuse.org/repositories/devel:/kubic:/images/openSUSE_Tumbleweed/> 这个下面的。国内镜像 <http://mirrors.ustc.edu.cn/opensuse/tumbleweed/appliances/>。我用的是 openSUSE-Tumbleweed-Kubic.x86_64-15.0-kubeadm-cri-o-OpenStack-Cloud-Build4.5.qcow2。另外一个 <https://github.com/kubic-project/automation/tree/master/caasp-kvm> 可以创建多 master，但是要企业账号。运行完后会显示 3 个 vm 的地址：
 ```
 ips = [
     [192.168.122.122], [192.168.122.174], [192.168.122.244]
 ]
 ```
-现在上面 repo 都已经消失，改成 <https://github.com/kubic-project/kubic-terraform-kvm>。
+现在上面 repo 都已经消失，改成 <https://github.com/kubic-project/kubic-terraform-kvm>。现在这个也archive了，这是闹哪样。
 如果要查询已生成虚机 IP，使用 `terraform show` 命令。我没有用 micro-os，改成 kubic-kubeadm，这个 vm 起来后啥都没有，只是 image 预先包含了 kubeadm/kubelet 包，容器引擎用的是 cri-o。集群还要自己初始化：
 ```sh
 kubeadm init --cri-socket="/var/run/crio/crio.sock" --pod-network-cidr=10.244.0.0/16
