@@ -172,7 +172,17 @@ CNNs通过逐层累加调整实现分类。它首先检测到边缘，然后是�
 
 [DeepMind官博详解AI打星际争霸:靠战略水平 而非手速](https://tech.sina.com.cn/it/2019-01-25/doc-ihrfqzka0851878.shtml)，[原文](https://deepmind.com/blog/alphastar-mastering-real-time-strategy-game-starcraft-ii/)，训练需要暴雪官方大量的历史对战数据，但是 RTS 游戏和围棋差别还是很大的。
 
-### 机器学习算法
+### 自然语言处理 NLP
+
+图像领域深度学习已经完美解决了，文本领域则是复杂的多。图像完全可以通过像素来量化，文本则包含文字的 ASCII 码和背后含义。
+
+NLP：[经典算法·从ELMo、GPT到bert](https://zhuanlan.zhihu.com/p/54578457)，[效果逆天的通用语言模型 GPT 2.0 来了，它告诉了我们什么？](https://www.infoq.cn/article/pW8YaUXjTuhC6d0p*OwX)
+
+[PaLM模型](https://www.cnbeta.com/articles/tech/1268179.htm)，还能自我解释。表面上和传统的机器人问答很像，但是其对文本进行深入的理解和组织。
+
+![learn-palm](/images/2016/ai-nlp.png)
+
+### 机器学习基础算法
 
 蒙特卡罗方法入门  <http://www.ruanyifeng.com/blog/2015/07/monte-carlo-method.html>  
 
@@ -204,4 +214,3 @@ API 网上算法，按调用付钱，提供了很多例子 <https://algorithmia.
 
 [Comparison of top data science libraries for Python, R and Scala](https://medium.com/activewizards-machine-learning-company/comparison-of-top-data-science-libraries-for-python-r-and-scala-infographic-574069949267?hss_channel=tw-816825631) 对比了很多框架
 
-NLP：[经典算法·从ELMo、GPT到bert](https://zhuanlan.zhihu.com/p/54578457)，[效果逆天的通用语言模型 GPT 2.0 来了，它告诉了我们什么？](https://www.infoq.cn/article/pW8YaUXjTuhC6d0p*OwX)
