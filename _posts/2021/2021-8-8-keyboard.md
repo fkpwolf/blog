@@ -69,6 +69,7 @@ typora-root-url: ../../../blog
 * <https://www.youtube.com/watch?v=GuQxLqAc5GE> 这个好像连pcb也不需要
 * <https://github.com/LeafCutterLabs/bigKNOB> 这个很简洁，但是没有开放pcb
 * <https://www.youtube.com/watch?v=IDlcxLQ1SbY> base on Arduino Pro Micro, so PCB is simple. But it not open source neither.
+* [Adafruit MacroPad](https://www.adafruit.com/product/5128) 通过旋钮更换布局，有个小屏幕显示当前布局。挺有创意。这个旋钮只能更换布局么？我希望它还能用来控制音量大小。Adafruit 也做了很多其他的小键盘。
 
 ### 按键延时
 测试网站 <https://en.key-test.ru/>
