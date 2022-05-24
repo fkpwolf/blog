@@ -389,3 +389,57 @@ NUMA node2 CPU(s):     2,6,10,14,18,22,26,30,34,38,42,46
 NUMA node3 CPU(s):     3,7,11,15,19,23,27,31,35,39,43,47
 Flags:                 fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm constant_tsc art rep_good nopl nonstop_tsc extd_apicid amd_dcm aperfmperf eagerfpu pni pclmulqdq monitor ssse3 fma cx16 sse4_1 sse4_2 movbe popcnt aes xsave avx f16c rdrand lahf_lm cmp_legacy svm extapic cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw skinit wdt tce topoext perfctr_core perfctr_nb bpext perfctr_l2 cpb hw_pstate ibpb_support avic fsgsbase bmi1 avx2 smep bmi2 rdseed adx smap clflushopt sha_ni xsaveopt xsavec xgetbv1 arat npt lbrv svm_lock nrip_save tsc_scale vmcb_clean flushbyasid decodeassists pausefilter pfthreshold overflow_recov succor smca
 ```
+
+```
+[fan@DESKTOP-EV5RNR2 ~]$ lscpu
+Architecture:            x86_64
+  CPU op-mode(s):        32-bit, 64-bit
+  Address sizes:         46 bits physical, 48 bits virtual
+  Byte Order:            Little Endian
+CPU(s):                  20
+  On-line CPU(s) list:   0-19
+Vendor ID:               GenuineIntel
+  Model name:            12th Gen Intel(R) Core(TM) i7-12700
+    CPU family:          6
+    Model:               151
+    Thread(s) per core:  2
+    Core(s) per socket:  12
+    Socket(s):           1
+    Stepping:            2
+    CPU(s) scaling MHz:  17%
+    CPU max MHz:         4900.0000
+    CPU min MHz:         800.0000
+    BogoMIPS:            4224.00
+    Flags:               fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dt
+                         s acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc ar
+                         t arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf tsc_k
+                         nown_freq pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 
+                         xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx 
+                         f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault invpcid_single ssbd ibrs ibpb st
+                         ibp ibrs_enhanced tpr_shadow vnmi flexpriority ept vpid ept_ad fsgsbase tsc_adjust
+                          bmi1 avx2 smep bmi2 erms invpcid rdseed adx smap clflushopt clwb intel_pt sha_ni 
+                         xsaveopt xsavec xgetbv1 xsaves split_lock_detect avx_vnni dtherm ida arat pln pts 
+                         hwp hwp_notify hwp_act_window hwp_epp hwp_pkg_req umip pku ospke waitpkg gfni vaes
+                          vpclmulqdq tme rdpid movdiri movdir64b fsrm md_clear serialize pconfig arch_lbr f
+                         lush_l1d arch_capabilities
+Virtualization features: 
+  Virtualization:        VT-x
+Caches (sum of all):     
+  L1d:                   512 KiB (12 instances)
+  L1i:                   512 KiB (12 instances)
+  L2:                    12 MiB (9 instances)
+  L3:                    25 MiB (1 instance)
+NUMA:                    
+  NUMA node(s):          1
+  NUMA node0 CPU(s):     0-19
+Vulnerabilities:         
+  Itlb multihit:         Not affected
+  L1tf:                  Not affected
+  Mds:                   Not affected
+  Meltdown:              Not affected
+  Spec store bypass:     Mitigation; Speculative Store Bypass disabled via prctl
+  Spectre v1:            Mitigation; usercopy/swapgs barriers and __user pointer sanitization
+  Spectre v2:            Mitigation; Enhanced IBRS, IBPB conditional, RSB filling
+  Srbds:                 Not affected
+  Tsx async abort:       Not affected
+```
