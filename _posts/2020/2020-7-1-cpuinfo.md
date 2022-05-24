@@ -23,7 +23,7 @@ VCED exceptions : not available
 VCEI exceptions : not available
 ```
 
----
+
 
 ```
 system type : Atheros AR9344 rev 2
@@ -39,7 +39,7 @@ tlb_entries : 32
 extra interrupt vector : yes
 hardware watchpoint : yes, count: 4, address/irw mask: [0x0000, 0x0720, 0x0700, 0x0b98]
 ```
----
+
 
 ```
 system type : Atheros AR9330 rev 1
@@ -54,7 +54,7 @@ extra interrupt vector : yes
 hardware watchpoint : yes, count: 4, address/irw mask: [0x0000, 0x0f10, 0x0e10, 0x0a20]
 ```
 
----
+
 
 ```
 system type : Atheros AR7240 rev 2
@@ -65,7 +65,7 @@ cpu model : MIPS 24Kc V7.4
 BogoMIPS : 265.42
 ```
 
----
+
 ```
 Processor : ARMv7 Processor rev 2 (v7l)
 processor : 0
@@ -82,7 +82,7 @@ CPU revision : 2
 Hardware : ODROIDXU
 Board Type : XU Lite
 ```
----
+
 ```
 Processor : ARMv7 Processor rev 0 (v7l)
 
@@ -99,7 +99,7 @@ CPU revision : 0
 
 Hardware : RK30board
 ```
----
+
 ```
 processor : 0 - 7
 vendor_id : AuthenticAMD
@@ -131,7 +131,7 @@ cache_alignment : 64
 address sizes : 48 bits physical, 48 bits virtual
 power management: ts ttp tm stc 100mhzsteps hwpstate
 ```
----
+
 ```
 processor : 0 - 7
 cpu : POWER7 (architected), altivec supported
@@ -142,7 +142,7 @@ platform : pSeries
 model : IBM,9119-FHB
 machine : CHRP IBM,9119-FHB
 ```
----
+
 ```
 model name      : ARMv7 Processor rev 0 (v7l)
 processor       : 0-1
@@ -158,7 +158,7 @@ Hardware        : Northstar Prototype(xiaomi miwif, bcm4709)
 Revision        : 0000
 Serial          : 0000000000000000
 ```
----
+
 ```
 processor       : 3
 model name      : ARMv7 Processor rev 5 (v7l)
@@ -174,7 +174,7 @@ Hardware        : BCM2709 (raspberry pi 2)
 Revision        : a01041
 Serial          : 00000000f3919f9b
 ```
----
+
 ```
 Processor       : ARMv6-compatible processor rev 7 (v6l)
 BogoMIPS        : 697.95
@@ -189,7 +189,7 @@ Hardware        : BCM2708 (raspberry pi)
 Revision        : 0003
 Serial          : 00000000f90cbb6b
 ```
----
+
 ```
 processor       : 0-3
 model name      : ARMv7 Processor rev 10 (v7l)
@@ -205,7 +205,7 @@ Hardware        : Freescale i.MX6 Quad/DualLite (Device Tree)
 Revision        : 0000
 Serial          : 0000000000000000
 ```
----
+
 ```
 Beaglebone Black
 processor       : 0
@@ -221,7 +221,7 @@ Hardware        : Generic AM33XX (Flattened Device Tree)
 Revision        : 0000
 Serial          : 0000000000000000
 ```
----
+
 ```
 root@OpenWrt:~# cat /proc/cpuinfo
 processor    : 0 ~ 1
@@ -238,7 +238,7 @@ Hardware    : Marvell Armada 380/385 (Device Tree)
 Revision    : 0000
 Serial        : 0000000000000000
 ```
----
+
 ```
 processor    : 0 ~ 31
 vendor_id    : GenuineIntel
@@ -266,7 +266,7 @@ cache_alignment    : 64
 address sizes    : 46 bits physical, 48 bits virtual
 power management:
 ```
----
+
 ```
 ubuntu@great-aigo:~$ cat /proc/cpuinfo
 processor       : 0~5
@@ -297,7 +297,7 @@ cache_alignment : 64
 address sizes   : 48 bits physical, 48 bits virtual
 power management: ts ttp tm 100mhzsteps hwpstate cpb
 ```
----
+
 ```
 fan@bstone:~$ cat /proc/cpuinfo
 processor       : 0~3
@@ -327,7 +327,7 @@ cache_alignment : 64
 address sizes   : 36 bits physical, 48 bits virtual
 power management:
 ```
----
+
 ```
 root@OpenWrt:/bin# cat /proc/cpuinfo 
 processor     : 0
@@ -359,7 +359,7 @@ power management:
 
 KVM on Intel(R) Xeon(R) CPU L3406
 ```
----
+
 ```
 [root@eypc ~]# lscpu
 Architecture:          x86_64

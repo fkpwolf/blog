@@ -30,12 +30,13 @@ The Design of HTML5 <https://adactio.com/articles/1704>，翻译 [HTML5 设计�
 - http://abbett.org/post/a-guide-to-building-webapps-with-ie8-support it use backbone.js.
 随着 HTML5 的流行以及 Chrome 内核系浏览器的大行其道，兼容性似乎越来越谈的少了。
 
-### Boilerplate - most from WebStrom
-* Web Starter Kit - 用了Material Design Lite，这也是google自己的。responsive做的相当全。号称只用CSS，其实还是有JS，而且导致HTML巨长的CSS class name，感觉还没Angular Meterial做的干净。material.min.js虽然小，怎么和主流的侵入式JS框架配合呢？就搞一DEMO或者宣传站点？工具集还算经典: gulp,es5,reload.
+### Boilerplate
+* Web Starter Kit - 用了Material Design Lite，这也是Google自己的，responsive做的相当全。号称只用CSS，其实还是有JS，而且导致HTML巨长的CSS class name，感觉还没Angular Meterial做的干净。material.min.js虽然小，怎么和主流的侵入式JS框架配合呢？就搞一DEMO或者宣传站点？工具集还算经典: gulp,es5,reload.
 * Bootstrap
 * React Starter Kit - 有单独的topic
 * HTML5 Boilerplate
 * https://github.com/facebookincubator/create-react-app Facebook官方
+* Vite，这个是 Vue.js 易用性体现的地方：从hello world就开始使用脚手架
 
 ### Framework
 - Angular.js https://angularjs.org/ has on-fly example
@@ -137,18 +138,11 @@ AMP，来自 Google 的移动页面优化方案 <https://imququ.com/post/amp-pro
 
 
 ### Think
-* 测试
-UI 很难或者无法测试
-* 兼容性
-UI开发的局限性，不可避免的要做hack，UI 本来就是现实世界的模拟，而非真实的逻辑
-* 稳定性
-而 UI 是在不断变化中，新的模式，新的设计，都会冲击现有的代码结构。这会导致后期的维护性非常差，跟不上变化。
-* 分离
-想法是好的，也要努力做到。如果新特性对页面整体没有改变，很好，怎么完技巧都可以。
-* 全局变量
-虽然现在 javascript 大家已经不用全局变量，但是 UI 的特点导致全局不可避免。比如 Angular Material 在 body 上设置了 `position: relative`; 会对整个系统照成影响。还有 footer, header，弹出消息都是全局的。
-很多情况是布局修改了，很多组件都错位了。因为布局是个全局变量。
-系统的全局变量越少，则系统越容易改变。而 web 系统越容易改变，这个架构设计的也越好。
+* 测试 - UI 很难或者无法测试
+* 兼容性 - UI开发的局限性，不可避免的要做hack，UI 本来就是现实世界的模拟，而非真实的逻辑
+* 稳定性 - 而 UI 是在不断变化中，新的模式，新的设计，都会冲击现有的代码结构。这会导致后期的维护性非常差，跟不上变化
+* 分离 - 想法是好的，也要努力做到。如果新特性对页面整体没有改变，很好，怎么玩技巧都可以
+* 全局变量 - 虽然现在 JavaScript 大家已经不用全局变量，但是 UI 的特点导致全局不可避免。比如 Angular Material 在 body 上设置了 `position: relative`; 会对整个系统照成影响。还有 footer, header，弹出消息都是全局的。很多情况是布局修改了，很多组件都错位了。因为布局是个全局变量。系统的全局变量越少，则系统越容易改变。而 web 系统越容易改变，这个架构设计的也越好
 
 ### 组件思想
 复杂的组件，比如 auto-complete，直接拿来用，很好。其他的能重用么？如果组件满足不了要求，怎么办？自己有能力改么？很多办法后来都变成了 hack。组件库本身也有依赖和侵入性，用了某个库，刚开始时用库自带的控件，很爽。但是如果库不带某个控件，引入第三方，则存在了兼容性的问题，比如经常看到某个组件的 angular.js 版本。jQuery 之所以流行，就是因为其依赖少。在组件库不存在标准的情况下，依赖少就很难得了。把组件所有元素比如 css/js 都封装到一个控件中，这个是很多框架努力的方向，但其导致的复杂度也导致其只能在特定的环境中运行。从某种程度上说，这些组件都应该是浏览器自带的，最终也会被浏览器实现。
@@ -158,7 +152,4 @@ UI开发的局限性，不可避免的要做hack，UI 本来就是现实世界�
 只做应该做的事情
 比如屏幕的自适应，要体现自然，让浏览器去做事情，让元素自己变化，通过语义就可以体现不同的显示方式。如果参与过多，代码则很难维护，更难于变化。作为对真实事物的映射，不仅在代码上要用到语义的元素，比如`<header>`，更要在大的范围显示对真实事物的映射。比如如果一件事情能在 CSS 中完成，则最好不用 JavaScript。为什么？因为分工不同，更因为这样得到了更好的代码可读性。浏览器做的事情归浏览器，CSS 做的事情归 CSS。
 
-Web 开发的目的：数据展示和交互。Web 开发和其他 UI 开发相比，要坚持其开放、简单的原则。开放：从最简单的代码查看，CSS 查看，到跟随变化，js 的弱类型检查。简单：只有简单才能适应变化，只有简单才能不拘泥于技术而跟随设计的脚步，这才是 UI 开发的目的。复杂是本地/原生开发的优势。
-
-
-
+Web 开发的目的：数据展示和交互。Web 开发和其他 UI 开发相比，要坚持其开放、简单的原则。开放：从最简单的代码查看，CSS 查看，到跟随变化，js 的弱类型检查。简单：只有简单才能适应变化，只有简单才能不拘泥于技术而跟随设计的脚步，这才是 UI 开发的目的。只有简单才能易于维护，而这是软件开发的大敌。
