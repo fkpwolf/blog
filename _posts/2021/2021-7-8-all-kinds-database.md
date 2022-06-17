@@ -42,7 +42,7 @@ SQLite Is Serverless
 leveldb 和 mongodb 很像，但是作为一个数据库后者功能更全面，前者性能是好，但只是一个库。
 浅析 Bigtable 和 LevelDB 的实现 http://draveness.me/bigtable-leveldb.html 实现和hbase比较像，但是leveldb用了memtable作为磁盘table的中介和缓存，性能会提高，而hbase则偏向大数据情况下的处理。主要是 Leveldb 不支持分布式。
 
-【Rocksdb实现及优化分析】 JoinBatchGroup http://kernelmaker.github.io/Rocksdb_Study_1 TiDB 底层也基于这个
+Rocksdb实现及优化分析 JoinBatchGroup http://kernelmaker.github.io/Rocksdb_Study_1 TiDB 底层也基于这个
 
 badger https://github.com/dgraph-io/badger separating values from keys, significantly reducing the write amplification compared to a typical LSM tree.
 [badger 一个高性能的LSM K/V store](https://colobu.com/2017/10/11/badger-a-performant-k-v-store/)
@@ -87,10 +87,13 @@ https://github.com/yahoo/HaloDB/blob/master/docs/WhyHaloDB.md，类似 Bitcask
 "an index in memory which stores all the keys, and append-only log files on the persistent layer which stores all the data"  混合的技术
 
 ### YugabyteDB
-https://github.com/yugabyte/yugabyte-db
-[YugabyteDB 介绍](https://zhuanlan.zhihu.com/p/102589603)
+<https://github.com/yugabyte/yugabyte-db> [YugabyteDB 介绍](https://zhuanlan.zhihu.com/p/102589603)
+
+<https://docs.yugabyte.com/> nice document!
+
 partition https://docs.yugabyte.com/latest/architecture/docdb-sharding/ a new term 'tablet'.
-master server: keep metadata & coordinate. TServer: query & storage. The arch is some like HBase.
+
+master server: keep metadata & coordinate. TServer: query & storage.
 
 ### FoundationDB
 [苹果公司开源FoundationDB的简单分析](https://cloud.tencent.com/developer/article/1164667) 『和其他NoSQL不一样的是，FoundationDB的Key-Value Store实现了强一致性，而非最终一致性』大数据时代的Key-Value Store大体上分为两类：
@@ -106,12 +109,14 @@ https://apple.github.io/foundationdb/getting-started-linux.html 安装挺容易�
 * https://www.arangodb.com/ 专门为图算法优化的数据库。
 * TSDB
 
-### 国内数据库
+### 国产数据库
 * TiDB
-* openGauss 华为开源的数据库  https://opengauss.org/zh/
+* openGauss 华为开源的数据库  https://opengauss.org/zh/，基于 PostgreSQL
 * ZNBase 浪潮的分布式数据库 http://www.znbase.com/
 * 淘宝 [OceanBase](https://www.zhihu.com/question/19841579) 融合了 mysql 的事务并且兼容 mysql，以及用了 leveldb 类似的内存写的技术，不过虽然开源但是 commit 特别少，现在已经成为阿里云上面的一个产品了。
 * 阿里云 [PolarDB for PostgreSQL](https://github.com/ApsaraDB/PolarDB-for-PostgreSQL) "数据库由传统的 Share-Nothing 架构，转变成了 Shared-Storage 架构。由原来的 N 份计算 + N 份存储，转变成了 N 份计算 + 1 份存储。"
+* 万里数据库 <https://gitee.com/GreatSQL/GreatSQL>，基于 MySQL
+* TDengine <https://github.com/taosdata/TDengine> 开源，据说没有使用任何第三方库，口号是“一个数据采集点一张表”，对外接口也是结构模型的MySQL。
 
 ### 比较传统数据库
 CAP理论十二年回顾："规则”变了 http://www.infoq.com/cn/articles/cap-twelve-years-later-how-the-rules-have-changed
