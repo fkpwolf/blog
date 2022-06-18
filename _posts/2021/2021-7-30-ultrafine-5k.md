@@ -91,6 +91,8 @@ https://fedoramagazine.org/thunderbolt-how-to-use-keyboard-during-boot-time/
 
 “对于5k，此显示器同时支持MST和SST。用雷电卡，将双路DP1.2合并到USB-C形状的雷电，直接MST方式驱动即可；另外新款N卡，支持DP1.4输出即采用SST方式驱动，因WIN10同时支持MST和SST，所以两种方式很容易驱动。但是HACKINTOSH驱动5k只能采取MST方式，系统原生不支持SST驱动5k，所以只能采取win10的第一种方式，即利用雷电卡将两路DP1.2合并到USB-C形状的雷电，驱动显示器。” Come from [here](https://www.chiphell.com/forum.php?mod=redirect&goto=findpost&ptid=2327490&pid=47599622). 从[这里](https://www.futureplus.com/displayport-multi-steam-versus-single-stream-what-is-the-difference/)解释来看，SST 是最简单的形式，MST 一般用在DP菊链中。
 
+但是在我的测试中，6600显卡，接单根DP，ultrafine 5k只能显示4k。这个显卡一个DP口应该能驱动5K分辨率。这说明ultrafine 5k并不支持5k的SST驱动。
+
 贝尔金CV10 线(DP转 TYPEC) 据说可以直接搞定，不过不是雷电方案，要拖几根usb线，感觉违背了雷电初衷。Moshi USB C to DisplayPort Cable 这跟线也支持 5K，但是就没有USB通道了。
 
 [Type-C 扩展器 方案参考（Thunderbolt Alternative Mode 篇）](https://zhuanlan.zhihu.com/p/390425571) 专业的雷电分析，作者雷电系列和拆解也不错。
@@ -99,6 +101,7 @@ https://fedoramagazine.org/thunderbolt-how-to-use-keyboard-during-boot-time/
 * HP雷电扩展坞 [HP Elite 65W Thunderbolt 3 Dock](https://support.hp.com/us-en/drivers/selfservice/hp-elite-thunderbolt-3-65w-dock/9822172)，如果接usb键盘鼠标，冷启动OpenCore中无法操作键盘鼠标，重启可以操作。这个扩展坞在 x86 Mac下面无法免驱，但是在 m1 Mac mini下面是免驱的。为什么 ultrafine 的usb键盘可以操作呢？usb 2.0 hub？ultrafine也不是所有情况都可以：只有windows关机和重启后才可以。如果是linux关机后开机，一样问题。上面的ASM1042A要到HP官网上才能下载驱动，Windows 默认没有带驱动，真是辣鸡啊，VGA 口也很碍眼，后来出了。
 * Belkin Thunderbolt 3 Express Dock HD, F4U095，<https://www.belkin.com/th/support-article?articleNum=216428> 没有windows驱动和固件更新下载，据说Windows下面没法PD输出电流，买的有点唐突。
 * Kensington Thunderbolt 4，4 个雷电 4 口，看上去不错，有点像交换机了。
+* CalDigit TS4，接口超多，价格也最贵
 
 ### Linux
 Fedora suspend 后 resume，雷电下的 USB 鼠标键盘无法工作，重新连接雷电设备也不起作用。B660m AORUS还有suspend后马上resume的问题，需要运行命令`echo GPP0 | sudo tee /proc/acpi/wakeup`来禁用[GPP0](https://forums.linuxmint.com/viewtopic.php?p=2117343)作为resume的事件触发源。
