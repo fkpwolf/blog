@@ -6,13 +6,16 @@ categories:
   - DIY
 typora-root-url: ../../../blog
 ---
-### 各系统支持情况
-Windows HiDPI 支持算是最好的：
-- 可以支持更多 scale 倍数比如 250%
+### 操作系统支持情况
+Windows HiDPI 支持是最好的：
+- 可以支持更多 scale 倍数，比如 250%
 - 不同屏幕可以用不同 DPI
 - 窗口拖动的时候可以跨屏显示，Mac 会截掉一半
 
-对于 27 寸 5K 显示器，Windows 下面 250% 的放大比例最为完美。Gnome 下面 5K 200% 放大比在 4k 下表现好很多，4k 下 200% 放大会让窗口组件过大而显得不够精细， 而 [Linux Fractional Scaling](https://wiki.archlinux.org/title/HiDPI#Fractional_scaling) 还不成熟。
+对于 27 寸 5K 显示器：
+* Windows 下面 250% 的放大比例最为完美
+* Gnome 下面 5K 200% 放大比在 4k 下表现好很多，4k 下 200% 放大会让窗口组件过大而显得不够精细， 而 [Linux Fractional Scaling](https://wiki.archlinux.org/title/HiDPI#Fractional_scaling) 还不成熟
+* MacOS 下面 200% 放大字体偏小，没有 4k 显示效果好
 
 ### 主板
 - [MEG Z590I UNIFY](https://www.msi.com/Motherboard/MEG-Z590I-UNIFY) 有两个 DP IN 接口，只支持 11 代CPU，不支持 MacOS。但是两个 DP IN 算是雷电主板里面最高规格了，[BIOS](https://www.chiphell.com/portal.php?mod=view&aid=25543&page=4) 里面也有雷电相关的详细配置。[MEG Z590 ACE](https://www.msi.com/Motherboard/MEG-Z590-ACE)也有两个 DP IN。MSI MEG Z690 ACE 雷电也是一样配置。
