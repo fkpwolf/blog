@@ -92,11 +92,11 @@ https://fedoramagazine.org/thunderbolt-how-to-use-keyboard-during-boot-time/
 
 如果type-c或者雷电线支持视频，USB和声音传输，这就有点像KVM功能了。
 
-“对于5k，此显示器同时支持MST和SST。用雷电卡，将双路DP1.2合并到USB-C形状的雷电，直接MST方式驱动即可；另外新款N卡，支持DP1.4输出即采用SST方式驱动，因WIN10同时支持MST和SST，所以两种方式很容易驱动。但是HACKINTOSH驱动5k只能采取MST方式，系统原生不支持SST驱动5k，所以只能采取win10的第一种方式，即利用雷电卡将两路DP1.2合并到USB-C形状的雷电，驱动显示器。” Come from [here](https://www.chiphell.com/forum.php?mod=redirect&goto=findpost&ptid=2327490&pid=47599622). 从[这里](https://www.futureplus.com/displayport-multi-steam-versus-single-stream-what-is-the-difference/)解释来看，SST 是最简单的形式，MST 一般用在DP菊链中。
+“对于5k，此显示器同时支持MST和SST。用雷电卡，将双路DP1.2合并到USB-C形状的雷电，直接MST方式驱动即可；另外新款N卡，支持DP1.4输出即采用SST方式驱动，因WIN10同时支持MST和SST，所以两种方式很容易驱动。但是HACKINTOSH驱动5k只能采取MST方式，系统原生不支持SST驱动5k，所以只能采取win10的第一种方式，即利用雷电卡将两路DP1.2合并到USB-C形状的雷电，驱动显示器。” Come from [here](https://www.chiphell.com/forum.php?mod=redirect&goto=findpost&ptid=2327490&pid=47599622). 从[这里](https://www.futureplus.com/displayport-multi-steam-versus-single-stream-what-is-the-difference/)解释来看，SST 是最简单的形式，MST 一般用在DP菊链中。但是在我的测试中，6600显卡，接单根DP，ultrafine 5k只能显示4k。这个显卡一个DP口应该能驱动5K分辨率。这说明ultrafine 5k并不支持5k的SST驱动，必须使用两路DP1.2聚合的形式。
 
-但是在我的测试中，6600显卡，接单根DP，ultrafine 5k只能显示4k。这个显卡一个DP口应该能驱动5K分辨率。这说明ultrafine 5k并不支持5k的SST驱动。
+贝尔金CV10 线(DP转 TYPEC) 据说可以直接搞定，不过不是雷电方案，要拖几根 USB 线，感觉违背了雷电初衷。我尝试结果是能驱动ultrafine 5k，包括显示器的音箱和摄像头，但是分辨率最高只能4k。
 
-贝尔金CV10 线(DP转 TYPEC) 据说可以直接搞定，不过不是雷电方案，要拖几根usb线，感觉违背了雷电初衷。Moshi USB C to DisplayPort Cable 这跟线也支持 5K，但是就没有USB通道了。
+Moshi USB C to DisplayPort Cable 这跟线也支持 5K，但是就没有USB通道了。
 
 [Type-C 扩展器 方案参考（Thunderbolt Alternative Mode 篇）](https://zhuanlan.zhihu.com/p/390425571) 专业的雷电分析，作者雷电系列和拆解也不错。
 
