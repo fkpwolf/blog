@@ -43,7 +43,7 @@ typora-root-url: ../../../blog
 * SMK68: First Community-Driven OpenSource RISC-V Custom Mechanical Keyboard~ with BL706. With Programmable OLED Keys, RGB Led, Hot-swappable, USB/BLE Dual-Mode, vibration feedback, and even Serial Terminal ! <https://github.com/sipeed/sipeed_keyboard>
 * <https://github.com/Lotlab/Lot60-BLE-Keyboard>  全开源，<https://wiki.lotlab.org/index.html>
 * [Makerdiary M60](https://makerdiary.com/pages/m60-mechanical-keyboard)，我买的第一个热拔插键盘
-* System76 Launch Configurable Keyboard <https://github.com/system76/launch>，Launch Lite 则是 65% 键盘
+* System76 Launch Configurable Keyboard <https://github.com/system76/launch>，Launch Lite 则是 70 按键版本。
 
 ### 开源软件
 * QMK <https://qmk.fm/> 大多数有线键盘都基于这个方案，支持挺多MCU，但是缺少对无线/蓝牙的支持。
