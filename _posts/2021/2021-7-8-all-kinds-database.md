@@ -27,6 +27,7 @@ SQLite Is Serverless
 国内的数据库博主
 * <https://www.zhihu.com/people/fuyufjh/posts>
 * <https://www.zhihu.com/column/c_1037748468491689984>
+* <https://www.zhihu.com/column/distributed-storage>
 * <https://draveness.me>
 
 ### Leveldb 和 RocksDB
