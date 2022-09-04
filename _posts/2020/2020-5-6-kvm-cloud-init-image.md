@@ -12,13 +12,9 @@ typora-root-url: ../../../blog
 - OpenSuse <https://get.opensuse.org/leap/> Jeos is for cloud. Leap is normal version, Tumbleweed is rolling update. openSUSE MicroOS is a variant of openSUSE Tumbleweed and serves as a base of openSUSE Kubic, a Container as a Service platform. Guide of kubeadm’s installation container runtimes uses Tumbleweed. `KVM and XEN` version of JeOS image is cool: need interactive installation and it is fast. Doesn’t need extra disk for OS so boot image is enough. `OpenStack-Cloud` filesystem is xfs and 1G size. `KVM and XEN` filesystem is btrfs and 26G size. But Tumbleweed `KVM` version didn't have igbvf driver. Crazy! Need `zypper install kernel-default`. It is 5.11.11. So what is stock or default kernel version?
 - Centos Stream <https://cloud.centos.org/centos/>
 - Rocky <https://download.rockylinux.org/pub/rocky/8.4/images/>
-- Linux Amazon Linux 2 https://aws.amazon.com/cn/amazon-linux-2/faqs/
+- Linux Amazon Linux 2 <https://aws.amazon.com/cn/amazon-linux-2/faqs/>
 
 ### Create VM
-* <https://people.redhat.com/mskinner/rhug/q3.2014/cloud-init.pdf>
-* cloud-init 工作原理 - 每天5分钟玩转 OpenStack [IBM DW](https://www.ibm.com/developerworks/community/blogs/132cfa78-44b0-4376-85d0-d3096cd30d3f/entry/cloud_init_%E5%8E%9F%E7%90%86_%E6%AF%8F%E5%A4%A95%E5%88%86%E9%92%9F%E7%8E%A9%E8%BD%AC_OpenStack_171?lang=en).
-* 如何把用户信息注入到里面
-
 ```sh
 ## Install a necessary packages 
 $ sudo apt-get install kvm cloud-utils genisoimage 
