@@ -139,4 +139,4 @@ As of Evolution release 3.30.0, users can build the latest stable (or developmen
 
 postmarketOS，专门为老手机提供最新 Linux 系统，[User-Interfaces](https://wiki.postmarketos.org/wiki/User-Interfaces)，其使用的默认窗口管理系统是 Weston。有些驱动比如无线和蓝牙是闭源的，不知道图像驱动是不是也是。
 
-[Pure Wayland toolkit prototype] supports in OpenJDK
+[Pure Wayland toolkit prototype](https://wiki.openjdk.org/display/wakefield/Pure+Wayland+toolkit+prototype) supports in OpenJDK
