@@ -78,7 +78,7 @@ typora-root-url: ../../../blog
 ### 按键延时
 测试网站 <https://en.key-test.ru/>
 
-从算法上，并不是每个键都连了一个GPIO，而是每排和每列连接一个GPIO，键盘每排的按键是并连的，也就是说任何一个接通都会设置这个GPIO为接通，然后算法先遍历每排，然后遍历每列。这种叫矩阵扫描。
+从[算法](http://www.openmusiclabs.com/learning/digital/input-matrix-scanning/)上，并不是每个键都连了一个GPIO+GND，而是每排/每列连接一个GPIO，键盘每排的按键是并连的，也就是说任何一个接通都会设置这个GPIO为接通。然后算法先遍历每排（当前排GPIO设置为高电平），然后遍历每列（总是低电平，检测GPIO值）。这种叫矩阵扫描。
 
 机械键盘矩阵扫描并不是延时的最大问题，而是去抖比较耗时。
 
