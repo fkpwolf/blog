@@ -48,6 +48,7 @@ typora-root-url: ../../../blog
 ### 开源软件
 * QMK <https://qmk.fm/> 大多数有线键盘都基于这个方案，支持挺多MCU，但是缺少对无线/蓝牙的支持。
 * ZMK <https://zmk.dev/> ZMK Firmware is an open source (MIT) keyboard firmware built on the Zephyr™ Project Real Time Operating System (RTOS). Wireless First.
+* KMK <http://kmkfw.io/> Powered By CircuitPython, supports BLE 
 * VIA <https://caniusevia.com/> 修改键盘配列的一个图形界面软件。这个软件强的地方在于修改后立即生效，没有保存的动作。而且下次修改的时候会加载键盘里面的配置，所以是无缝连接。如果能让一款成品键盘，比如IKBC的支持VIA，那是极好的。
 
 为什么要改标准布局的键盘的布局呢？因为每个人键盘使用和常用按键都不同，对于我来说，最迫切需求是：
