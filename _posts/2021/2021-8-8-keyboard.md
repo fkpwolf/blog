@@ -48,6 +48,7 @@ typora-root-url: ../../../blog
 ### 开源软件
 * QMK <https://qmk.fm/> 大多数有线键盘都基于这个方案，支持挺多MCU，但是缺少对无线/蓝牙的支持。
 * ZMK <https://zmk.dev/> ZMK Firmware is an open source (MIT) keyboard firmware built on the Zephyr™ Project Real Time Operating System (RTOS). Wireless First.
+* KMK <http://kmkfw.io/> Powered By CircuitPython, supports BLE 
 * VIA <https://caniusevia.com/> 修改键盘配列的一个图形界面软件。这个软件强的地方在于修改后立即生效，没有保存的动作。而且下次修改的时候会加载键盘里面的配置，所以是无缝连接。如果能让一款成品键盘，比如IKBC的支持VIA，那是极好的。
 
 为什么要改标准布局的键盘的布局呢？因为每个人键盘使用和常用按键都不同，对于我来说，最迫切需求是：
@@ -78,7 +79,7 @@ typora-root-url: ../../../blog
 ### 按键延时
 测试网站 <https://en.key-test.ru/>
 
-从算法上，并不是每个键都连了一个GPIO，而是每排和每列连接一个GPIO，键盘每排的按键是并连的，也就是说任何一个接通都会设置这个GPIO为接通，然后算法先遍历每排，然后遍历每列。这种叫矩阵扫描。
+从[算法](http://www.openmusiclabs.com/learning/digital/input-matrix-scanning/)上，并不是每个键都连了一个GPIO+GND，而是每排/每列连接一个GPIO，键盘每排的按键是并连的，也就是说任何一个接通都会设置这个GPIO为接通。然后算法先遍历每排（当前排GPIO设置为高电平），然后遍历每列（总是低电平，检测GPIO值）。这种叫矩阵扫描。
 
 机械键盘矩阵扫描并不是延时的最大问题，而是去抖比较耗时。
 

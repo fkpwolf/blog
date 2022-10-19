@@ -180,35 +180,27 @@ Span 是个完整调用链或者跨度，从开始触发到结果返回。
 
 上面的 jaeger-client 通过 UDP 发送报文，这个报文是单个 trace 还是完整的 span？应该是单个的，完整的是分布式环境。这里上传报文应该有 buffer 吧，否则每次调用就发送报文太耗资源。istio 这块是在 mixer 里面做的上传报文，并非每个 pod 中的 proxy (envoy)，proxy 收集数据，所以应该由 proxy 来确定每个 trace 的时间点，proxy 是每个 pod 里面都有，所以这个时间应该相对准确，如果由应用来确定时间则对应用侵入性太大。istio 用的是jaegertracing/all-in-one:1.5，一个 pod 做了 jaeger-agent, jaeger-collector 所有事情，所以并非严格按照上面每个应用/host 上面都安放一个 agent。 
 
-[jaeger-operator](https://github.com/jaegertracing/jaeger-operator) 这个操作起来可能更容易。
-
-thrift 类似 gRPC，Dubbo 也使用这个。 
+[jaeger-operator](https://github.com/jaegertracing/jaeger-operator) 这个操作起来可能更容易。其部署可以AllInOne，这样所以服务都在一个Pod上面。也可以像Istio那样注入到namespace中，agent作为每个目标Pod的sidecar。也可以DaemonSet方法，在每个host上面只安装一个agent，用户pod可以直接向这个agent发送trace数据(thrift格式)，看上去是push模式。
 
 Control Flow 这种反向控制是做何用？ 
 
 分布式跟踪 jaeger-query  这个 UI (<https://github.com/jaegertracing/jaeger> Go Lang, React)做的还很专业，能看到调用链和每步花的时间，但是似乎也需要 REST 接口来配合。 
 
-这个 Jaeger 是如何无缝的接入到系统中？Istio 如何直接像这个入口发送 log 的呢？ 
+这个 Jaeger 是如何无缝的接入到系统中？Istio 如何直接像这个入口发送 log 的呢？看上去要客户端集成 Jaeger 库。
 
-<https://raw.githubusercontent.com/jaegertracing/jaeger-kubernetes/master/all-in-one/jaeger-all-in-one-template.yml>
-
-Jaeger 是 CNCF 项目，关注的是 distributed tracing。 
-
-收集调用链这种数据称为 telemetry，遥测，属于APM(application performance monitor) system 系统 
+Jaeger 是 CNCF 项目，关注的是 distributed tracing。收集调用链这种数据称为 telemetry，遥测，属于APM(application performance monitor) system 系统 
 
 <https://github.com/apache/incubator-skywalking> 国产，apache 孵化，Java + antd，和 Jaeger 有点像，也对 Istio 做了优化，图形功能更多点。 
 
 ![skywalking-arch](/images/2018/skywalking-arch.png)
 
-考虑他也带收集功能，所以对标的应该是 Prometheus - 监控告警，支持ElasticSearch，也支持H2预览版，同时支持ShardingSphere项目用于MySql关系数据库集群的管理。』 
+考虑到他也带收集功能，所以对标的应该是 Prometheus - 监控告警，支持ElasticSearch，也支持H2预览版，同时支持ShardingSphere项目用于MySql关系数据库集群的管理。』 
 
 Sharding-Sphere是一套开源的分布式数据库中间件解决方案组成的生态圈，它由Sharding-JDBC、Sharding-Proxy和Sharding-Sidecar这3款相互独立的产品组成。他们均提供标准化的数据分片、读写分离、柔性事务和数据治理功能，可适用于如Java同构、异构语言、容器、云原生等各种多样化的应用场景。 
 
 H2是一个Java编写的关系型数据库，它可以被嵌入Java应用程序中使用，或者作为一个单独的数据库服务器运行。keycloak 默认用的也是这个。当然 keycloak 也是 java 写的。 
 
 看来这个 SkyWalking 是 Java 世界的东西了。 
-
-[360容器平台监控实践](https://mp.weixin.qq.com/s/tZxaSQh3wulL5eHXWHiohg)
 
 [Monitoring and Managing Workflows Across Collaborating Microservices](https://www.infoq.com/articles/monitor-workflow-collaborating-microservices) 把跟踪数据转化为图形化的工作流，更为直观。业务流程模型和标记法（BPMN, Business Process Model and Notation）是一套图形化表示法，用于以业务流程模型详细说明各种业务流程。
 
@@ -217,6 +209,6 @@ H2是一个Java编写的关系型数据库，它可以被嵌入Java应用程序�
 ### Think
 1. 基本上配置都是找到各种数据源
 2. 如果日志监控这些基础设施本身就不稳定，出现问题就很尴尬了，所以需要分开部署和维护
-3. 对于开发者来说需要时透明的，不应增加额外负担，比如不应要求把日志写到新的地方
+3. 对于开发者来说需要时透明的，不应增加额外负担，比如把日志写到新的地方不需要动源代码
 4. 这里只是收集数据和初步的分析，和大数据系统有些重合（日志分析是大数据典型案例），所以要考虑各个部分的独立性和灵活性，要有一种数据流（pipeline）的考虑
 5. 跨语言、跨平台，这样的系统不能对语言和平台有特定要求

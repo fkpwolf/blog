@@ -95,16 +95,15 @@ Format specific information:
 It is small now but increase fast and soon it will be same size as original file. 
 
 ### Useful commands
-`virt-install --import --disk /var/lib/libvirt/images/focal-server-cloudimg-amd64-disk-kvm.img,bus=virtio --name vm1--ram 2000 --nographics`
+`virt-install --import --disk ubuntu1.img,bus=virtio --disk seed.img,device=cdrom --name vm1 --ram 8192 --nographics`
 
-https://quantum-integration.org/posts/install-cloud-guest-with-virt-install-and-cloud-init-configuration.html
---nographics option forces virt-install to redirect the console output to the terminal window. After successful boot you get to the vm promt:
+<https://quantum-integration.org/posts/install-cloud-guest-with-virt-install-and-cloud-init-configuration.html>
+--nographics option forces virt-install to redirect the console output to the terminal window. After successful boot you get to the vm promt.
+And you can still access the text console by Virt Manager. 
 
-For Debian, it will start an install dialog.
-
-`virt console vm`
+`virsh console vm`
 to connect running vm.
-The default escape key - to exit: ^[ ( Ctrl + [ )
+The default escape key - to exit: ^[ ( Ctrl + ] )
 
 [Installing a KVM Guest OS from the Command-line (virt-install)](https://www.techotopia.com/index.php/Installing_a_KVM_Guest_OS_from_the_Command-line_(virt-install)) command reference
 
@@ -116,7 +115,7 @@ virt-install -n nwtest --description Test -r 512 --vcpus 1 \
    --disk /srv/virtual/nwtest,device=disk,bus=virtio,size=3 \ 
    --network bridge=br0,model=virtio \ 
    --autostart \ 
-    --nographics \ 
+   --nographics \ 
    -x "console=tty0 console=ttyS0,115200n8" 
 Directly install from scratch, step by step. the location parameter specific kernel and initrd address. It is net-install indeed.
 ```
