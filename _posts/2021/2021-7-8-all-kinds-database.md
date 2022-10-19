@@ -21,14 +21,11 @@ SQLite Is Serverless
 * <https://www.sqlite.org/serverless.html>
 * <https://www.sqlite.org/whentouse.html>
 
-为什么数据库不应该使用外键 https://draveness.me/whys-the-design-database-foreign-key/
-为什么 MySQL 使用 B+ 树 https://draveness.me/whys-the-design-mysql-b-plus-tree/
-
 国内的数据库博主
 * <https://www.zhihu.com/people/fuyufjh/posts>
 * <https://www.zhihu.com/column/c_1037748468491689984>
 * <https://www.zhihu.com/column/distributed-storage>
-* <https://draveness.me>
+* <https://draveness.me>: [为什么数据库不应该使用外键](https://draveness.me/whys-the-design-database-foreign-key/), [为什么 MySQL 使用 B+ 树](https://draveness.me/whys-the-design-mysql-b-plus-tree/)
 
 ### Leveldb 和 RocksDB
 [Leveldb 和 RocksDB 在大 value 场景下的一些问题](http://idning.github.io/leveldb-rocksdb-on-large-value.html)
@@ -41,20 +38,22 @@ SQLite Is Serverless
 
 [几款主流 NoSql 数据库的对比](http://www.cnblogs.com/vajoy/p/5471308.html)
 leveldb 和 mongodb 很像，但是作为一个数据库后者功能更全面，前者性能是好，但只是一个库。
-浅析 Bigtable 和 LevelDB 的实现 http://draveness.me/bigtable-leveldb.html 实现和hbase比较像，但是leveldb用了memtable作为磁盘table的中介和缓存，性能会提高，而hbase则偏向大数据情况下的处理。主要是 Leveldb 不支持分布式。
+浅析 Bigtable 和 LevelDB 的实现 <http://draveness.me/bigtable-leveldb.html> 实现和hbase比较像，但是leveldb用了memtable作为磁盘table的中介和缓存，性能会提高，而hbase则偏向大数据情况下的处理。主要是 Leveldb 不支持分布式。
 
-Rocksdb实现及优化分析 JoinBatchGroup http://kernelmaker.github.io/Rocksdb_Study_1 TiDB 底层也基于这个
+Rocksdb实现及优化分析 JoinBatchGroup <http://kernelmaker.github.io/Rocksdb_Study_1> TiDB 底层也基于这个
 
-badger https://github.com/dgraph-io/badger separating values from keys, significantly reducing the write amplification compared to a typical LSM tree.
+badger <https://github.com/dgraph-io/badger> separating values from keys, significantly reducing the write amplification compared to a typical LSM tree.
 [badger 一个高性能的LSM K/V store](https://colobu.com/2017/10/11/badger-a-performant-k-v-store/)
 [如何评价 Badger (fast key-value storage)？](https://www.zhihu.com/question/59895275) "基本思路是RocksDB基于LevelDB为SSD优化，但不是为SSD尤其是目前超高随机读写能力的NVME SSD设计．"
 [badger 事务过程笔记](https://zhuanlan.zhihu.com/p/395229054)
 
 MyRocks: MariaDB将MyRocks作为一个alpha阶段的存储引擎 <https://mariadb.com/kb/en/about-myrocks-for-mariadb/>
 
-### LeanStore
-a high-performance OLTP storage engine optimized for many-core CPUs and NVMe SSDs. https://dbis1.github.io/leanstore.html
+### 内存数据库
+LeanStore: a high-performance OLTP storage engine optimized for many-core CPUs and NVMe SSDs. https://dbis1.github.io/leanstore.html
 Talk https://twitter.com/andy_pavlo/status/1389042478796492800
+
+内存数据库：TUM 数据库组的 HyPer 和后续的 Umbra，有详细的论文，代码没有开源。
 
 ### Cassandra 
 Netflix 用的比较多
@@ -106,8 +105,8 @@ https://apple.github.io/foundationdb/getting-started-linux.html 安装挺容易�
 其文档写的很全，不错。
 
 ### 非通用数据库
-* https://db-engines.com/en/system/LokiJS%3BLovefield%3BPouchDB System Properties Comparison LokiJS vs. Lovefield vs. PouchDB JavaScript 数据库，轻量级，可以在客户端（浏览器、手机）运行，然后同步整个db data to server side. Azurite is an open source Azure Storage API compatible server (emulator) 有用到。
-* https://www.arangodb.com/ 专门为图算法优化的数据库。
+* <https://db-engines.com/en/system/LokiJS%3BLovefield%3BPouchDB> System Properties Comparison LokiJS vs. Lovefield vs. PouchDB JavaScript 数据库，轻量级，可以在客户端（浏览器、手机）运行，然后同步整个db data to server side. Azurite is an open source Azure Storage API compatible server (emulator) 有用到。
+* <https://www.arangodb.com/> 专门为图算法优化的数据库。
 * TSDB
 
 ### 国产数据库
@@ -117,7 +116,7 @@ https://apple.github.io/foundationdb/getting-started-linux.html 安装挺容易�
 * 淘宝 [OceanBase](https://www.zhihu.com/question/19841579) 融合了 mysql 的事务并且兼容 mysql，以及用了 leveldb 类似的内存写的技术，不过虽然开源但是 commit 特别少，现在已经成为阿里云上面的一个产品了。
 * 阿里云 [PolarDB for PostgreSQL](https://github.com/ApsaraDB/PolarDB-for-PostgreSQL) "数据库由传统的 Share-Nothing 架构，转变成了 Shared-Storage 架构。由原来的 N 份计算 + N 份存储，转变成了 N 份计算 + 1 份存储。"
 * 万里数据库 <https://gitee.com/GreatSQL/GreatSQL>，基于 MySQL
-* TDengine <https://github.com/taosdata/TDengine> 开源，据说没有使用任何第三方库，口号是“一个数据采集点一张表”，对外接口也是结构模型的MySQL。
+* TDengine <https://github.com/taosdata/TDengine> 开源，据说没有使用任何第三方库，口号是“一个数据采集点一张表”，对外接口也是关系模型的MySQL。
 
 ### 比较传统数据库
 CAP理论十二年回顾："规则”变了 http://www.infoq.com/cn/articles/cap-twelve-years-later-how-the-rules-have-changed
@@ -162,6 +161,8 @@ OLAP即联机分析处理，是数据仓库的核心部心，所谓数据仓库�
 随着大数据时代的到来，对于OLAP，列存储模式或者说nosql模式比传统意义的行存储模式可能更具优势。
 
 ### Think
+* 不同的应用场景需要使用不同的数据库，这确实是很头痛的事情。大数据的情况下，通用数据库已经难以满足各种格式迥异的数据。
+* 不管是关系数据库还是非关系数据库，SQL 都表现的强大的生命力，真正做到了和底层实现无关的抽象。
 * 对于私有云来说，每个微服务趋向自己创建数据库，或者自己维护的大的数据库。
 * 对于公有云来说，每个微服务会直接使用已有的多租户数据库。
 * 从技术上来说当然是公有云多租户数据库更好（技术、经济），但是国内环境下，自己维护的更多，这种情况下，NewSQL 对于升级换代吸引很大。
