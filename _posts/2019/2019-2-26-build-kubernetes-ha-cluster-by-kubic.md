@@ -9,6 +9,8 @@ typora-root-url: ../../../blog
 
 总的指导文章：<https://kubernetes.io/docs/setup/independent/ha-topology/>
 
+Kubic 现在已经被 SUSE 废弃，可惜了。
+
 ### 创建虚拟机
 
 想试下 terraform + kvm 来搭建，感觉手工用 cloud-init 还是太慢。使用 <https://github.com/dmacvicar/terraform-provider-libvirt> terraform-provider-libvirt-Fedora-28，binary 现在区分 provider OS 下载。还是有点懒，<https://github.com/kubic-project/automation/tree/master/kubic-kvm> 这个有，为什么要自己创建呢？代码里面的地址有点老，改成 <https://download.opensuse.org/repositories/devel:/kubic:/images/openSUSE_Tumbleweed/> 这个下面的。国内镜像 <http://mirrors.ustc.edu.cn/opensuse/tumbleweed/appliances/>。我用的是 openSUSE-Tumbleweed-Kubic.x86_64-15.0-kubeadm-cri-o-OpenStack-Cloud-Build4.5.qcow2。另外一个 <https://github.com/kubic-project/automation/tree/master/caasp-kvm> 可以创建多 master，但是要企业账号。运行完后会显示 3 个 vm 的地址：
