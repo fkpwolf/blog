@@ -37,7 +37,7 @@ $ qemu-img convert -O qcow2 download-disk.img disk.qcow2
 ## create the disk with NoCloud data on it. 
 $ cloud-localds my-seed.img my-user-data 
 ## if command not exist, run: genisoimage  -output seed.iso -volid cidata -joliet -rock user-data meta-data 
-## Create a delta disk to keep our .orig file pristine 
+## Create a new delta disk to keep our .orig file pristine 
 $ qemu-img create -f qcow2 -b disk.qcow2 -F qcow2 disk-new.img 
 ## boot a kvm 
 $ kvm -net nic -net user -hda disk.img -hdb my-seed.img -m 512
