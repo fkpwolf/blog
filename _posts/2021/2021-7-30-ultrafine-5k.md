@@ -54,7 +54,7 @@ BIOS 没有pre-boot acl支持怎么办？可以试试去掉mortar的雷电header
 6. Linux 下suspend会导致机器风扇狂转，无法通过关机键关机，只能关掉电源按钮。试过不同Linux版本同样的问题。Windows下可以休眠。感觉还是和雷电卡有关系，将来升级BIOS可能会修复这个问题 (确实，会好点，现在是suspend变成poweroff)。
 7. 今天发现 F4 版本 BIOS 已经出现 Pre-Boot ACL 菜单，太棒了！但是设置后并不起效，甚至连 no security 也不能生效（Thunderbolt控制中心还是显示用户身份认证），更难以忍受的是更新后BIOS，开机自检到显示BIOS画面中间要等半天。只能换回F2版本。
 8. 闲鱼买了个B550m Aorus Pro-P，带 THB 接口。接上去后和上面 Aorus AX 总体表现一致。开机会快点。刷最新 BIOS 后，贝尔金雷电扩展坞总可以正常工作，但是 Ultrafine 显示器自带的 USB 设备总是不没法正常工作，而这个显示器的声音设备对于我来说是必须的。而且 Windows 下面还会有 Cache Hierarchy Error，会随机重启，这个很恐怖，网上说这个大概和 CPU 电压配置有关。换成低版本的 BIOS 后表现和 AX 一致。
-9. B550m Aorus Pro-P最新的F15a版本离上个版本只有一个月，像紧急修复。首先稳定提高，不会出现Windows随机启动的问题。然后bios设置雷电no security也能在windows中生效，所以上面两个问题得到修复。但是 Ultrafine 5K还是有兼容性问题：必须 enable User security & disbale pro-boot，否则机器重启后找不到USB设备。如果连在贝尔金雷电扩展坞上面则表现很稳定。
+9. B550m Aorus Pro-P最新的F15a版本离上个版本只有一个月，像紧急修复。首先稳定提高，不会出现Windows随机启动的问题。然后bios设置雷电no security也能在windows中生效，所以上面两个问题得到修复。但是 Ultrafine 5K还是有兼容性问题：必须 enable User security & disable pre-boot，否则机器重启后找不到USB设备。如果连在贝尔金雷电扩展坞上面则表现很稳定。
 
 ### MAG B460M MORTAR
 v11 BIOS菜单里面有雷电，虽然问题多多（雷电设备能看到，但是USB和PCI网卡都看不到）。但是 v14 居然去掉了。v13 changelog 我看还有改进 Thunderbolt functional patch. 换成 v13，问题解决。
@@ -68,10 +68,14 @@ Added support for PRE-BOOT ACL feature (deprecating previous implementation from
 ```
 但是 NUC BIOS 里面没有看到对应的配置。看看其thunderbolt nvm version is just 33.0，但是 NUC 官网也没有新的版本。我猜测进入windows系统后动态的启用和批准设备的pre boot，这样重启后启动就能在启动阶段使用键盘。后来测试这个NUC对pre-boot支持的已经挺好了，虽然bios里面没有显示的支持，默认似乎是已经开启了。
 
+B660M AORUS PRO DDR4，这个板子上面表现也很稳定，没有雷电相关的BUG。看上去 intel 芯片的板子雷电兼容性会好很多，可能是intel firmware做得好。
+
 ### ProArt Z690-Creator
 挺完美的主板，从[这里](https://www.computerdiy.com.tw/asus-proart-z690-creator-wifi_unbox/)的Block diagram看，其雷电口是可以输出集显DP显示的，如果同时接上DP IN，如何切换显示源呢？还是默认接上外接显卡集显就被屏蔽了？
 ![](/images/2021/paroart-z690.png)
 [这里开箱](https://zhuanlan.zhihu.com/p/434899023)显示主控为 JHL8540 ThunderBolt4 控制器。tonymacx86 已经有 macOS 安装[方法](https://www.tonymacx86.com/threads/asus-z690-proart-creator-wifi-thunderbolt-4-i7-12700k-amd-rx-6800-xt.318311/)，虽然我不是很想试。
+
+ProArt Z90 也是同样的高规格，但是ProArt X670就只有一个DP IN。
 
 ### 雷电 4
 https://www.gigabyte.com/Motherboard/GC-MAPLE-RIDGE-rev-10#kf 这个表明支持5k，我看也是Display Port 1.4。[这个](https://www.asrock.com/MB/Intel/Z590%20Phantom%20Gaming-ITXTB4/index.asp#Specification)也可以。https://www.msi.com/Motherboard/MAG-B560M-MORTAR/Specification 微星这个性价比的选择1x TBT connector (Supports RTD3) 。这个B560M AORUS PRO AX[白雕](https://www.gigabyte.com/Motherboard/B560M-AORUS-PRO-AX-rev-10)也挺好看。
