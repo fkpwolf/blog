@@ -15,7 +15,7 @@ Windows HiDPI 支持是最好的：
 对于 27 寸 5K 显示器：
 * Windows 下面 250% 的放大比例最为完美
 * Gnome 下面 5K 200% 放大比在 4k 下表现好很多（整体有些偏小），4k 下 200% 放大会让窗口组件过大而显得不够精细， 而 [Linux Fractional Scaling](https://wiki.archlinux.org/title/HiDPI#Fractional_scaling) 还不成熟。Gnome 在 200% 放大比例下，最好显示效果是32寸4k。
-* MacOS 下面 200% 放大字体偏小，没有 4k 显示效果好
+* MacOS 下面 200% 放大字体偏小，没有 4k 显示效果好。系统没有其他放大比例。
 
 ### 主板
 - [MEG Z590I UNIFY](https://www.msi.com/Motherboard/MEG-Z590I-UNIFY) 有两个 DP IN 接口，只支持 11 代CPU，不支持 MacOS。但是两个 DP IN 算是雷电主板里面最高规格了，[BIOS](https://www.chiphell.com/portal.php?mod=view&aid=25543&page=4) 里面也有雷电相关的详细配置。[MEG Z590 ACE](https://www.msi.com/Motherboard/MEG-Z590-ACE)也有两个 DP IN。MSI MEG Z690 ACE 雷电也是一样配置。这些主板都是通过PCIe子卡插到主板上，所以可能无法连通集显，也就是说雷电只能通过DP-IN来输出显示信号，效果和技嘉雷电卡一样。
@@ -117,6 +117,11 @@ Fedora suspend 后 resume，雷电下的 USB 鼠标键盘无法工作，重新�
 但在Windows 11上面休眠正常，而Fedora在冥王峡谷上面也休眠正常。似乎是Linux对于AMD平台电源管理支持还不够完善。
 
 B650M AORUS ELITE AX, BIOS F3h，在Linux 6.1.6内核下终于休眠正常。
+
+### Mac
+苹果自身设备兼容性理应是最好的。
+
+Mac Mini M2，显示器和 Belkin 扩展坞没有任何问题，毕竟这个扩展坞本来就是为苹果用户设计的。而且Mini休眠后也可以用键盘鼠标唤醒，这个就很厉害了。另外：Mini休眠时指示灯也是亮的，如何判断是否休眠？我能想到的办法只有耳朵凑到机器后面的风扇口听听有没有风声。联想到MacOS电源设置里面也没有过期休眠的时间，似乎苹果想让用户忘掉这个设备的电源管理方式：一直放在那里就好了。
 
 ### 总结
 总的看来，[雷电](https://zh.wikipedia.org/wiki/Thunderbolt)的理念确实不错：一根线能传输电源和多种不同数字信号，这对桌面的整洁至关重要，特别适合某些场景：
