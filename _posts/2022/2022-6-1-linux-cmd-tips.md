@@ -19,7 +19,7 @@ Find Out Ram Speed, Make, Form Factor, Type and Other Information : `dmidecode -
 set timezone `sudo dpkg-reconfigure tzdata`
 
 To change locale, use `sudo update-locale LANG=en_US.utf8`. Then ssh can show Chinese characters.
-In Ubuntu Server, "locale -a" say zh_CN.utf8. It is unusual. In Putty, "Connection → Data → Environment variables", add LANG/zh_CN.utf8 & LC_CTYPE/zh_CN.utf8. Than Putty can type and show Chinese. 
+In Ubuntu Server, `locale -a` says zh_CN.utf8. It is unusual. In Putty, "Connection → Data → Environment variables", add LANG/zh_CN.utf8 & LC_CTYPE/zh_CN.utf8. Than Putty can type and show Chinese. 
 Mac always ok on Chinese.
 
 ### Package management
@@ -32,13 +32,15 @@ To activate screen logging function, just press “Ctrl-A” and “H“. (Pleas
 Ctrl-A, d — will detach from current, but screen still run background. Mac will not release TTL device. If want to attach again, use “screen -r”.
 Ctrl-A, : — will enter command mode, run “quit” will exit completely.
 
-picocom -b 115200 -f h /dev/ttyS0
+`picocom -b 115200 -f h /dev/ttyS0`
 To exit, C-a, C-x
 compared with screen, picocom can view output history.
 
 no permission to access tty device:
+```
 sudo usermod -a -G dialout $USER
 sudo reboot
+```
 
 ### SSH
 http://stackoverflow.com/questions/12202587/automatically-enter-ssh-password-with-script
@@ -60,7 +62,8 @@ Host *
 ```
 More details about the config, check https://deepzz.com/post/how-to-setup-ssh-config.html
 
-"permissions are too open” error : chmod 400 ~/.ssh/id_rsa
+"permissions are too open” error : `chmod 400 ~/.ssh/id_rsa`
+
 Sometimes ssh it very slow:
     Next authentication method: gssapi-with-mic
     Next authentication method: publickey
@@ -74,24 +77,24 @@ ServerAliveInterval 10
 Set it in client $HOME/.ssh/config file. Now all ssh connections will send a TCPKeepAlive every 10 seconds.
 
 Unable to negotiate with host: no matching key exchange method found. Their offer: diffie-hellman-group1-sha1
---> ssh -oKexAlgorithms=+diffie-hellman-group1-sha1 user@host
+--> `ssh -oKexAlgorithms=+diffie-hellman-group1-sha1 user@host`
 
 ### File
-show details when copy file: cp --verbose -rf /src/ /dsc/
+show details when copy file: `cp --verbose -rf /src/ /dsc/`
 
-rsync -avz --progress /path/of/source /path/of/target
+`rsync -avz --progress /path/of/source /path/of/target`
 
 A look at rsync performance https://lwn.net/Articles/400489/
 
 https://stackoverflow.com/questions/13713101/rsync-exclude-according-to-gitignore-hgignore-svnignore-like-filter-c
-rsync -a -v --ignore-existing a/ b/ --filter=':- .gitignore' --exclude='/.git'
+`rsync -a -v --ignore-existing a/ b/ --filter=':- .gitignore' --exclude='/.git'`
 
 mount loop image file
 https://www.linuxquestions.org/questions/linux-general-1/how-to-mount-img-file-882386/ only this work for me
 https://unix.stackexchange.com/questions/316401/how-to-mount-a-disk-image-from-the-command-line/316407#316407
 
 exclude all “permission denied” messages from “find”
-find /  -name javac 2>/dev/null
+`find /  -name javac 2>/dev/null`
 
 chmod 755, 644, 700  http://learn-web-hosting-domain-name.mygreatname.com/chmod-tutorial.html 
 
@@ -105,22 +108,22 @@ nvme-cli package
 sudo nvme list
 sudo nvme smart-log /dev/nvme0n1
 
-Samba sometimes need create user: smbpasswd -a linuxsir. 'root' user is not permitted. Sometimes need "chmod 777 /mnt/sda1” if only read & can’t write.
-New samba looks having better UX: just add/append below to /etc/samba/smb.conf. Then ok. Restart is not need.
+Samba sometimes need create user: `smbpasswd -a linuxsir`. 'root' user is not permitted. Sometimes need `chmod 777 /mnt/sda1` if only read & can’t write.
+New samba looks having better UX: just add/append below to /etc/samba/smb.conf. Then ok. Restart is not needed.
 
 ### Network
 Ubuntu: netplan
 
 ### Binary file
-To list a binary dependency library: “ldd file", or use "readelf -a file".
+To list a binary dependency library: `ldd file`, or use `readelf -a file`.
 
-run "readelf -a portal" and find line as below:
+run `readelf -a portal` and find line as below:
       [Requesting program interpreter: /lib/ld-linux-armhf.so.3]
-Then run "ln -s /lib/ld-linux.so.3 /lib/ld-linux-armhf.so.3".
+Then run `ln -s /lib/ld-linux.so.3 /lib/ld-linux-armhf.so.3`.
 
-readelf -a /usr/arm-linux-gnueabihf/lib/libm.so.6 | grep FP
+`readelf -a /usr/arm-linux-gnueabihf/lib/libm.so.6 | grep FP`
 
-nm a.so
+`nm a.so`
 
 `strings a.so` #print printable string.
 
@@ -150,20 +153,22 @@ Edit this file /etc/dhcp/dhclient.conf and set timeout to a reasonable value, li
     timeout 15
 The default value of 300 seconds is way too high. The suggested replacement value of 15 was tested and works fine.
 
-echo -n "STRING" | base64 
+`echo -n "STRING" | base64`
 -n is to avoid a new line character on the end of the line.
 
 linux nohup http://kumu-linux.github.io/blog/2013/08/06/tmux/
 
-mutliply download: axel. It also can be used in OS X.
+mutliply download tool: `axel`. It also can be used in MacOS.
 
-patch -p1 <~/patch1.diff
+Apply path `patch -p1 <~/patch1.diff`
 
 Most digital cameras and cell phone add EXIF metadata to the images. EXIF metadata includes camera specifications, settings, location (GPS coordinates) and more.
-exiftool -all= */*.jpg -overwrite_original
+`exiftool -all= */*.jpg -overwrite_original`
 
-STDERR (standard error) in UNIX and UNIX-like systems is redirected using 2> instead of a single chevron (>). gpc xxx.pas 2> error.txt
+STDERR (standard error) in UNIX and UNIX-like systems is redirected using 2> instead of a single chevron (>). `gpc xxx.pas 2> error.txt`
 
 https://www.cyberciti.biz/faq/what-process-has-open-linux-port/
 
 https://linux.cn/article-5608-1.html 
+
+Check service recent log: `journalctl -u docker -f`
