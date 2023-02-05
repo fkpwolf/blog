@@ -109,7 +109,7 @@ Moshi USB C to DisplayPort Cable 这跟线也支持 5K，但是就没有USB通�
 * HP雷电扩展坞 [HP Elite 65W Thunderbolt 3 Dock](https://support.hp.com/us-en/drivers/selfservice/hp-elite-thunderbolt-3-65w-dock/9822172)，如果接usb键盘鼠标，冷启动OpenCore中无法操作键盘鼠标，重启可以操作。这个扩展坞在 x86 Mac下面无法免驱，但是在 m1 Mac mini下面是免驱的。为什么 ultrafine 的usb键盘可以操作呢？usb 2.0 hub？ultrafine也不是所有情况都可以：只有windows关机和重启后才可以。如果是linux关机后开机，一样问题。上面的ASM1042A要到HP官网上才能下载驱动，Windows 默认没有带驱动，真是辣鸡啊，VGA 口也很碍眼，后来出了。
 * Belkin Thunderbolt 3 Express Dock HD, F4U095，<https://www.belkin.com/th/support-article?articleNum=216428> 没有windows驱动和固件更新下载，据说Windows下面没法PD输出电流，买的有点唐突。
 * Kensington Thunderbolt 4，4 个雷电 4 口，看上去不错，有点像交换机了。
-* CalDigit TS4，接口超多，价格也最贵
+* [CalDigit THUNDERBOLT 4 ELEMENT HUB](https://www.caldigit.com/zh/thunderbolt-4-element-hub-zh/)，四个雷电口+四个USB type A，更像hub而非扩展坞。如果有多个雷电显示器，这个很适合，其网页也很详细的介绍了兼容性，比如不支持双ultrafine 5k，但是Studio Display可以。如果我把它当成KVM来连接和控制多个PC电脑作为输入，这样避免雷电线的反复插拔，感觉不错。但是如果两台电脑同时开机，这个hub会选择那个作为视频输入呢？
 
 ### Linux
 Fedora suspend 后 resume，雷电下的 USB 鼠标键盘无法工作，重新连接雷电设备也不起作用。B660m AORUS还有suspend后马上resume的问题，需要运行命令`echo GPP0 | sudo tee /proc/acpi/wakeup`来禁用[GPP0](https://forums.linuxmint.com/viewtopic.php?p=2117343)作为resume的事件触发源。Windows下面打开系统日志，查看类型为“Power Troubleshooter”的信息，也可以找到resume的事件触发源。
