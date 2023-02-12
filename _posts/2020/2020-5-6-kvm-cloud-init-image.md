@@ -123,3 +123,9 @@ Directly install from scratch, step by step. the location parameter specific ker
 `virsh domxml-to-native`
 [this command ](https://unix.stackexchange.com/questions/587045/convert-libvirt-xml-into-qemu-command-line) can 
 convert virt instance into a vm creation command.
+
+```
+genisoimage -o image.iso -r /path/to/dir
+virsh attach-disk guest image.iso hdc --driver file --type cdrom --mode readonly
+```
+Use this way to transfer data to VM before network of the VM is ready.
