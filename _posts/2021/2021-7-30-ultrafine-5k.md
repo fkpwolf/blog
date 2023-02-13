@@ -71,11 +71,12 @@ Added support for PRE-BOOT ACL feature (deprecating previous implementation from
 B660M AORUS PRO DDR4，这个板子上面表现也很稳定，没有雷电相关的BUG。看上去 intel 芯片的板子雷电兼容性会好很多，可能是intel firmware做得好。
 
 ### ProArt Z690-Creator
-挺完美的主板，从[这里](https://www.computerdiy.com.tw/asus-proart-z690-creator-wifi_unbox/)的Block diagram看，其雷电口是可以输出集显DP显示的，如果同时接上DP IN，如何切换显示源呢？还是默认接上外接显卡集显就被屏蔽了？
 ![](/images/2021/paroart-z690.png)
+挺完美的主板，从[这里](https://www.computerdiy.com.tw/asus-proart-z690-creator-wifi_unbox/)的Block diagram看，其雷电口是可以输出集显一个DP 1.4 来显示的，中间通过一个Q-SW来切换。板子本身没有DP输出。如果同时接上显卡DP IN，如何切换显示源呢？还是默认接上外接显卡集显就被屏蔽了？
+
 [这里开箱](https://zhuanlan.zhihu.com/p/434899023)显示主控为 JHL8540 ThunderBolt4 控制器。tonymacx86 已经有 macOS 安装[方法](https://www.tonymacx86.com/threads/asus-z690-proart-creator-wifi-thunderbolt-4-i7-12700k-amd-rx-6800-xt.318311/)，虽然我不是很想试。
 
-ProArt Z90 也是同样的高规格，但是ProArt X670就只有一个DP IN。
+ProArt Z790 也是同样的高规格，但是ProArt X670就只有一个DP IN。
 
 ### 雷电 4
 https://www.gigabyte.com/Motherboard/GC-MAPLE-RIDGE-rev-10#kf 这个表明支持5k，我看也是Display Port 1.4。[这个](https://www.asrock.com/MB/Intel/Z590%20Phantom%20Gaming-ITXTB4/index.asp#Specification)也可以。https://www.msi.com/Motherboard/MAG-B560M-MORTAR/Specification 微星这个性价比的选择1x TBT connector (Supports RTD3) 。这个B560M AORUS PRO AX[白雕](https://www.gigabyte.com/Motherboard/B560M-AORUS-PRO-AX-rev-10)也挺好看。
