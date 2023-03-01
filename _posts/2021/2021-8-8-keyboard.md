@@ -12,6 +12,7 @@ typora-root-url: ../../../blog
 * 关于键帽表面材质以及印刷工艺的详细介绍 <https://www.wstx.com/p-20810-1>
 * 现在虽然流行PBT，但是一般PBT虽然不容易打油，更“干燥”，但是感觉粗糙。
 * Filco 圣手87，虽然是ABS键帽，但是比PBT的那种磨砂感更为细腻。不过这在这种很少了。ABS 缺点是更容易打油，但是更容易做出不同色彩和配色的键帽。高端用的都是双色ABS。
+* [KEYCAPS 101](https://www.solutionsinplastic.com/keycaps-101/) from Signature Plastics
 
 ### 轴体
 以是否有段落感区分。如果按下去有明显的咔嚓一声来确认触发，这个就是段落轴。
