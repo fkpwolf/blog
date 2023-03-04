@@ -29,6 +29,8 @@ Windows HiDPI 支持是最好的：
 - 超微[X11SRA](https://www.supermicro.com/en/products/motherboard/X11SRA)有雷电 header，但是 BIOS 不支持，这么多PCI，真是可惜了。[这里说](https://www.chiphell.com/forum.php?mod=viewthread&tid=2153615&extra=page%3D1&mobile=1)可以在没有 header 的超微 X11DPH-T 上面实验成功，奇怪了，多半是默认开启，但是 pre-boot 肯定是没有了。
 - [Pro WS W480-ACE](https://www.asus.com/Motherboards-Components/Motherboards/Workstation/Pro-WS-W480-ACE/)，两 DP IN，支持 CPU 有 10 代，11 代和 Xeon W，不过 PCI 通道数似乎没啥亮点，有点尴尬。
 - AM5 主板[支持情况](https://unikoshardware.com/2022/08/amd-am5-usb4-ic-shortage.html)，需要一个USB4芯片。[技嘉](https://www.techpowerup.com/295196/hands-on-with-the-new-gigabyte-x670-motherboards-at-computex-2022)用的是 ASMedia ASM4242，没有看到DP IN的选项，用的都是 AM5 CPU 新内建的核显。
+- Type-C 显示输出主板，比如[B650I AORUS ULTRA](https://www.gigabyte.com/Motherboard/B650I-AORUS-ULTRA-rev-10#kf)，这个主板也支持3个M.2。这种没有DP IN的用来配合APU很合适，但是可能主板价格比CPU贵。
+- ASRock [Z790 PG-ITX/TB4](https://pg.asrock.com/mb/Intel/Z790%20PG-ITXTB4/index.asp)
 
 ### 雷电扩展卡
 虽然御三家都有雷电控制卡，做的比较好的是[GC-TITAN-RIDGE v2](https://www.gigabyte.com/Motherboard/GC-TITAN-RIDGE-rev-20#kf)和[GC-TITAN-RIDGE](https://www.gigabyte.com/Motherboard/GC-TITAN-RIDGE-rev-10#kf)。居然连 AMD B550 也支持，[B550M AORUS PRO](https://www.gigabyte.com/Motherboard/B550M-AORUS-PRO-rev-10/sp#sp) 感觉这个还可以，DP 接口支持 5K，如果配个 APU 就可以省下显卡钱了。
