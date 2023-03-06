@@ -113,6 +113,7 @@ Moshi USB C to DisplayPort Cable 这跟线也支持 5K，但是就没有USB通�
 * Belkin Thunderbolt 3 Express Dock HD, F4U095，<https://www.belkin.com/th/support-article?articleNum=216428> 没有windows驱动和固件更新下载，据说Windows下面没法PD输出电流，买的有点唐突。
 * Kensington Thunderbolt 4，4 个雷电 4 口，看上去不错，有点像交换机了。
 * [CalDigit THUNDERBOLT 4 ELEMENT HUB](https://www.caldigit.com/zh/thunderbolt-4-element-hub-zh/)，四个雷电口+四个USB type A，更像hub而非扩展坞。如果有多个雷电显示器，这个很适合，其网页也很详细的介绍了兼容性，比如不支持双ultrafine 5k，但是Studio Display可以。如果我把它当成KVM来连接和控制多个PC电脑作为输入，这样避免雷电线的反复插拔，感觉不错。但是如果两台电脑同时开机，这样有两个雷电输入，这个hub会选择那个作为视频输入呢？同样方案的有 Kensington SD2600T Thunderbolt 4 Hub，也是4个雷电口。
+* KVM，[这里](https://www.reddit.com/r/Thunderbolt/comments/fmpyv6/can_someone_recommend_me_a_thunderbolt_3_kvm/)讨论很热烈，其中“Type-C 8K Switch”似乎可行，价格也不贵。
 
 ### Linux
 Fedora suspend 后 resume，雷电下的 USB 鼠标键盘无法工作，重新连接雷电设备也不起作用。B660m AORUS还有suspend后马上resume的问题，需要运行命令`echo GPP0 | sudo tee /proc/acpi/wakeup`来禁用[GPP0](https://forums.linuxmint.com/viewtopic.php?p=2117343)作为resume的事件触发源。Windows下面打开系统日志，查看类型为“Power Troubleshooter”的信息，也可以找到resume的事件触发源。
