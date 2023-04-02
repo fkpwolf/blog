@@ -29,7 +29,7 @@ Windows HiDPI 支持是最好的：
 - 超微[X11SRA](https://www.supermicro.com/en/products/motherboard/X11SRA)有雷电 header，但是 BIOS 不支持，这么多PCI，真是可惜了。[这里说](https://www.chiphell.com/forum.php?mod=viewthread&tid=2153615&extra=page%3D1&mobile=1)可以在没有 header 的超微 X11DPH-T 上面实验成功，奇怪了，多半是默认开启，但是 pre-boot 肯定是没有了。
 - [Pro WS W480-ACE](https://www.asus.com/Motherboards-Components/Motherboards/Workstation/Pro-WS-W480-ACE/)，两 DP IN，支持 CPU 有 10 代，11 代和 Xeon W，不过 PCI 通道数似乎没啥亮点，有点尴尬。
 - AM5 主板[支持情况](https://unikoshardware.com/2022/08/amd-am5-usb4-ic-shortage.html)，需要一个USB4芯片。[技嘉](https://www.techpowerup.com/295196/hands-on-with-the-new-gigabyte-x670-motherboards-at-computex-2022)用的是 ASMedia ASM4242，没有看到DP IN的选项，用的都是 AM5 CPU 新内建的核显。
-- Type-C 显示输出主板，比如[B650I AORUS ULTRA](https://www.gigabyte.com/Motherboard/B650I-AORUS-ULTRA-rev-10#kf)，这个主板也支持3个M.2。这种没有DP IN的用来配合APU很合适，但是可能主板价格比CPU贵。
+- Type-C 显示输出主板，比如[B650I AORUS ULTRA](https://www.gigabyte.com/Motherboard/B650I-AORUS-ULTRA-rev-10#kf)，这个主板也支持3个M.2。这种没有DP IN的用来配合APU很合适，但是可能主板价格比CPU贵。[这里](https://www.reddit.com/r/ASUS/comments/123mgjx/asus_x670ei_supports_lg_ultrafine_5k/)显示可能这种集成显卡的雷电输出方式都包含了两条DisplayPort信号。
 - ASRock [Z790 PG-ITX/TB4](https://pg.asrock.com/mb/Intel/Z790%20PG-ITXTB4/index.asp)
 
 ### 雷电扩展卡
