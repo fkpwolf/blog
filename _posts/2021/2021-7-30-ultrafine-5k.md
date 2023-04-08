@@ -30,13 +30,13 @@ Windows HiDPI 支持是最好的：
 - [Pro WS W480-ACE](https://www.asus.com/Motherboards-Components/Motherboards/Workstation/Pro-WS-W480-ACE/)，两 DP IN，支持 CPU 有 10 代，11 代和 Xeon W，不过 PCI 通道数似乎没啥亮点，有点尴尬。
 - AM5 主板[支持情况](https://unikoshardware.com/2022/08/amd-am5-usb4-ic-shortage.html)，需要一个USB4芯片。[技嘉](https://www.techpowerup.com/295196/hands-on-with-the-new-gigabyte-x670-motherboards-at-computex-2022)用的是 ASMedia ASM4242，没有看到DP IN的选项，用的都是 AM5 CPU 新内建的核显。
 - Type-C 显示输出主板，比如[B650I AORUS ULTRA](https://www.gigabyte.com/Motherboard/B650I-AORUS-ULTRA-rev-10#kf)，这个主板也支持3个M.2。这种没有DP IN的用来配合APU很合适，但是可能主板价格比CPU贵。[这里](https://www.reddit.com/r/ASUS/comments/123mgjx/asus_x670ei_supports_lg_ultrafine_5k/)显示可能这种集成显卡的雷电输出方式都包含了两条DisplayPort信号。
-- ASRock [Z790 PG-ITX/TB4](https://pg.asrock.com/mb/Intel/Z790%20PG-ITXTB4/index.asp)
+- ASRock [Z790 PG-ITX/TB4](https://pg.asrock.com/mb/Intel/Z790%20PG-ITXTB4/index.asp)，没有 DP IN 接口。
 
 ### 雷电扩展卡
 虽然御三家都有雷电控制卡，做的比较好的是[GC-TITAN-RIDGE v2](https://www.gigabyte.com/Motherboard/GC-TITAN-RIDGE-rev-20#kf)和[GC-TITAN-RIDGE](https://www.gigabyte.com/Motherboard/GC-TITAN-RIDGE-rev-10#kf)。居然连 AMD B550 也支持，[B550M AORUS PRO](https://www.gigabyte.com/Motherboard/B550M-AORUS-PRO-rev-10/sp#sp) 感觉这个还可以，DP 接口支持 5K，如果配个 APU 就可以省下显卡钱了。
-https://www.chiphell.com/thread-1955259-1-1.html TITAN RIDGE 不需要雷电header就可以，有时候需要短接。
+TITAN RIDGE 不需要雷电header就可以，有时候需要[短接](https://www.chiphell.com/thread-1955259-1-1.html)。
 Z490支持DP IN的，也就是支持5k输出的是[Z490 VISION D](https://www.gigabyte.com/Motherboard/Z490-VISION-D-rev-1x#kf)。
-https://cn.msi.com/Motherboard/Z490M-S1/Specification 这个主板规格比较完美，不过是微星的，技嘉的扩展卡不知道是否兼容。或者[MAG B460M MORTAR](https://www.msi.com/Motherboard/MAG-B460M-MORTAR) 迫击炮感觉也行，有雷电口5pin JTBT1，这个OC支持的更多 https://heipg.cn/tutorial/b460m-install-big-sur.html。好玩是的从[规格书](https://download.msi.com/archive/mnu_exe/mb/E7C82v1.1.pdf)上看是微星这个板子有两个thunderbolt接口:
+[Z490M-S1](https://cn.msi.com/Motherboard/Z490M-S1/Specification)这个主板规格比较完美，不过是微星的，技嘉的扩展卡不知道是否兼容。或者[MAG B460M MORTAR](https://www.msi.com/Motherboard/MAG-B460M-MORTAR) 迫击炮感觉也行，有雷电口5pin JTBT1，这个OC支持的更多 https://heipg.cn/tutorial/b460m-install-big-sur.html。好玩是的从[规格书](https://download.msi.com/archive/mnu_exe/mb/E7C82v1.1.pdf)上看是微星这个板子有两个thunderbolt接口:
 ![](/images/2021/thunderbolt-port.png)
 GC-TITAN-RIDGE-20的[规格书](https://download.gigabyte.com/FileList/Manual/mb_manual_GC-TITAN-RIDGE-20_1001.pdf)也有这两个接口。Z490/B560M AORUS PRO AX技嘉的板子[也有](https://download.gigabyte.com/FileList/Manual/mb_manual_z490-aorus-pro-ax_1001_e.pdf)两个雷电header，B550M AORUS PRO则只有一个。问题是技嘉的扩展卡和主板都没有详细列出header的定义，所以不确定微星的主板是否和技嘉的扩展卡兼容。这个 RTD3 好像是“[现代待机](https://zhuanlan.zhihu.com/p/114448236)”（[Modern Standby](https://graniteriverlabs.com.tw/2021/04/07/grl-ap-tbt-fv-modern-standby/)）的东西。
 
