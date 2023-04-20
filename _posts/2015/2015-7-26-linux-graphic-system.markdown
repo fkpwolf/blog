@@ -51,7 +51,7 @@ COMMAND    PID USER  FD   TYPE DEVICE SIZE/OFF    NODE NAME
 gnome-she 1205  fan mem    REG    8,1   105520 3439743 /usr/lib/libevdev.so.2.1.21
 ```
 
-[DRM](https://en.wikipedia.org/wiki/Direct_Rendering_Manager) 允许多个程序使用统一的接口来同时使用 GPU。DRM 获得对 Video Card 的独占访问权限，它负责初始化和维护命令队列、Video RAM 以及其他相关的硬件资源。<https://book.iyounix.com/device-porting/drm/linux-drm-1-display-server-history.html>. `amd-gpu` 是AMD显卡的内核驱动模块，"One of the key interfaces used by the amdgpu module is the Direct Rendering Manager (DRM) subsystem, which provides a standardized interface for user-space applications to access the GPU hardware. The amdgpu driver registers itself as a DRM driver, which allows it to handle requests from user-space applications that use the OpenGL or Vulkan APIs for 3D graphics rendering." by ChatGPT. I can see `drm_buddy` and `drm_display_helper` modules depend on `amd_gpu` module.
+[DRM](https://en.wikipedia.org/wiki/Direct_Rendering_Manager) 允许多个程序使用统一的接口来同时使用 GPU。DRM 获得对 Video Card 的独占访问权限，它负责初始化和维护命令队列、Video RAM 以及其他相关的硬件资源。<https://book.iyounix.com/device-porting/drm/linux-drm-1-display-server-history.html>. `amd-gpu` 是AMD显卡的内核驱动模块，"One of the key interfaces used by the amdgpu module is the Direct Rendering Manager (DRM) subsystem, which provides a standardized interface for user-space applications to access the GPU hardware. The amdgpu driver registers itself as a DRM driver, which allows it to handle requests from user-space applications that use the OpenGL or Vulkan APIs for 3D graphics rendering." by ChatGPT. I can see `drm_buddy` and `drm_display_helper` modules depend on `amd_gpu` module. For Intel graphic device like Arc A750, the driver is `i915`.
 
 [DRI](https://en.wikipedia.org/wiki/Direct_Rendering_Infrastructure) 似乎只有 X 才会使用
 
