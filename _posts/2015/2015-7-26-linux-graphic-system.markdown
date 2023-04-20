@@ -51,7 +51,7 @@ COMMAND    PID USER  FD   TYPE DEVICE SIZE/OFF    NODE NAME
 gnome-she 1205  fan mem    REG    8,1   105520 3439743 /usr/lib/libevdev.so.2.1.21
 ```
 
-[DRM](https://en.wikipedia.org/wiki/Direct_Rendering_Manager) 允许多个程序同时使用 GPU。DRM 获得对 Video Card 的独占访问权限，它负责初始化和维护命令队列、Video RAM 以及其他相关的硬件资源。<https://book.iyounix.com/device-porting/drm/linux-drm-1-display-server-history.html>
+[DRM](https://en.wikipedia.org/wiki/Direct_Rendering_Manager) 允许多个程序使用统一的接口来同时使用 GPU。DRM 获得对 Video Card 的独占访问权限，它负责初始化和维护命令队列、Video RAM 以及其他相关的硬件资源。<https://book.iyounix.com/device-porting/drm/linux-drm-1-display-server-history.html>. `amd-gpu` 是AMD显卡的内核驱动模块，"One of the key interfaces used by the amdgpu module is the Direct Rendering Manager (DRM) subsystem, which provides a standardized interface for user-space applications to access the GPU hardware. The amdgpu driver registers itself as a DRM driver, which allows it to handle requests from user-space applications that use the OpenGL or Vulkan APIs for 3D graphics rendering." by ChatGPT. I can see `drm_buddy` and `drm_display_helper` modules depend on `amd_gpu` module.
 
 [DRI](https://en.wikipedia.org/wiki/Direct_Rendering_Infrastructure) 似乎只有 X 才会使用
 
@@ -60,7 +60,7 @@ gnome-she 1205  fan mem    REG    8,1   105520 3439743 /usr/lib/libevdev.so.2.1.
 <https://en.wikipedia.org/wiki/Mesa_(computer_graphics)> 开源的显卡驱动，是OpenGL, ES, EGL, Vulkan的软件实现。运行 glxinfo 可以得到：
 OpenGL vendor string: Intel Open Source Technology Center
 OpenGL renderer string: Mesa DRI Intel(R) Sandybridge Server
-EGL 是 OpenGL ES 渲染 API 和本地窗口系统(native platform window system)之间的一个[中间接口层](https://woshijpf.github.io/android/2017/09/04/Android系统图形栈OpenGLES和EGL介绍.html)，通过调用 eglCreateWindowSurface 提供给 OpenGL 一个 surface / 画布，还做 front buffer 和 back buffer 之间的切换 eglSwapBuffer。如此看来 EGL 做了相当多的事情了，而 wayland 只是处理了鼠标键盘事件？
+EGL 是 OpenGL ES 渲染 API 和本地窗口系统(native platform window system)之间的一个[中间接口层](https://woshijpf.github.io/android/2017/09/04/Android系统图形栈OpenGLES和EGL介绍.html)，通过调用 eglCreateWindowSurface 提供给 OpenGL 一个 surface / 画布，还做 front buffer 和 back buffer 之间的切换 eglSwapBuffer。如此看来 EGL 做了相当多的事情了，而 Wayland 只是处理了鼠标键盘事件？
 
 ### Compositor
 <https://en.wikipedia.org/wiki/Compositing_window_manager> A compositing window manager, or compositor, is a window manager that provides applications with an off-screen buffer for each window. The window manager composites the window buffers into an image representing the screen and writes the result into the display memory. 对于 EGL 部分，就交给 libGL 了。<https://en.wikipedia.org/wiki/Mutter_(software)> Gnome3 默认的管理器。
