@@ -124,7 +124,7 @@ libglw1-mesa-dev - GL widget library for Athena and Motif -- development files
 
 ![wayland5](/images/2015/wayland5.png)
 
-这个对比更为清楚。主要是对于普通 X11 application，所有的渲染操作都是 server 完成，client 只发送消息，这属于典型 C/S 模式，性能会有额外开销。Wayland 则是自己直接渲染。
+这个对比更为清楚。主要是对于普通 X11 application，所有的渲染操作都是 server 完成，client 只发送消息，这属于典型 C/S 模式，性能会有额外开销。Wayland 则是自己直接通过调用EGL来渲染，渲染完成后用wayland protocal通知compositor特定区域已经被更新。所以Wayland protocol 只是high-level API，用来处理显示和用户输入。
 
 ### 树莓派
 <https://github.com/anholt/mesa/wiki/VC4> Enabling the driver is controlled using raspi-config. Select Advanced Options option and then GL Driver.
