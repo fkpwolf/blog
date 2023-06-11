@@ -8,6 +8,7 @@ typora-root-url: ../../../blog
 ---
 ### Image list
 - Ubuntu <https://cloud-images.ubuntu.com/> .img是给QEUM和KVM用，.vhd是给Azure用，vmdk是给Vmware用。一般这些是在 OpenStack 这样的 IaaS 平台上面使用。这里描述如何在安装有 KVM 的普通 Linux 机器上面使用这些 Image。
+- Debian <https://cloud.debian.org/images/cloud/>
 - Fedora <https://cloud.fedoraproject.org/> Fedora cloud image，比 Ubuntu 兼容性好。
 - OpenSuse <https://get.opensuse.org/leap/> Jeos is for cloud. Leap is normal version, Tumbleweed is rolling update. openSUSE MicroOS is a variant of openSUSE Tumbleweed and serves as a base of openSUSE Kubic, a Container as a Service platform. Guide of kubeadm’s installation container runtimes uses Tumbleweed. `KVM and XEN` version of JeOS image is cool: need interactive installation and it is fast. Doesn’t need extra disk for OS so boot image is enough. `OpenStack-Cloud` filesystem is xfs and 1G size. `KVM and XEN` filesystem is btrfs and 26G size. But Tumbleweed `KVM` version didn't have igbvf driver. Crazy! Need `zypper install kernel-default`. It is 5.11.11. So what is stock or default kernel version?
 - Centos Stream <https://cloud.centos.org/centos/>
@@ -58,6 +59,8 @@ Kernel driver name, corresponding to the DRIVER udev property. Globs are support
 但是其cloud-init log里面有错误：AttributeError: 'NoneType' object has no attribute 'iter_interfaces'
 嗯，centos呢？也是一样的错误。发现 centos7 (kernel v3.10) vm 启动很快，比 ubuntu 16.04 快多了。[16.04 cloud image hangs at first boot](https://bugs.launchpad.net/cloud-images/+bug/1573095)，原来这个和 TTY有关系。但是我看 virt-manager 默认已经帮我生成好了啊。又尝试了下 Debian cloud image，也很快。
 仔细查看上面 v2 文档，发现其需要 netplan，这样只有 Ubuntu 17.10 支持了？v1 我试过是可以的，但是其只能用 mac 地址匹配。
+
+对于Ubuntu/Debian，手工修改 /etc/netplan/50-cloud-init.yaml 这个文件即可，不需要额外运行命令 netplan。
 
 为什么每次启动 vm 后其virtual function mac地址会变呢？算了，最后我还是自己修改 os 配置为静态 ip 地址。对于 Centos，要删除 /etc/sysconfig/network-scripts/ifcfg-ens3 文件里面的 HWADDR=xxx 和 BOOTPROTO=dhcp。
 
