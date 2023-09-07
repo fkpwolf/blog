@@ -78,7 +78,9 @@ B660M AORUS PRO DDR4，这个板子上面表现也很稳定，没有雷电相关
 
 [这里开箱](https://zhuanlan.zhihu.com/p/434899023)显示主控为 JHL8540 ThunderBolt4 控制器。tonymacx86 已经有 macOS 安装[方法](https://www.tonymacx86.com/threads/asus-z690-proart-creator-wifi-thunderbolt-4-i7-12700k-amd-rx-6800-xt.318311/)，虽然我不是很想试。
 
-ProArt Z790 也是同样的高规格，但是ProArt X670就只有一个DP IN。
+ProArt Z790 也是同样的高规格，但是ProArt X670就只有一个DP IN，感觉这个是无法驱动Ultrafine 5K 显示器的。
+![](/images/2021/ASRock_X670E-Taichi-block-diagram.jpg)
+X670E太极没有DP IN，但是把两个CPU集成的显卡DP信号输出到了雷电口，所以这个应该可以直接能点亮 Ultrafine 5K 显示器。缺点在于集成显卡有点弱，没法像外接显卡那样能够升级。
 
 ### 雷电 4
 https://www.gigabyte.com/Motherboard/GC-MAPLE-RIDGE-rev-10#kf 这个表明支持5k，我看也是Display Port 1.4。[这个](https://www.asrock.com/MB/Intel/Z590%20Phantom%20Gaming-ITXTB4/index.asp#Specification)也可以。https://www.msi.com/Motherboard/MAG-B560M-MORTAR/Specification 微星这个性价比的选择1x TBT connector (Supports RTD3) 。这个B560M AORUS PRO AX[白雕](https://www.gigabyte.com/Motherboard/B560M-AORUS-PRO-AX-rev-10)也挺好看。
