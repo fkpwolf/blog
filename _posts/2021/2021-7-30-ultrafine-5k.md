@@ -110,6 +110,8 @@ Moshi USB C to DisplayPort Cable 这跟线也支持 5K，但是就没有USB通�
 
 [Type-C 扩展器 方案参考（Thunderbolt Alternative Mode 篇）](https://zhuanlan.zhihu.com/p/390425571) 专业的雷电分析，作者雷电系列和拆解也不错。
 
+有的显卡自带Type-c接口，比如RX 6800XT，[这里的兼容报告](https://www.sonnettech.com/product/amd-radeon-rx6800xt-bundles/techspecs.html)表明这种接口可以直接驱动 5k 显示器，但是显示器上面的USB设备比如摄像头无法识别。
+
 ### 雷电扩展坞
 * HP雷电扩展坞 [HP Elite 65W Thunderbolt 3 Dock](https://support.hp.com/us-en/drivers/selfservice/hp-elite-thunderbolt-3-65w-dock/9822172)，如果接usb键盘鼠标，冷启动OpenCore中无法操作键盘鼠标，重启可以操作。这个扩展坞在 x86 Mac下面无法免驱，但是在 m1 Mac mini下面是免驱的。为什么 ultrafine 的usb键盘可以操作呢？usb 2.0 hub？ultrafine也不是所有情况都可以：只有windows关机和重启后才可以。如果是linux关机后开机，一样问题。上面的ASM1042A要到HP官网上才能下载驱动，Windows 默认没有带驱动，真是辣鸡啊，VGA 口也很碍眼，后来出了。
 * Belkin Thunderbolt 3 Express Dock HD, F4U095，<https://www.belkin.com/th/support-article?articleNum=216428> 没有windows驱动和固件更新下载，据说Windows下面没法PD输出电流，买的有点唐突。
