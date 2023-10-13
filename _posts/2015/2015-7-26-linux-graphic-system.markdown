@@ -126,12 +126,17 @@ libglw1-mesa-dev - GL widget library for Athena and Motif -- development files
 
 这个对比更为清楚。主要是对于普通 X11 application，所有的渲染操作都是 server 完成，client 只发送消息，这属于典型 C/S 模式，性能会有额外开销。Wayland 则是自己直接通过调用EGL来渲染，渲染完成后用wayland protocal通知compositor特定区域已经被更新。所以Wayland protocol 只是high-level API，用来处理显示和用户输入。
 
+[https://wiki.archlinux.org/title/wayland] list of different Compositors: Tiling and Stacking.
+
+[What are the best Wayland compositors?](https://www.slant.co/topics/11023/~wayland-compositors) shows the best one is [Sway](https://swaywm.org/).
+
 ### 树莓派
 <https://github.com/anholt/mesa/wiki/VC4> Enabling the driver is controlled using raspi-config. Select Advanced Options option and then GL Driver.
 Raspbian only supports vc4 on the Raspberry PI 2 and later. The driver supports Raspberry Pi 1, but raspi-config refuses to do it.
 
-<https://www.collabora.com/news-and-blog/blog/2016/06/03/running-weston-on-a-raspbian/> 只有少量程序可以运行
+Raspberry Pi OS now uses Wayland (instead of X11) with Wayfire (instead of Mutter) by default on Raspberry Pi 4 and Raspberry Pi 5. <https://wayfire.org/>
 
+<https://www.collabora.com/news-and-blog/blog/2016/06/03/running-weston-on-a-raspbian/> 只有少量程序可以运行
 
 Evolution in Flatpak <https://wiki.gnome.org/Apps/Evolution/Flatpak>
 As of Evolution release 3.30.0, users can build the latest stable (or development) version of Evolution using Flatpak.As of Evolution release 3.30.0, users can build the latest stable (or development) version of Evolution using Flatpak.
