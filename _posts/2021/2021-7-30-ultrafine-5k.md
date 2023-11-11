@@ -124,9 +124,9 @@ Moshi USB C to DisplayPort Cable 这跟线也支持 5K，但是就没有USB通�
 ### Linux
 Fedora suspend 后 resume，雷电下的 USB 鼠标键盘无法工作，重新连接雷电设备也不起作用。B660m AORUS还有suspend后马上resume的问题，需要运行命令`echo GPP0 | sudo tee /proc/acpi/wakeup`来禁用[GPP0](https://forums.linuxmint.com/viewtopic.php?p=2117343)作为resume的事件触发源。Windows下面打开系统日志，查看类型为“Power Troubleshooter”的信息，也可以找到resume的事件触发源。
 
-但在Windows 11上面休眠正常，而Fedora在冥王峡谷上面也休眠正常。似乎是Linux对于AMD平台电源管理支持还不够完善。
+但在Windows 11上面休眠正常，而Fedora在冥王峡谷上面也休眠正常。似乎是Linux对于AMD平台电源管理支持还不够完善。B650M AORUS ELITE AX, BIOS F3h，在Linux 6.1.6内核下终于休眠正常。
 
-B650M AORUS ELITE AX, BIOS F3h，在Linux 6.1.6内核下终于休眠正常。
+显示器 Linux 下的亮度调节可以看[这里](https://www.feliciano.tech/blog/lg-ultrafine-brightness-linux/)，需要安装一个`ddcutil`的工具。
 
 ### Mac
 苹果自身设备兼容性理应是最好的。
