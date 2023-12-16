@@ -133,6 +133,26 @@ ddcutil getvcp 0x10 # Get brightness. Ref https://www.ddcutil.com/monitor_notes/
 ddcutil setvcp 10 + 25 # Increase brightness
 ```
 
+Linux 有个命令`boltctl`可以显示雷电设备连接状况。
+```
+ ● CE-LINK TB4-Dock01
+   ├─ type:          peripheral
+   ├─ name:          TB4-Dock01
+   ├─ vendor:        CE-LINK
+   ├─ uuid:          08aa8780-00f8-81e8-ffff-ffffffffffff
+   ├─ generation:    USB4
+   ├─ status:        authorized
+   │  ├─ domain:     ef693804-91cd-ee10-ffff-ffffffffffff
+   │  ├─ rx speed:   40 Gb/s = 2 lanes * 20 Gb/s
+   │  ├─ tx speed:   40 Gb/s = 2 lanes * 20 Gb/s
+   │  └─ authflags:  boot
+   ├─ authorized:    2023年12月16日 星期六 03时12分19秒
+   ├─ connected:     2023年12月16日 星期六 03时12分19秒
+   └─ stored:        2023年12月12日 星期二 09时48分51秒
+      ├─ policy:     auto
+      └─ key:        no
+```
+
 ### Mac
 苹果自身设备兼容性理应是最好的。
 
