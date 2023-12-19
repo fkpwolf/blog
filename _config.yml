@@ -12,6 +12,7 @@ kramdown:
   input: GFM
   hard_wrap: false
 highlighter: rouge
+theme: minima
 gems:
   - jekyll-coffeescript
   - jekyll-paginate
