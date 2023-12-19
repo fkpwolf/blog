@@ -13,6 +13,8 @@ kramdown:
   hard_wrap: false
 highlighter: rouge
 theme: minima
+minima:
+  skin: auto
 gems:
   - jekyll-coffeescript
   - jekyll-paginate
