@@ -57,7 +57,7 @@ main.c:40:20: 致命错误：string.h：没有那个文件或目录 https://bugz
 
 ### OpenWrt 
 
-I download file openwrt-19.07.3-mvebu-cortexa53-globalscale_espressobin-ext4-sdcard.img.gz from https://downloads.openwrt.org/releases/19.07.3/targets/mvebu/cortexa53/ and flash it into SD card firstly.
+I download file `openwrt-19.07.3-mvebu-cortexa53-globalscale_espressobin-ext4-sdcard.img.gz` from <https://downloads.openwrt.org/releases/19.07.3/targets/mvebu/cortexa53/> and flash it into SD card firstly.
 if boot into eMMC, run `run bootcmd_mmc0` in uboot to boot from sd card. But soon I found in OpenWrt I can't find eMMC disk, only sd card.
 I realise that I need openwrt-19.07.3-mvebu-cortexa53-globalscale_espressobin-emmc-ext4-sdcard.img.gz. This type of Openwrt can detect eMMC. So the later image can be only used on the eMMC board? Otherwise it is not necessary to create two different images.
 Now I am in SD card OpenWrt, flash image by `dd if=xxx.img of=/dev/mmcblk1 bs=10M`. Reboot and get error:
@@ -85,6 +85,7 @@ oh, I should run `dd if=xxx.img of=/dev/mmcblk0 bs=10M`. In OpenWrt, the device 
 eMMC resize
 eMMC can't be detected under Armbian. And OpenWrt(eMMC version) didn't have appropriate tool like `diskpat`.
 
+### PCIe
 To enable my mini PCIE-e Atheros AR928X Wireless, I need install following package:
 * ath9k-htc-firmware
 * kmod-ath9k
@@ -101,5 +102,5 @@ sata 接了个 SSD，感觉速度还可以：
 samba 拷贝能到 80 MB/s，没有仔细测试。
 
 ![Image](/images/2018/ESPRESSObin-run.jpg)
-这个是当前的使用状态，接了个mini PCIE网卡，一块笔记本硬盘。对比BPI-R2或者BPI-R64，优点在于已经有很
+上图是当前的使用状态，接了个mini PCIE网卡，一块笔记本硬盘。对比BPI-R2或者BPI-R64，优点在于已经有很
 稳定的、官方的OpenWrt版本可以使用，这点很重要，因为我不想每次安装一个新的包的时候都需要自己编译。
