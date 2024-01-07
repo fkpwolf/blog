@@ -82,8 +82,18 @@ Now I am in SD card OpenWrt, flash image by `dd if=xxx.img of=/dev/mmcblk1 bs=10
 
 oh, I should run `dd if=xxx.img of=/dev/mmcblk0 bs=10M`. In OpenWrt, the device is eMMC. Then boot OK.
 
-eMMC resize
-eMMC can't be detected under Armbian. And OpenWrt(eMMC version) didn't have appropriate tool like `diskpat`.
+To resize eMMC, enlarge the OpenWrt image file before flashing, or run following commands after flashed:
+
+    # blkid
+    /dev/mmcblk0p1: LABEL="kernel" UUID="84173db5-fa99-e35a-95c6-28613cc79ea9" BLOCK_SIZE="4096" TYPE="ext4" PARTUUID="0ba8884c-01"
+    /dev/mmcblk0p2: LABEL="rootfs" UUID="ff313567-e9f1-5a5d-9895-3ba130b4a864" BLOCK_SIZE="4096" TYPE="ext4" PARTUUID="0ba8884c-02"
+    # parted -s /dev/mmcblk0 resizepart 2 100%
+    # losetup /dev/loop1 /dev/mmcblk0p2
+    [  152.963916] loop1: detected capacity change from 0 to 7696384
+    # resize2fs -f /dev/loop1
+    resize2fs 1.47.0 (5-Feb-2023)
+    Resizing the filesystem on /dev/loop1 to 962048 (4k) blocks.
+    The filesystem on /dev/loop1 is now 962048 (4k) blocks long.
 
 ### PCIe
 To enable my mini PCIE-e Atheros AR928X Wireless, I need install following package:
