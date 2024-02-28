@@ -145,7 +145,9 @@ modify _vimrc in home directory:
 ```
 set guifont=Cascadia_Code:h9
 set guioptions -=T
+set mouse=
 ```
+This configuration disables mouse support in Vim, which should prevent accidental entry into visual mode when pasting text.
 
 CNTRL+ALT & F1 through F6 you have 7 virtual consoles the seventh is reserved for X.
 
