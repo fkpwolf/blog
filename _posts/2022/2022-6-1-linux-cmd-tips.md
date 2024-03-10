@@ -8,7 +8,6 @@ typora-root-url: ../../../blog
 ---
 ### System Info
 Neofetch is a command-line system information tool written in bash 3.2+. Neofetch displays information about your operating system, software and hardware in an aesthetic and visually pleasing way. 
-
 Neofetch has lots of dependency. An alternative is screenfetch.
 
 `lsb_release -a` show linux release version and codename
@@ -26,15 +25,15 @@ Mac always ok on Chinese.
 `dpkg --get-selections | grep java` find which package provides java command
 
 ### TTY Device
-screen /dev/ttyUSB0 115200
-screen -L /dev/tty.SLAB_USBtoUART 115200 — will generate a log file screenlog.0 in current directory.
+    screen /dev/ttyUSB0 115200
+    screen -L /dev/tty.SLAB_USBtoUART 115200 — will generate a log file screenlog.0 in current directory.
 To activate screen logging function, just press “Ctrl-A” and “H“. (Please be careful, we use capital ‘H’ letter. Using non capital ‘h’, will only create a screenshot of screen in another file named hardcopy).
-Ctrl-A, d — will detach from current, but screen still run background. Mac will not release TTL device. If want to attach again, use “screen -r”.
-Ctrl-A, : — will enter command mode, run “quit” will exit completely.
+
+    Ctrl-A, d — will detach from current, but screen still run background. Mac will not release TTL device. If want to attach again, use “screen -r”.
+    Ctrl-A, : — will enter command mode, run “quit” will exit completely.
 
 `picocom -b 115200 -f h /dev/ttyS0`
-To exit, C-a, C-x
-compared with screen, picocom can view output history.
+To exit, C-a, C-x. Compared with screen, picocom can view output history.
 
 no permission to access tty device:
 ```
@@ -50,7 +49,7 @@ ssh user@host <<'ENDSSH'
 #commands to run on remote host
 ENDSSH
 
-Example of .ssh/config 
+Example of `.ssh/config`
 ```
 Host 192.168.51.3* f*
     User fedora 
@@ -60,7 +59,7 @@ Host f1
 Host * 
     User fan
 ```
-More details about the config, check https://deepzz.com/post/how-to-setup-ssh-config.html
+More details about the config, check <https://deepzz.com/post/how-to-setup-ssh-config.html>
 
 "permissions are too open” error : `chmod 400 ~/.ssh/id_rsa`
 
@@ -112,13 +111,15 @@ $ sudo usermod -aG users your_username
 $ groups #logout and login
 ```
 
-Check SATA speed smartctl -a /dev/sda 
-nvme-cli package
+Check SATA speed `smartctl -a /dev/sda`
+nvme-cli:
+```bash
 sudo nvme list
 sudo nvme smart-log /dev/nvme0n1
+```
 
 Samba sometimes need create user: `smbpasswd -a linuxsir`. 'root' user is not permitted. Sometimes need `chmod 777 /mnt/sda1` if only read & can’t write.
-New samba looks having better UX: just add/append below to /etc/samba/smb.conf. Then ok. Restart is not needed.
+New samba looks having better UX: just add/append to /etc/samba/smb.conf. Then ok. Restart is not needed.
 
 ### Network
 Ubuntu: netplan
@@ -148,9 +149,11 @@ https://rook.io/docs/rook/v1.6/ceph-teardown.html another way to run command wit
 
 ![Image](/images/2022/bash.png)
 
+### Dev Env
+Ubunt: `sudo apt install build-essential`. Centos: `sudo yum groupinstall "Development Tools"`.
+
 ### Others
-Vim
-modify _vimrc in home directory:
+Vim, modify _vimrc in home directory:
 ```
 set guifont=Cascadia_Code:h9
 set guioptions -=T
@@ -158,16 +161,15 @@ set mouse=
 ```
 This configuration disables mouse support in Vim, which should prevent accidental entry into visual mode when pasting text.
 
-CNTRL+ALT & F1 through F6 you have 7 virtual consoles the seventh is reserved for X.
+CNTRL+ALT+F1(F2) through F6 you have 7 virtual consoles the seventh is reserved for X.
 
-Edit this file /etc/dhcp/dhclient.conf and set timeout to a reasonable value, like
-    timeout 15
+Edit this file /etc/dhcp/dhclient.conf and set timeout to a reasonable value, like `timeout 15`.
 The default value of 300 seconds is way too high. The suggested replacement value of 15 was tested and works fine.
 
 `echo -n "STRING" | base64`
 -n is to avoid a new line character on the end of the line.
 
-linux nohup http://kumu-linux.github.io/blog/2013/08/06/tmux/
+linux nohup <http://kumu-linux.github.io/blog/2013/08/06/tmux/>
 
 mutliply download tool: `axel`. It also can be used in MacOS.
 
@@ -178,8 +180,8 @@ Most digital cameras and cell phone add EXIF metadata to the images. EXIF metada
 
 STDERR (standard error) in UNIX and UNIX-like systems is redirected using 2> instead of a single chevron (>). `gpc xxx.pas 2> error.txt`
 
-https://www.cyberciti.biz/faq/what-process-has-open-linux-port/
+<https://www.cyberciti.biz/faq/what-process-has-open-linux-port/>
 
-https://linux.cn/article-5608-1.html 
+<https://linux.cn/article-5608-1.html>
 
 Check service recent log: `journalctl -u docker -f`
