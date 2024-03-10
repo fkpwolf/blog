@@ -101,7 +101,16 @@ chmod 755, 644, 700  http://learn-web-hosting-domain-name.mygreatname.com/chmod-
 who use this file : `fuser file -v`
 
 ### Disk
-https://askubuntu.com/questions/587247/how-to-create-a-ext4-partition-for-all-users
+<https://askubuntu.com/questions/587247/how-to-create-a-ext4-partition-for-all-users>
+```bash
+$ cat /etc/fstab
+UUID=019fb0f8-.... /mnt	xfs defaults 0 0
+$ sudo mount -a
+$ sudo chown -R :users /mnt
+$ sudo chmod -R g+rw /mnt
+$ sudo usermod -aG users your_username
+$ groups #logout and login
+```
 
 Check SATA speed smartctl -a /dev/sda 
 nvme-cli package
