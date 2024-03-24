@@ -82,8 +82,12 @@ ProArt Z790 也是同样的高规格，但是ProArt X670就只有一个DP IN，�
 ![](/images/2021/ASRock_X670E-Taichi-block-diagram.jpg)
 X670E太极没有DP IN，但是把两个CPU集成的显卡DP信号输出到了雷电口，所以这个应该可以直接能点亮 Ultrafine 5K 显示器。缺点在于集成显卡有点弱，没法像外接显卡那样能够升级。
 
+### NUC
+NUC 设备一般都配有双雷电口，但是基本上都是连接的集成显卡DP输出，即使像蝰蛇峡谷这种配备 A770M 独立显卡的也不例外。只有冥王峡谷雷电口是直连的Radeon显卡。
+当然，即使非直连的输出也能使用独立显卡的资源，这和游戏笔记本一样。
+
 ### 雷电 4
-https://www.gigabyte.com/Motherboard/GC-MAPLE-RIDGE-rev-10#kf 这个表明支持5k，我看也是Display Port 1.4。[这个](https://www.asrock.com/MB/Intel/Z590%20Phantom%20Gaming-ITXTB4/index.asp#Specification)也可以。https://www.msi.com/Motherboard/MAG-B560M-MORTAR/Specification 微星这个性价比的选择1x TBT connector (Supports RTD3) 。这个B560M AORUS PRO AX[白雕](https://www.gigabyte.com/Motherboard/B560M-AORUS-PRO-AX-rev-10)也挺好看。
+[Maple Ridge](https://www.gigabyte.com/Motherboard/GC-MAPLE-RIDGE-rev-10) 这个表明支持5k，我看也是Display Port 1.4。[这个](https://www.asrock.com/MB/Intel/Z590%20Phantom%20Gaming-ITXTB4/index.asp#Specification)也可以。https://www.msi.com/Motherboard/MAG-B560M-MORTAR/Specification 微星这个性价比的选择1x TBT connector (Supports RTD3) 。这个B560M AORUS PRO AX[白雕](https://www.gigabyte.com/Motherboard/B560M-AORUS-PRO-AX-rev-10)也挺好看。
 [Asus Thunderbolt EX3-TR](https://www.asus.com.cn/support/FAQ/1043485/)，新版本，居然不支持mATX的板子。14-1 pin Thunderbolt，这个只有asus板子才有这个规格吧。
 
 雷电4对比3虽然带宽一样，但是：
