@@ -82,9 +82,14 @@ ProArt Z790 也是同样的高规格，但是ProArt X670就只有一个DP IN，�
 ![](/images/2021/ASRock_X670E-Taichi-block-diagram.jpg)
 X670E太极没有DP IN，但是把两个CPU集成的显卡DP信号输出到了雷电口，所以这个应该可以直接能点亮 Ultrafine 5K 显示器。缺点在于集成显卡有点弱，没法像外接显卡那样能够升级。
 
-### NUC
+### NUC / 迷你小主机 / 笔记本
 NUC 设备一般都配有双雷电口，但是基本上都是连接的集成显卡DP输出，即使像蝰蛇峡谷这种配备 A770M 独立显卡的也不例外。只有冥王峡谷雷电口是直连的Radeon显卡。
 当然，即使非直连的输出也能使用独立显卡的资源，这和游戏笔记本一样。
+
+AMD 7840HS 小主机最近很流行，比如零刻 GTR7 配备了两个USB4.0接口，实测可以驱动这块5K显示器。
+
+最近发布的 [Intel Core Ultra](https://www.anandtech.com/show/21282/intel-core-ultra-7-115h-review-meteor-lake-makes-makes-fresh-start-to-mobile-cpus) 带有 4 个雷电4接口，很恐怖（两条PCIe X4的带宽给雷电输出？）。
+不过一般笔记本不会全部配齐，我看现在只有 ThinkBook X 2024 配备了3个雷电口。如果这个CPU做成迷你小主机，扩展无敌了。
 
 ### 雷电 4
 [Maple Ridge](https://www.gigabyte.com/Motherboard/GC-MAPLE-RIDGE-rev-10) 这个表明支持5k，我看也是Display Port 1.4。[这个](https://www.asrock.com/MB/Intel/Z590%20Phantom%20Gaming-ITXTB4/index.asp#Specification)也可以。https://www.msi.com/Motherboard/MAG-B560M-MORTAR/Specification 微星这个性价比的选择1x TBT connector (Supports RTD3) 。这个B560M AORUS PRO AX[白雕](https://www.gigabyte.com/Motherboard/B560M-AORUS-PRO-AX-rev-10)也挺好看。
