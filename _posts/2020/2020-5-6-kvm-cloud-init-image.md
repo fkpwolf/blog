@@ -64,6 +64,9 @@ Kernel driver name, corresponding to the DRIVER udev property. Globs are support
 
 为什么每次启动 vm 后其virtual function mac地址会变呢？算了，最后我还是自己修改 os 配置为静态 ip 地址。对于 Centos，要删除 /etc/sysconfig/network-scripts/ifcfg-ens3 文件里面的 HWADDR=xxx 和 BOOTPROTO=dhcp。
 
+手工配置IP为DHCP的方法：
+1. Debian, edit `/etc/systemd/network/enp1s0.network` file
+
 ### Resize image
 Ubuntu cloud image's default size is 2GB. You can use `qemu-img info a.img` to check details. To resize it:
 
