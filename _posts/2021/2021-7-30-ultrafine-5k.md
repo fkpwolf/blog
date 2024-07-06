@@ -31,7 +31,7 @@ Windows HiDPI 支持是最好的：
 - AM5 主板[支持情况](https://unikoshardware.com/2022/08/amd-am5-usb4-ic-shortage.html)，需要一个USB4芯片。[技嘉 X670E Aero D](https://www.techpowerup.com/295196/hands-on-with-the-new-gigabyte-x670-motherboards-at-computex-2022)用的是 ASMedia ASM4242，没有看到DP IN的选项，用的都是 AM5 CPU 新内建的核显。不过这块主板看来是难产了。[MSI USB4 Expansion Card MS-4489](https://www.techpowerup.com/309532/msi-first-motherboard-maker-to-offer-usb4-add-in-card-with-100-w-usb-pd)用的也是ASM4242，这卡现在叫[USB4 PD100W EXPANSION CARD](https://www.msi.com/PC-Component/USB4-PD100W-EXPANSION-CARD/Overview)。华硕也出了款[USB4 PCIE GEN4 CARD](https://www.asus.com/motherboards-components/motherboards/accessories/usb4-pcie-gen4-card/techspec/)。
 - Type-C 显示输出主板，比如[B650I AORUS ULTRA](https://www.gigabyte.com/Motherboard/B650I-AORUS-ULTRA-rev-10#kf)，这个主板也支持3个M.2。这种没有DP IN的用来配合APU很合适，但是可能主板价格比CPU贵。[这里](https://www.reddit.com/r/ASUS/comments/123mgjx/asus_x670ei_supports_lg_ultrafine_5k/)显示可能这种集成显卡的雷电输出方式都包含了两条DisplayPort信号。
 - ASRock [Z790 PG-ITX/TB4](https://pg.asrock.com/mb/Intel/Z790%20PG-ITXTB4/index.asp)，没有 DP IN 接口。
-- [B650E AORUS PRO X USB4](https://www.gigabyte.com/Motherboard/B650E-AORUS-PRO-X-USB4-rev-10) 使用[ASM4242](https://unikoshardware.com/2024/06/gigabyte-b650e-aorus-and-x870e-leak.html)连接CPU的PCIe通道。其实就是超级雕的一个m.2口接了ASM4242，不知道对比AMD 800系列主板是否有优势。
+- [B650E AORUS PRO X USB4](https://www.gigabyte.com/Motherboard/B650E-AORUS-PRO-X-USB4-rev-10) 使用[ASM4242](https://unikoshardware.com/2024/06/gigabyte-b650e-aorus-and-x870e-leak.html)连接CPU的PCIe通道。其实就是超级雕的一个cpu m.2口接了ASM4242，但是没有DP IN。这个主板也带 thb header，所以可以组成 4 雷电接口。
 
 ### 雷电扩展卡
 虽然御三家都有雷电控制卡，做的比较好的是[GC-TITAN-RIDGE v2](https://www.gigabyte.com/Motherboard/GC-TITAN-RIDGE-rev-20#kf)和[GC-TITAN-RIDGE](https://www.gigabyte.com/Motherboard/GC-TITAN-RIDGE-rev-10#kf)。居然连 AMD B550 也支持，[B550M AORUS PRO](https://www.gigabyte.com/Motherboard/B550M-AORUS-PRO-rev-10/sp#sp) 感觉这个还可以，DP 接口支持 5K，如果配个 APU 就可以省下显卡钱了。
@@ -75,11 +75,9 @@ B660M AORUS PRO DDR4，这个板子上面表现也很稳定，没有雷电相关
 
 ### ProArt Z690-Creator
 ![](/images/2021/paroart-z690.png)
-挺完美的主板，从[这里](https://www.computerdiy.com.tw/asus-proart-z690-creator-wifi_unbox/)的Block diagram看，其雷电口是可以输出集显一个DP 1.4 来显示的，中间通过一个Q-SW来切换。板子本身没有DP输出。如果同时接上显卡DP IN，如何切换显示源呢？还是默认接上外接显卡集显就被屏蔽了？
+挺完美的主板，从[这里](https://www.computerdiy.com.tw/asus-proart-z690-creator-wifi_unbox/)的Block diagram看，其雷电口是可以输出集显一个DP 1.4 来显示的，中间通过一个Q-SW来切换。板子本身没有DP输出。如果同时接上显卡DP IN，如何切换显示源呢？还是默认接上外接显卡集显就被屏蔽了？[这里开箱](https://zhuanlan.zhihu.com/p/434899023)显示主控为 JHL8540 ThunderBolt4 控制器。tonymacx86 已经有 macOS 安装[方法](https://www.tonymacx86.com/threads/asus-z690-proart-creator-wifi-thunderbolt-4-i7-12700k-amd-rx-6800-xt.318311/)，虽然我不是很想试。ProArt Z790 也是同样的高规格，没有找到其Block diagram，但是应该和上面一样，毕竟CPU规格并没有变。
 
-[这里开箱](https://zhuanlan.zhihu.com/p/434899023)显示主控为 JHL8540 ThunderBolt4 控制器。tonymacx86 已经有 macOS 安装[方法](https://www.tonymacx86.com/threads/asus-z690-proart-creator-wifi-thunderbolt-4-i7-12700k-amd-rx-6800-xt.318311/)，虽然我不是很想试。
-
-ProArt Z790 也是同样的高规格，但是ProArt X670就只有一个DP IN，感觉这个是无法驱动Ultrafine 5K 显示器的。
+ProArt X670只有一个DP IN，感觉这个是无法驱动Ultrafine 5K 显示器的。
 ![](/images/2021/ASRock_X670E-Taichi-block-diagram.jpg)
 X670E太极没有DP IN，但是把两个CPU集成的显卡DP信号输出到了雷电口，所以这个应该可以直接能点亮 Ultrafine 5K 显示器。缺点在于集成显卡有点弱，没法像外接显卡那样能够升级。
 
