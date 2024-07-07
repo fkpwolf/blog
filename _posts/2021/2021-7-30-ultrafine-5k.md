@@ -85,7 +85,7 @@ X670E太极没有DP IN，但是把两个CPU集成的显卡DP信号输出到了�
 NUC 设备一般都配有双雷电口，但是基本上都是连接的集成显卡DP输出，即使像蝰蛇峡谷这种配备 A770M 独立显卡的也不例外。只有冥王峡谷雷电口是直连的Radeon显卡。
 当然，即使非直连的输出也能使用独立显卡的资源，这和游戏笔记本一样。
 
-AMD 7840HS 小主机最近很流行，比如零刻 GTR7 配备了两个USB4.0接口，实测可以驱动这块5K显示器。
+AMD 7840HS 小主机最近很流行，比如零刻 GTR7 配备了两个USB4.0接口，实测可以驱动这块5K显示器。详细见[这里](../2024/20240-7-1-bee-link-GTR7.md)的评测。
 
 最近发布的 [Intel Core Ultra](https://www.anandtech.com/show/21282/intel-core-ultra-7-115h-review-meteor-lake-makes-makes-fresh-start-to-mobile-cpus) 带有 4 个雷电4接口，很恐怖（两条PCIe X4的带宽给雷电输出？）。
 不过一般笔记本不会全部配齐，我看现在只有 ThinkBook X 2024 配备了3个雷电口。如果这个CPU做成迷你小主机，扩展无敌了。
