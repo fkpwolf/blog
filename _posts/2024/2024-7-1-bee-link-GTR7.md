@@ -9,8 +9,6 @@ typora-root-url: ../../../blog
 
 # 零刻 GTR7 & mini 小主机
 
-Created: June 10, 2023 10:04 AM
-Tags: review
 
 ### 链接
 
@@ -75,13 +73,13 @@ ca:00.6 USB controller: Advanced Micro Devices, Inc. [AMD] Pink Sardine USB4/Thu
 
 这个机器能驱动 LG Ultrafine 5K，是因为雷电有两条 DP OUT 么？如何在 Windows 下面查看？
 
-![Untitled](./2024-7-1-bee-link-GTR7/Untitled.png)
+![Untitled](/images/2024/bee-link-GTR7/Untitled.png)
 
 确实有两个 DP IN，如果接普通4K显示器，上面隧道DP IN为1。而 780M 显卡输出为4 Displays (max.), HDMI 2.1, DisplayPort 2.1 [https://www.notebookcheck.net/AMD-Radeon-780M-GPU-Benchmarks-and-Specs.680539.0.html](https://www.notebookcheck.net/AMD-Radeon-780M-GPU-Benchmarks-and-Specs.680539.0.html) 所以这是全接出了。
 
 ### 散热
 
-![Untitled](./2024-7-1-bee-link-GTR7/Untitled%201.png)
+![Untitled](/images/2024/bee-link-GTR7/Untitled%201.png)
 
 拆机[视频](https://post.smzdm.com/talk/p/a305x3m7/)。从面板的后部排风口看，涡轮风扇距离面板很近，所以并不能靠两侧的孔网进风。但是因为是涡轮风扇，感觉上面板盖住问题也不大，只要不是全封闭。
 
