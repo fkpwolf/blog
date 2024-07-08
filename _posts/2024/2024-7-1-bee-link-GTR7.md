@@ -11,7 +11,7 @@ typora-root-url: ../../../blog
 
 [https://www.bee-link.com.cn/catalog/product/index?id=808](https://www.bee-link.com.cn/catalog/product/index?id=808) Product page.
 
-[https://www.bee-link.com.cn/cms/support/driverhardware](https://www.bee-link.com.cn/cms/support/driverhardware) Driver download.
+[https://www.bee-link.com.cn/cms/support/driverhardware](https://www.bee-link.com.cn/cms/support/driverhardware) BIOS & Driver download.
 
 [https://www.wolai.com/meiss/76fqibfv2v7iN8wAnfWLZ4](https://www.wolai.com/meiss/76fqibfv2v7iN8wAnfWLZ4) BIOS upgrade guide.
 
@@ -102,7 +102,7 @@ AR900i(板载i9-13900HX)，也没有雷电接口，但是有type-c显示输出�
 
 尔英板载CPU套装13代，一个雷电口，DDR5，13600H 1400￥，三个m.2。CPU可能比7480差，但是7840现在主板很少。MS-01其实不错，但是不是ATX电源接口灵活性不够。
 
-对比 mini 小主机，MoDT 会有一个独立的PCIe插槽，标准ATX电源，折腾空间更大。
+对比 mini 小主机，MoDT 会有一个独立的PCIe插槽，标准ATX电源和机箱，折腾空间更大。
 
 ### Intel Ultra
 
@@ -112,7 +112,9 @@ Asus NUC14 Pro+，双雷电口，这个型号更小，改进了进风，4299￥�
 
 Minisforum UH125 Pro 双USB4+OCulink+双5G网口，OCulink不会占用m.2。[https://minisforum.hk/products/minisforum-uh125-pro](https://minisforum.hk/products/minisforum-uh125-pro)
 
-零刻 GTi14，内置PCIe X8插槽，感觉这样还不如像幽灵峡谷那样直接做成个nuc的主机，内置PCIe X8插槽。
+零刻 GTi14，内置电源，引出 PCIe x8 插槽，这种形态需要一个显卡扩展坞+ATX电源。感觉这样还不如像幽灵峡谷那样直接做成个 NUC 的主机。
+
+总的来说，要么mini小主机，要么MoDT，中间形态都有些尴尬。显卡扩展坞对于笔记本还有一定需求，对于mini小主机来说有点尴尬，因为后者都是固定装置，合在一起就没有必要分开了。
 
 ### Ryzen AI 300
 
