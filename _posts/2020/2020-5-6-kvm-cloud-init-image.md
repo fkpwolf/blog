@@ -1,16 +1,16 @@
 ---
 layout: post
-title: "手动在 KVM 上面使用 cloud-init image"
+title: "Manually create KVM machine by cloud-init image"
 date: 2020-5-6
 categories:
   - cloud
 typora-root-url: ../../../blog
 ---
 ### Image list
-- Ubuntu <https://cloud-images.ubuntu.com/> .img是给QEUM和KVM用，.vhd是给Azure用，vmdk是给Vmware用。一般这些是在 OpenStack 这样的 IaaS 平台上面使用。这里描述如何在安装有 KVM 的普通 Linux 机器上面使用这些 Image。
+- Ubuntu <https://cloud-images.ubuntu.com/>
 - Debian <https://cloud.debian.org/images/cloud/>
-- Fedora <https://cloud.fedoraproject.org/> Fedora cloud image，比 Ubuntu 兼容性好。
-- OpenSuse <https://get.opensuse.org/leap/> Jeos is for cloud. Leap is normal version, Tumbleweed is rolling update. openSUSE MicroOS is a variant of openSUSE Tumbleweed and serves as a base of openSUSE Kubic, a Container as a Service platform. Guide of kubeadm’s installation container runtimes uses Tumbleweed. `KVM and XEN` version of JeOS image is cool: need interactive installation and it is fast. Doesn’t need extra disk for OS so boot image is enough. `OpenStack-Cloud` filesystem is xfs and 1G size. `KVM and XEN` filesystem is btrfs and 26G size. But Tumbleweed `KVM` version didn't have igbvf driver. Crazy! Need `zypper install kernel-default`. It is 5.11.11. So what is stock or default kernel version?
+- Fedora <https://cloud.fedoraproject.org/> 
+- OpenSuse <https://get.opensuse.org/leap/> Jeos is for cloud. Leap is normal version, Tumbleweed is rolling update. openSUSE MicroOS is a variant of openSUSE Tumbleweed and serves as a base of openSUSE Kubic, a Container as a Service platform. Guide of kubeadm’s installation container runtimes uses Tumbleweed. `KVM and XEN` version of JeOS image is cool: need interactive installation and it is fast. Doesn’t need extra disk for OS so boot image is enough. `OpenStack-Cloud` filesystem is xfs and 1G size. `KVM and XEN` filesystem is btrfs and 26G size. But Tumbleweed `KVM` version didn't have igbvf driver. Crazy! Need `zypper install kernel-default`.
 - Centos Stream <https://cloud.centos.org/centos/>
 - Rocky <https://download.rockylinux.org/pub/rocky/8.4/images/>
 - Linux Amazon Linux 2 <https://aws.amazon.com/cn/amazon-linux-2/faqs/>
@@ -43,7 +43,7 @@ $ qemu-img create -f qcow2 -b disk.qcow2 -F qcow2 disk-new.img
 ## boot a kvm 
 $ kvm -net nic -net user -hda disk.img -hdb my-seed.img -m 512
 ```
-密码似乎不能用 123123 这种简单的。完整的 user-data spec 可以参考 http://cloudinit.readthedocs.io/en/latest/topics/examples.html，更多操作指南参考 KVM / libvirt。
+密码不能用 123123 这种简单的。完整的 user-data spec 可以参考 http://cloudinit.readthedocs.io/en/latest/topics/examples.html，更多操作指南参考 KVM / libvirt。
 
 对于 Centos Steam 和 Kubic，上面配置无法 login，[这里](https://github.com/cockpit-project/bots/tree/main/machine) 的 cloud-init.iso 可以用，原因未知。
 
