@@ -101,10 +101,9 @@ Format specific information:
 It is small now but increase fast and soon it will be same size as original file. 
 
 ### Useful commands
-`virt-install --import --disk ubuntu1.img,bus=virtio --disk seed.img,device=cdrom --name vm1 --ram 8192 --nographics`
+`virt-install --import --disk ubuntu1.img,bus=virtio --disk my-seed.img,bus=virtio,shareable=on --name vm1 --ram 8192 --nographics --osinfo ubuntujammy`
 
-<https://quantum-integration.org/posts/install-cloud-guest-with-virt-install-and-cloud-init-configuration.html>
---nographics option forces virt-install to redirect the console output to the terminal window. After successful boot you get to the vm promt.
+`--osinfo` value comes from output of `virt-install --osinfo list`. `--nographics` option forces virt-install to redirect the console output to the terminal window. After successful boot you get to the vm promt.
 And you can still access the text console by Virt Manager. 
 
 `virsh console vm`
