@@ -9,13 +9,10 @@ typora-root-url: ../../../blog
 
 ### 链接
 
-[https://www.bee-link.com.cn/catalog/product/index?id=808](https://www.bee-link.com.cn/catalog/product/index?id=808) Product page.
-
-[https://www.bee-link.com.cn/cms/support/driverhardware](https://www.bee-link.com.cn/cms/support/driverhardware) BIOS & Driver download.
-
-[https://www.wolai.com/meiss/76fqibfv2v7iN8wAnfWLZ4](https://www.wolai.com/meiss/76fqibfv2v7iN8wAnfWLZ4) BIOS upgrade guide.
-
-[https://weibo.com/u/7319305762](https://weibo.com/u/7319305762) 零刻官方微博
+* [Product page](https://www.bee-link.com.cn/catalog/product/index?id=808)
+* [BIOS & Driver download](https://www.bee-link.com.cn/cms/support/driverhardware)
+* [BIOS upgrade guide](https://www.wolai.com/meiss/76fqibfv2v7iN8wAnfWLZ4)
+* [零刻官方微博](https://weibo.com/u/7319305762)
 
 ### 体验
 
@@ -68,10 +65,6 @@ ca:00.6 USB controller: Advanced Micro Devices, Inc. [AMD] Pink Sardine USB4/Thu
 
 ### Change boot order
 
-[https://superuser.com/questions/1338643/how-do-i-change-the-uefi-boot-order-from-within-windows-10](https://superuser.com/questions/1338643/how-do-i-change-the-uefi-boot-order-from-within-windows-10)
-
-[https://superuser.com/questions/1016762/is-it-possible-to-select-which-system-to-boot-before-rebooting-on-a-multi-boot](https://superuser.com/questions/1016762/is-it-possible-to-select-which-system-to-boot-before-rebooting-on-a-multi-boot)
-
 Set Linux as default boot OS. In Linux, run command `sudo efibootmgr -n 0000` to set EFI BootNext var which will boot to Windows only next time. The boot order is not changed.
 
 ### 铭凡和其他品牌
@@ -90,9 +83,9 @@ AR900i(板载i9-13900HX)，也没有雷电接口，但是有type-c显示输出�
 
 ### MS-01 和其他全闪NAS小主机
 
-[https://minisforum.hk/products/ms01](https://minisforum.hk/products/ms01)，[CHH 讨论贴](https://www.chiphell.com/thread-2542008-1-1.html)，[评测](https://www.chiphell.com/thread-2571531-1-1.htm)，[https://www.koolcenter.com/posts/465](https://www.koolcenter.com/posts/465) 评测，i5-12600H 版本 2999￥，我认为只有这个最便宜的版本才有价值，因为这个板子主要是扩展性，CPU 太高反而散热着急。[绿联DXP480T Plus](https://www.ugnas.com/products-detail/id-33.html)，和这个很像，价格也类似。DXP6800 Pro也可以，如果有机械硬盘的需求，[CHH讨论贴](https://www.chiphell.com/forum.php?mod=redirect&goto=findpost&ptid=2607738&pid=55008203)。
+[MS-01产品页](https://minisforum.hk/products/ms01)，[CHH 讨论贴](https://www.chiphell.com/thread-2542008-1-1.html)，[CHH 评测](https://www.chiphell.com/thread-2571531-1-1.htm)，[koolcenter 评测](https://www.koolcenter.com/posts/465)，i5-12600H 版本 2999￥，我认为只有这个最便宜的版本才有价值，因为这个板子主要是扩展性，CPU 太高反而散热着急。[绿联DXP480T Plus](https://www.ugnas.com/products-detail/id-33.html)，和这个很像，价格也类似。DXP6800 Pro也可以，如果有机械硬盘的需求，[CHH讨论贴](https://www.chiphell.com/forum.php?mod=redirect&goto=findpost&ptid=2607738&pid=55008203)。这种NAS的雷电能作为非host接入USB4 hub么？如果可以，这个雷电倒是有了个很好的使用场景，否则雷电网桥似乎使用场景不多。
 
-这种NAS的雷电能作为非host接入USB4 hub么？如果可以，这个雷电倒是有了个很好的使用场景，否则雷电网桥似乎使用场景不多。
+[MS-A1产品页面](https://minisforum.hk/products/minisforum-ms-a1) AMD版本，而且只有8700G系列才能使用雷电接口。缺少PCI-e插槽，对比一般7840小主机就少了可能性。
 
 ### MoDT
 
@@ -108,7 +101,7 @@ AR900i(板载i9-13900HX)，也没有雷电接口，但是有type-c显示输出�
 
 Asus NUC14 Pro+，双雷电口，这个型号更小，改进了进风，4299￥，贵了不少，[拆解评测](https://www.chiphell.com/thread-2611878-1-1.html)，散热很独特，涡轮风扇能两边出风。精致商用机。
 
-Minisforum UH125 Pro 双USB4+OCulink+双5G网口，OCulink不会占用m.2。[https://minisforum.hk/products/minisforum-uh125-pro](https://minisforum.hk/products/minisforum-uh125-pro)
+[Minisforum UH125 Pro](https://minisforum.hk/products/minisforum-uh125-pro) 双USB4+OCulink+双5G网口，OCulink不会占用m.2。
 
 零刻 GTi14，内置电源，引出 PCIe x8 插槽，这种形态需要一个显卡扩展坞+ATX电源。感觉这样还不如像幽灵峡谷那样直接做成个 NUC 的主机。
 
