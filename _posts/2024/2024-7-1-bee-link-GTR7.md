@@ -103,7 +103,8 @@ Asus NUC14 Pro+，双雷电口，这个型号更小，改进了进风，4299￥�
 
 [Minisforum UH125 Pro](https://minisforum.hk/products/minisforum-uh125-pro) 双USB4+OCulink+双5G网口，OCulink不会占用m.2。
 
-零刻 GTi14，内置电源，引出 PCIe x8 插槽，这种形态需要一个显卡扩展坞+ATX电源。感觉这样还不如像幽灵峡谷那样直接做成个 NUC 的主机。
+零刻 GTi14，内置电源和喇叭，[拆解视频](https://www.bilibili.com/video/BV1fr421T7Lx)，引出 PCIe x8 + x1 插槽，这种形态需要一个显卡扩展坞+ATX电源。感觉这样还不如像幽灵峡谷那样直接做成个可以接独立显卡的 NUC 的主机。
+机器进风会被很多原件遮挡，感觉不是很顺畅。
 
 总的来说，要么mini小主机，要么MoDT，中间形态都有些尴尬。显卡扩展坞对于笔记本还有一定需求，对于mini小主机来说有点尴尬，因为后者都是固定装置，合在一起就没有必要分开了。
 
