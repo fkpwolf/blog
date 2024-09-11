@@ -30,7 +30,7 @@ DDR5能到5600，非常不错。这个对于核显的发挥很重要。
 
 外观色彩里面应该有个黑色。AMD贴纸在机器反面，好评。总体来说，体积还是大了点。
 
-Windows 下面机器没法休眠，[我的问题](https://tieba.baidu.com/p/8604777597)。Linux反而可以。
+Windows 下面机器没法休眠，[我提的问题](https://tieba.baidu.com/p/8604777597)。Linux反而可以。
 
 磁吸电源接口，拔插手感一般，没有苹果笔记本的顺畅。不过这个没带电池，拔掉就关机，平时也不像笔记本那样经常拔插，手感不好问题不大。但有这个创新意识就很好。贴吧认为联想拯救者C130和C140电源兼容性比较好，支持20Vx6A功率。雷电4电源，可以开机，但是过一会就自动关机了。客服说是开机峰值110W，PD最高只能100W。感觉这个峰值可以在BIOS里面微调，还是等待以后改进吧。其实这个使用场景更多是为笔记本服务的（反向充电），mini小主机并不会从中受益很多，主要是要占用一个雷电接口。总的来说，PD电源有不少兼容性问题，有的接入新设备电源还会重启。
 
@@ -73,9 +73,9 @@ BD790i，7945HX，TYPE-C显示，无雷电。这个级别的CPU还是适合作�
 
 UM880PRO，2599￥，8845HS，双USB4，改进后的型号。
 
-HX100G: 7840HS+RX6650M，双雷电口，这样可惜集成显卡了。HX200G：7945HX+7600M XT，这个配置很梦幻，但是雷电口就没有了，TYPE-C也没有标明是否有显示输出。原子侠 G7，7945HX+7600M XT。
+HX100G: 7840HS+RX6650M，双雷电口，这样可惜集成显卡了。HX200G：7945HX+7600M XT，这个配置很梦幻，但是雷电口就没有了，TYPE-C也没有标明是否有显示输出。原子侠 G7，7945HX+7600M XT，接口也是偏少。
 
-AR900i(板载i9-13900HX)，也没有雷电接口，但是有type-c显示输出。
+AR900i(板载i9-13900HX)，也没有雷电接口，有type-c显示输出。
 
 玄派创世魔方，8845HS，原生oculink，双雷电，图形化BIOS。堪称 AI PC前的辉煌了。B站上有不少评测。就是外观设计有点呆，底部进风也很小。oculink对比USB4带宽更大外设外设更便宜，但是使用场景少，如果真要引出这个PCIe x4，不如MoDT+ATX机箱了。
 
@@ -99,7 +99,9 @@ AR900i(板载i9-13900HX)，也没有雷电接口，但是有type-c显示输出�
 
 机械革命（MECHREVO）imini Pro游戏商务电脑台式迷你主机 Ultra 5 125H，只有一个雷电口。[拆解](https://post.smzdm.com/p/apml0ke7/) 另外一个型号是“Ultra 7 155h”
 
-Asus NUC14 Pro+，双雷电口，这个型号更小，改进了进风，4299￥，贵了不少，[拆解评测](https://www.chiphell.com/thread-2611878-1-1.html)，散热很独特，涡轮风扇能两边出风。精致商用机。
+Asus NUC14 Pro+，双雷电口，这个型号更小，改进了进风，4299￥，贵了不少，[拆解评测](https://www.chiphell.com/thread-2611878-1-1.html)，散热很独特，涡轮风扇能两边出风。总的来说，精致商用机。
+
+大厂比如 Asus 和联想都有出迷你主机，虽然 BIOS 应该比一般小厂调教的要好，但是种类少，动作慢，而且主要是基于 Intel 芯片的。
 
 [Minisforum UH125 Pro](https://minisforum.hk/products/minisforum-uh125-pro) 双USB4+OCulink+双5G网口，OCulink不会占用m.2。
 
@@ -114,7 +116,10 @@ Asus NUC14 Pro+，双雷电口，这个型号更小，改进了进风，4299￥�
 
 ### thunderbolt 3 hub USB lost after suspend
 
-冷启动没有问题，但是suspend然后resume后就出现问题。像是这个设备的linux driver问题，同样雷电hub在b650m/b660m主机上面工作正常。感觉还是BIOS电源设置问题。这个USB HUB是pcie的，雷电hub上面的pcie网卡倒是正常工作。和BIOS里面的ASPM有关么？
+Linux 下面冷启动没有问题，但是suspend然后resume后就出现问题。像是这个设备的 linux driver 问题，但是同样雷电hub在b650m/b660m主机上面工作正常，结合windows下面无法待机，感觉还是BIOS电源设置问题。
+这个挺蛋疼的，因为影响平时使用。零刻 GTR7这个设备官方是否会持续更新BIOS？我很怀疑。
+
+这个USB HUB是pcie的，雷电hub上面的pcie网卡倒是正常工作。和BIOS里面的ASPM有关么？
 
 ```bash
 xhci_hcd 0000:6a:00.0: xHCI host controller not responding, assume dead
