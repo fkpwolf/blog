@@ -134,3 +134,5 @@ genisoimage -o image.iso -r /path/to/dir
 virsh attach-disk guest image.iso hdc --driver file --type cdrom --mode readonly
 ```
 Use this way to transfer data to VM before network of the VM is ready.
+
+If can't login VM caused by wrong configuration, mount VM image file by `guestmount` and then `chroot` into the mount point.
