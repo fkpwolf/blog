@@ -116,10 +116,8 @@ Asus NUC14 Pro+，双雷电口，这个型号更小，改进了进风，4299￥�
 
 ### thunderbolt 3 hub USB lost after suspend
 
-Linux 下面冷启动没有问题，但是suspend然后resume后就出现问题。像是这个设备的 linux driver 问题，但是同样雷电hub在b650m/b660m主机上面工作正常，结合windows下面无法待机，感觉还是BIOS电源设置问题。
-这个挺蛋疼的，因为影响平时使用。零刻 GTR7这个设备官方是否会持续更新BIOS？我很怀疑。
-
-这个USB HUB是pcie的，雷电hub上面的pcie网卡倒是正常工作。和BIOS里面的ASPM有关么？
+Linux 下面冷启动没有问题，但是suspend然后resume后就出现问题。同样雷电hub在b650m/b660m主机上面工作正常。
+这个USB HUB是pcie的（Logic FL1100），雷电hub上面的pcie网卡倒是正常工作。和BIOS里面的ASPM有关么？
 
 ```bash
 xhci_hcd 0000:6a:00.0: xHCI host controller not responding, assume dead
@@ -137,4 +135,5 @@ On B650M which works well with this hub
 [    2.692789] xhci_hcd 0000:0c:00.0: Host supports USB 3.0 SuperSpeed
 ```
 
-when resume, only `[  392.346717] xhci_hcd 0000:0c:00.0: xHC error in resume, USBSTS 0x411, Reinit`.
+when resume, only `[  392.346717] xhci_hcd 0000:0c:00.0: xHC error in resume, USBSTS 0x411, Reinit`. May need some Linux PCIe kernel quirks.
+Changed Dock to Belkin Thunderbolt 3 Dock Pro which uses JHL7440 as Thunderbolt SOC and PCIe USB Hub. No this kind of power issue any more.
