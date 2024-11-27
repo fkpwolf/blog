@@ -27,6 +27,9 @@ SQLite Is Serverless
 * <https://www.zhihu.com/column/distributed-storage>
 * <https://draveness.me>: [为什么数据库不应该使用外键](https://draveness.me/whys-the-design-database-foreign-key/), [为什么 MySQL 使用 B+ 树](https://draveness.me/whys-the-design-mysql-b-plus-tree/)
 
+文章和论文
+* [The Log: What every software engineer should know about real-time data's unifying abstraction](https://engineering.linkedin.com/distributed-systems/log-what-every-software-engineer-should-know-about-real-time-datas-unifying)
+
 ### Leveldb 和 RocksDB
 [Leveldb 和 RocksDB 在大 value 场景下的一些问题](http://idning.github.io/leveldb-rocksdb-on-large-value.html)
 
