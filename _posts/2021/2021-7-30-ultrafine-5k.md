@@ -42,7 +42,7 @@ Z490支持DP IN的，也就是支持5k输出的是[Z490 VISION D](https://www.gi
 GC-TITAN-RIDGE-20的[规格书](https://download.gigabyte.com/FileList/Manual/mb_manual_GC-TITAN-RIDGE-20_1001.pdf)也有这两个接口。Z490/B560M AORUS PRO AX技嘉的板子[也有](https://download.gigabyte.com/FileList/Manual/mb_manual_z490-aorus-pro-ax_1001_e.pdf)两个雷电header，B550M AORUS PRO则只有一个。问题是技嘉的扩展卡和主板都没有详细列出header的定义，所以不确定微星的主板是否和技嘉的扩展卡兼容。这个 RTD3 好像是“[现代待机](https://zhuanlan.zhihu.com/p/114448236)”（[Modern Standby](https://graniteriverlabs.com.tw/2021/04/07/grl-ap-tbt-fv-modern-standby/)）的东西。技嘉Titan ridge v1.0使用：固件要升级，否则无法视频输出。主板没有thunderbolt header，1//3要短接，USB 接口要连接，否则难以激活。确实，我修改NUC 8 BIOS后为“无安全性(SL0)”，但是我也没法在技嘉主板BIOS里面修改。<https://github.com/ameyrupji/thunderbolt-macpro-5-1/blob/master/GC-TitanRidge.md> 这里有刷机的步骤。后来发现这个技嘉板子里面可以修改，修改后进入thunderbolt controller center也能看到security level改变了，我改为none。但是启动后发现雷电下面usb无法链接，重启也不行，只有热拔插雷电线可以，只能改回默认的 user auth。似乎这个如果bios里面修改了值，bios启动时会修改雷电扩展卡配置，但是不知道是因为和主板不兼容，还是我没有连接header，导致启动后OS虽然能看到修改后的安全级别，但是功能出现问题。这个是我的猜测。
 
 USB4 扩展卡：
-* [微星啟動！MSI USB4 PD100W PCI-E 擴充卡開拓 USB 全新領域！](https://unikoshardware.com/2023/11/msi-usb4-pd100w-expansion-card.html)，看上去不粗哦，但是兼容主板很少。
+* [微星啟動！MSI USB4 PD100W PCI-E 擴充卡開拓 USB 全新領域！](https://unikoshardware.com/2023/11/msi-usb4-pd100w-expansion-card.html)，看上去不错，但是兼容主板很少。
 * [ASUS USB4 PCIe Gen4 Card](https://www.asus.com/motherboards-components/motherboards/accessories/usb4-pcie-gen4-card/)兼容不少主板，文档一直在更新。
 这些扩展卡都使用ASM4242，但是尴尬的是这代主板不少都内置了雷电功能，所以如果不想浪费，最好用在中端的AMD主板。Intel因为 800 系列 CPU 已经内置了雷电控制器，自己加太多余。
 
@@ -86,7 +86,7 @@ X670E太极没有DP IN，但是把两个CPU集成的显卡DP信号输出到了�
 NUC 设备一般都配有双雷电口，但是基本上都是连接的集成显卡DP输出，即使像蝰蛇峡谷这种配备 A770M 独立显卡的也不例外。只有冥王峡谷雷电口是直连的Radeon显卡。
 当然，即使非直连的输出也能使用独立显卡的资源，这和游戏笔记本一样。
 
-AMD 7840HS 小主机最近很流行，比如零刻 GTR7 配备了两个USB4.0接口，实测可以驱动这块5K显示器。详细见[这里](../2024/2024-7-1-bee-link-GTR7.md的评测。
+AMD 7840HS 小主机最近很流行，比如零刻 GTR7 配备了两个USB4.0接口，实测可以驱动这块5K显示器。详细见[这里](../2024/2024-7-1-bee-link-GTR7.md)的评测。
 
 最近发布的 [Intel Core Ultra](https://www.anandtech.com/show/21282/intel-core-ultra-7-115h-review-meteor-lake-makes-makes-fresh-start-to-mobile-cpus) 带有 4 个雷电4接口，很恐怖（两条PCIe X4的带宽给雷电输出？）。
 不过一般笔记本不会全部配齐，我看现在只有 ThinkBook X 2024 配备了3个雷电口。如果这个CPU做成迷你小主机，扩展无敌了。
