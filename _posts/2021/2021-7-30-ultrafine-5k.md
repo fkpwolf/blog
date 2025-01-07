@@ -39,11 +39,12 @@ TITAN RIDGE 不需要雷电header就可以，有时候需要[短接](https://www
 Z490支持DP IN的，也就是支持5k输出的是[Z490 VISION D](https://www.gigabyte.com/Motherboard/Z490-VISION-D-rev-1x#kf)。
 [Z490M-S1](https://cn.msi.com/Motherboard/Z490M-S1/Specification)这个主板规格比较完美，不过是微星的，技嘉的扩展卡不知道是否兼容。或者[MAG B460M MORTAR](https://www.msi.com/Motherboard/MAG-B460M-MORTAR) 迫击炮感觉也行，有雷电口5pin JTBT1，这个OC支持的更多 https://heipg.cn/tutorial/b460m-install-big-sur.html。好玩是的从[规格书](https://download.msi.com/archive/mnu_exe/mb/E7C82v1.1.pdf)上看是微星这个板子有两个thunderbolt接口:
 ![](/images/2021/thunderbolt-port.png)
-GC-TITAN-RIDGE-20的[规格书](https://download.gigabyte.com/FileList/Manual/mb_manual_GC-TITAN-RIDGE-20_1001.pdf)也有这两个接口。Z490/B560M AORUS PRO AX技嘉的板子[也有](https://download.gigabyte.com/FileList/Manual/mb_manual_z490-aorus-pro-ax_1001_e.pdf)两个雷电header，B550M AORUS PRO则只有一个。问题是技嘉的扩展卡和主板都没有详细列出header的定义，所以不确定微星的主板是否和技嘉的扩展卡兼容。这个 RTD3 好像是“[现代待机](https://zhuanlan.zhihu.com/p/114448236)”（[Modern Standby](https://graniteriverlabs.com.tw/2021/04/07/grl-ap-tbt-fv-modern-standby/)）的东西。
+GC-TITAN-RIDGE-20的[规格书](https://download.gigabyte.com/FileList/Manual/mb_manual_GC-TITAN-RIDGE-20_1001.pdf)也有这两个接口。Z490/B560M AORUS PRO AX技嘉的板子[也有](https://download.gigabyte.com/FileList/Manual/mb_manual_z490-aorus-pro-ax_1001_e.pdf)两个雷电header，B550M AORUS PRO则只有一个。问题是技嘉的扩展卡和主板都没有详细列出header的定义，所以不确定微星的主板是否和技嘉的扩展卡兼容。这个 RTD3 好像是“[现代待机](https://zhuanlan.zhihu.com/p/114448236)”（[Modern Standby](https://graniteriverlabs.com.tw/2021/04/07/grl-ap-tbt-fv-modern-standby/)）的东西。技嘉Titan ridge v1.0使用：固件要升级，否则无法视频输出。主板没有thunderbolt header，1//3要短接，USB 接口要连接，否则难以激活。确实，我修改NUC 8 BIOS后为“无安全性(SL0)”，但是我也没法在技嘉主板BIOS里面修改。<https://github.com/ameyrupji/thunderbolt-macpro-5-1/blob/master/GC-TitanRidge.md> 这里有刷机的步骤。后来发现这个技嘉板子里面可以修改，修改后进入thunderbolt controller center也能看到security level改变了，我改为none。但是启动后发现雷电下面usb无法链接，重启也不行，只有热拔插雷电线可以，只能改回默认的 user auth。似乎这个如果bios里面修改了值，bios启动时会修改雷电扩展卡配置，但是不知道是因为和主板不兼容，还是我没有连接header，导致启动后OS虽然能看到修改后的安全级别，但是功能出现问题。这个是我的猜测。
 
-技嘉Titan ridge v1.0使用：固件要升级，否则无法视频输出。主板没有thunderbolt header，1//3要短接，USB 接口要连接，否则难以激活。
-
-确实，我修改NUC 8 BIOS后为“无安全性(SL0)”，但是我也没法在技嘉主板BIOS里面修改。<https://github.com/ameyrupji/thunderbolt-macpro-5-1/blob/master/GC-TitanRidge.md> 这里有刷机的步骤。后来发现这个技嘉板子里面可以修改，修改后进入thunderbolt controller center也能看到security level改变了，我改为none。但是启动后发现雷电下面usb无法链接，重启也不行，只有热拔插雷电线可以，只能改回默认的 user auth。似乎这个如果bios里面修改了值，bios启动时会修改雷电扩展卡配置，但是不知道是因为和主板不兼容，还是我没有连接header，导致启动后OS虽然能看到修改后的安全级别，但是功能出现问题。这个是我的猜测。
+USB4 扩展卡：
+* [微星啟動！MSI USB4 PD100W PCI-E 擴充卡開拓 USB 全新領域！](https://unikoshardware.com/2023/11/msi-usb4-pd100w-expansion-card.html)，看上去不粗哦，但是兼容主板很少。
+* [ASUS USB4 PCIe Gen4 Card](https://www.asus.com/motherboards-components/motherboards/accessories/usb4-pcie-gen4-card/)兼容不少主板，文档一直在更新。
+这些扩展卡都使用ASM4242，但是尴尬的是这代主板不少都内置了雷电功能，所以如果不想浪费，最好用在中端的AMD主板。Intel因为 800 系列 CPU 已经内置了雷电控制器，自己加太多余。
 
 ### B550M AORUS 
 BIOS 没有pre-boot acl支持怎么办？可以试试去掉mortar的雷电header改为短接，如果pre-boot还是可以工作，那说明这个功能完全是由bios控制。
