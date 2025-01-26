@@ -57,6 +57,8 @@ ca:00.6 USB controller: Advanced Micro Devices, Inc. [AMD] Pink Sardine USB4/Thu
 
 确实有两个 DP IN，如果接普通4K显示器，上面隧道DP IN为1。而 780M [显卡输出](https://www.notebookcheck.net/AMD-Radeon-780M-GPU-Benchmarks-and-Specs.680539.0.html)为4 Displays (max.), HDMI 2.1, DisplayPort 2.1，所以这是全接出了。
 
+机器 BIOS 启动菜单里面不能显示外接的雷电硬盘盒，应该是 BIOS 的问题。
+
 ### 散热
 
 ![Untitled](/images/2024/bee-link-GTR7/Untitled%201.png)
