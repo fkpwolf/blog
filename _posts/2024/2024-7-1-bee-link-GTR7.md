@@ -71,9 +71,9 @@ Set Linux as default boot OS. In Linux, run command `sudo efibootmgr -n 0000` to
 
 ### 铭凡和其他品牌
 
-BD790i，7945HX，TYPE-C显示，无雷电。这个级别的CPU还是适合作为游戏笔记本，因为iGPU羸弱，加个独立显卡刚好。mini小主机加显卡就不能mini了，必须要有专门定制的机箱，类似NUC幽灵峡谷，否则和自己配ITX主板+显卡没啥优势。“银欣 ML12薄型ITX小机箱”这个还可以，因为这个mini主机散热只能用下压了。或者分形工艺 Ridge。[这里](https://www.chiphell.com/thread-2597430-1-1.html)看感觉小厂实力。[这里](https://minisforum.hk/products/bd770i)装机展示用的机箱是酷冷至尊NR200，评论里面有用XPROTO-Mini这种全开放式机箱。
+BD790i，7945HX，TYPE-C显示，无雷电。这个级别的CPU还是适合作为游戏笔记本，因为iGPU羸弱，加个独立显卡刚好。mini小主机加显卡就不能mini了，必须要有专门定制的机箱，类似NUC幽灵峡谷，否则和自己配ITX主板+显卡没啥优势。“银欣 ML12薄型ITX小机箱”这个还可以，因为这个mini主机散热只能用下压了。或者分形工艺 Ridge。[这里](https://www.chiphell.com/thread-2597430-1-1.html)看感觉小厂实力。[这里](https://minisforum.hk/products/bd770i)装机展示用的机箱是酷冷至尊NR200，评论里面有用XPROTO-Mini这种全开放式机箱。后来又出了BD795M M-ATX型号，感觉更适合DIY，可以自己选择CPU散热，但是没有TYPE-C显示输出，接口一般，也很奇怪用的是笔记本内存。
 
-UM880PRO，2599￥，8845HS，双USB4，改进后的型号。
+UM880PRO，2599￥，8845HS，双USB4，改进后的型号，带Oculink接口，但这个接口是和m.2共享的。
 
 HX100G: 7840HS+RX6650M，双雷电口，这样可惜集成显卡了。HX200G：7945HX+7600M XT，这个配置很梦幻，但是雷电口就没有了，TYPE-C也没有标明是否有显示输出。原子侠 G7，7945HX+7600M XT，接口也是偏少。
 
