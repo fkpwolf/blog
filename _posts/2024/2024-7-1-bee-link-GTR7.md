@@ -9,9 +9,8 @@ typora-root-url: ../../../blog
 
 ### 链接
 
-* [Product page](https://www.bee-link.com.cn/catalog/product/index?id=808)
-* [BIOS & Driver download](https://www.bee-link.com.cn/cms/support/driverhardware)
-* [BIOS upgrade guide](https://www.wolai.com/meiss/76fqibfv2v7iN8wAnfWLZ4)
+* [Product page](https://www.bee-link.com.cn/catalog/product/index?id=681)
+* [BIOS & Driver download](https://dr.bee-link.cn/?dir=uploads%2FGTR%2FGTR+7840+GTR+7940%2FBios%2F)
 * [零刻官方微博](https://weibo.com/u/7319305762)
 
 ### 体验
