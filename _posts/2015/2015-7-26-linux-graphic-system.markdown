@@ -57,7 +57,7 @@ gnome-she 1205  fan mem    REG    8,1   105520 3439743 /usr/lib/libevdev.so.2.1.
 
 <https://en.wikipedia.org/wiki/Framebuffer>这个是显卡的设备
 
-<https://en.wikipedia.org/wiki/Mesa_(computer_graphics)> 开源的显卡驱动，是OpenGL, ES, EGL, Vulkan的软件实现。运行 glxinfo 可以得到：
+<https://en.wikipedia.org/wiki/Mesa_(computer_graphics)> 开源的显卡驱动，是OpenGL, ES, EGL, Vulkan（OpenGL的后继者）的软件实现。运行 glxinfo 可以得到：
 OpenGL vendor string: Intel Open Source Technology Center
 OpenGL renderer string: Mesa DRI Intel(R) Sandybridge Server
 EGL 是 OpenGL ES 渲染 API 和本地窗口系统(native platform window system)之间的一个[中间接口层](https://woshijpf.github.io/android/2017/09/04/Android系统图形栈OpenGLES和EGL介绍.html)，通过调用 eglCreateWindowSurface 提供给 OpenGL 一个 surface / 画布，还做 front buffer 和 back buffer 之间的切换 eglSwapBuffer。如此看来 EGL 做了相当多的事情了，而 Wayland 只是处理了鼠标键盘事件？
