@@ -128,6 +128,8 @@ libglw1-mesa-dev - GL widget library for Athena and Motif -- development files
 
 <https://wiki.archlinux.org/title/wayland> list of different Compositors: Tiling and Stacking. [What are the best Wayland compositors?](https://www.slant.co/topics/11023/~wayland-compositors) shows the best one is [Sway](https://swaywm.org/).
 
+Labwc, a wlroots-based window-stacking compositor. Niri, A scrollable-tiling Wayland compositor.
+
 ### 树莓派
 <https://github.com/anholt/mesa/wiki/VC4> Enabling the driver is controlled using raspi-config. Select Advanced Options option and then GL Driver.
 Raspbian only supports vc4 on the Raspberry PI 2 and later. The driver supports Raspberry Pi 1, but raspi-config refuses to do it.
