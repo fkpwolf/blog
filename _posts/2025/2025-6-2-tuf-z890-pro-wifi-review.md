@@ -115,7 +115,7 @@ boltctl output as below. Note the policy and key value.
 
 雷电4扩展坞，接主板雷电口，Nvidia显卡，DP IN 2，DP IN不可用0。先接5K显示器，这个就是一般使用模式，可以点亮，然后2k屏幕接扩展坞，显示无信号。因为DP已经用完。
 
-换成3 dp rx6600显卡，2k屏幕接雷电扩展卡，可以点亮。隧道DP IN2，DP IN不可用1，因为这个DP直接给了便携2k屏幕。所以我的雷电4扩展坞只能有2个DP，这个和[Thunderbolt 4 | USB4 ELEMENT HUB](https://www.caldigit.com/thunderbolt-4-element-hub/)一样，虽然后者有3个雷电下行，还是只能支持两个屏幕。这说明雷电 5 扩展坞还是有可能点亮我的 lg5k + 2k 屏幕的。然后这里的RX6600带lg显卡也有点奇怪，虽然有5k分辨率，但是 Windows 显示那里“推荐”为4k，而且活动信号也为4k，这个和 Nvidia 显卡一样，但是屏幕很清晰，似乎确实为5k。正常情况下是没有“推荐”的字样的。
+换成3 dp rx6600显卡，2k屏幕接雷电扩展卡，可以点亮。隧道DP IN2，DP IN不可用1，因为这个DP直接给了便携2k屏幕。所以我的雷电4扩展坞只能有2个DP，这个和[USB4 ELEMENT HUB](https://www.caldigit.com/thunderbolt-4-element-hub/)一样，虽然后者有3个雷电下行，还是只能支持两个屏幕。这说明雷电 5 扩展坞还是有可能点亮我的 lg5k + 2k 屏幕的。然后这里的RX6600带lg显卡也有点奇怪，虽然有5k分辨率，但是 Windows 显示那里“推荐”为4k，而且活动信号也为4k，这个和 Nvidia 显卡一样，但是屏幕很清晰，似乎确实为5k。正常情况下是没有“推荐”的字样的。
 
 说明书里面有“使用單一 Thunderbolt 顯示屏時，請確認使用 mini DisplayPort 的 MINI DP IN_1”
 
@@ -154,7 +154,7 @@ When 1) connect DP to DP_1 of card & 2) only 2 DP IN to prevent confusion, situa
 
 ### 绿联雷电5多功能扩展坞
 
-雷电3，titan ridge v2, b650m，机器无法启动，亮vga错误红灯。
+雷电3，Titan Ridge v2, b650m，机器无法启动，亮vga错误红灯。
 
 雷电5, Asus ThunderboltEX5，没有开机画面（拔掉键盘会显示bios，奇怪，快速启动？），进入windows后能点亮屏幕。但是lg 5k只能4k显示，显卡分辨率里面只有4k。奇怪的是这时候隧道DP IN为2，hub再接个便携显示器，能点亮，隧道DP IN为3，这说明lg 5k的时候确实输出了两条DP。结合前面的直接连控制器的测试，感觉雷电5控制器/转接卡的兼容性问题大点。如果安装完整版本AMD Software Adrenalin Edition，可以看到会多了一个LG显示器。Display里面会显示带宽current link settings，一个为5.4 Gbps x4，一个为1.62Gbps x1。但是我在b650m下面只会看到一个显示器，带宽为5.4 Gbps x4。
 
