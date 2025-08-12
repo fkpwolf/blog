@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "TUF GAMING Z890-PRO WIFI 评测"
+title: "TUF GAMING Z890-PRO WIFI & 雷电 5 评测"
 date: 2025-6-2
 categories:
   - DIY
