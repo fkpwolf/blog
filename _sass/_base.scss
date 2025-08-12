@@ -13,6 +13,10 @@ dl, dd, ol, ul, figure {
 /**
  * Basic styling
  */
+html {
+    background-color: $background-color;
+}
+
 body {
     font-family: $base-font-family;
     font-size: $base-font-size;
