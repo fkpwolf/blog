@@ -18,6 +18,7 @@ body {
     font-size: $base-font-size;
     line-height: $base-line-height;
     color: $text-color;
+    background-color: $background-color;
     -webkit-text-size-adjust: 100%;
 }
 
@@ -91,7 +92,7 @@ a {
     text-decoration: none;
 
     &:visited {
-        color: darken($brand-color, 15%);
+        color: var(--brand-color-visited);
     }
 
     &:hover {
@@ -107,7 +108,7 @@ a {
  */
 blockquote {
     color: $grey-color;
-    border-left: 4px solid $grey-color-light;
+    border-left: 4px solid var(--blockquote-border);
     padding-left: $spacing-unit / 2;
     font-size: 18px;
     letter-spacing: -1px;
@@ -128,14 +129,14 @@ code, pre, tt {
     font-size: 12px;
 }
 code, tt {
-    background-color: rgba(27,31,35,.05);
+    background-color: var(--code-bg-color);
     border-radius: 3px;
     font-size: 85%;
     margin: 0;
     padding: .2em .4em;
 }
 pre {
-    background-color: #f6f8fa;
+    background-color: var(--pre-bg-color);
     border-radius: 3px;
     font-size: 85%;
     line-height: 1.45;

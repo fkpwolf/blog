@@ -9,4 +9,55 @@
   <link rel="stylesheet" href="{{ "/css/main.css" | prepend: site.baseurl }}">
   <link rel="canonical" href="{{ page.url | replace:'index.html','' | prepend: site.baseurl | prepend: site.url }}">
   <link rel="alternate" type="application/atom+xml" title="{{ site.title }}" href="{{ "/feed.xml" | prepend: site.baseurl | prepend: site.url }}" />
+  
+  <script>
+    // Theme switcher functionality
+    (function() {
+      const themeKey = 'blog-theme';
+      const body = document.documentElement;
+      
+      // Get stored theme or detect system preference
+      function getStoredTheme() {
+        const stored = localStorage.getItem(themeKey);
+        if (stored) return stored;
+        
+        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+      
+      // Apply theme
+      function applyTheme(theme) {
+        body.classList.remove('light-theme', 'dark-theme');
+        body.classList.add(theme + '-theme');
+        localStorage.setItem(themeKey, theme);
+        
+        // Update toggle button icon
+        const toggleIcon = document.querySelector('.theme-toggle-icon');
+        if (toggleIcon) {
+          toggleIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
+        }
+      }
+      
+      // Toggle theme
+      function toggleTheme() {
+        const current = localStorage.getItem(themeKey) || 
+          (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        const newTheme = current === 'dark' ? 'light' : 'dark';
+        applyTheme(newTheme);
+      }
+      
+      // Initialize theme on page load
+      document.addEventListener('DOMContentLoaded', function() {
+        applyTheme(getStoredTheme());
+        
+        // Add click handler to toggle button
+        const toggleBtn = document.querySelector('.theme-toggle');
+        if (toggleBtn) {
+          toggleBtn.addEventListener('click', toggleTheme);
+        }
+      });
+      
+      // Apply theme immediately to prevent flash
+      applyTheme(getStoredTheme());
+    })();
+  </script>
 </head>
