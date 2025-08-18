@@ -13,8 +13,9 @@ Windows HiDPI 支持是最好的：
 - 窗口拖动的时候可以跨屏显示，Mac 会截掉一半
 
 对于 27 寸 5K 显示器：
-* Windows 下面 250% 的放大比例最为完美，此时 web page 显示 width 为 2048px。
+* Windows 下面 250% 的放大比例最为完美，此时 web page DevTools 显示 width 为 2048px。
 * Gnome 下面 5K 200% 放大比在 4k 下表现好很多，虽然整体有些偏小，而 300% 放大又明显过大。4k 下 200% 放大会让窗口组件过大而显得不够精细， 而 [Linux Fractional Scaling](https://wiki.archlinux.org/title/HiDPI#Fractional_scaling) 还不成熟（现在已经支持 250% 放大比例）。作为折中办法，我把浏览器统一放大到125%。Gnome 在 200% 放大比例下，最好显示效果是32寸4k。
+* Gnome 现在已经支持Fractional Scaling。我现在设置 Gnome 为 225% 放大，浏览器 110% 放大。
 * MacOS 下面 200% 放大字体偏小，没有 4k 显示效果好。系统没有其他放大比例。
 
 ### 主板
