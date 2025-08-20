@@ -23,7 +23,7 @@ B650E USB4 上面的 Windows 启动盘没法用，需要重新安装。Linux没�
 
 内存兼容性还不如B650，国产颗粒点不亮。是因为刚出来么？
 
-[ASUS + Kingston](https://edgeup.asus.com/2025/aemp-iii-gives-you-a-seamless-experience-with-the-new-kingston-64gb-ddr5-memory-modules/) 64GB x4, KVR64A52BD8-64，绿条，价格不会很贵吧。
+[ASUS + Kingston](https://edgeup.asus.com/2025/aemp-iii-gives-you-a-seamless-experience-with-the-new-kingston-64gb-ddr5-memory-modules/) 64GB x4, KVR64A52BD8-64，CUDIMM内存，绿条，价格不会很贵吧。
 
 Windows 下面一对PCI未安装驱动，看着烦心，虽然使用似乎也没啥问题。在华硕网站一个个安装驱动后解决，不用安装600MB的Intel Management Engine Interface driver。
 
@@ -69,13 +69,7 @@ boltctl output as below. Note the policy and key value.
 
 ### Asus USB4 Card
 
-如果同时集显HDMI输出到便携屏幕，Windows会马上重启，Linux下面只有便携显示器点亮。很奇怪的问题。
-
-进去Windows后，还是只有一个USB4主机路由器。
-
-总的感觉兼容性比较差，很容易重启。我已经升级到2024最新固件，注意他固件分不同主板，还有专门为PD的固件。
-
-接NVIDIA显卡，Windows下面桌面有5k，活动信号(active signal resolution)只有 4k，
+如果同时集显HDMI输出到便携屏幕，Windows会马上重启，Linux下面只有便携显示器点亮。很奇怪的问题。进去Windows后，还是只有一个USB4主机路由器。总的感觉兼容性比较差，很容易重启。我已经升级到2024最新固件，注意他固件分不同主板，还有专门为PD的固件。接NVIDIA显卡，Windows下面桌面有5k，活动信号(active signal resolution)只有 4k，
 
 ![image.png](/images/2025/tuf-z890/image.png)
 
