@@ -19,6 +19,9 @@ USB4如果挂在PCH下面那这个ATX板子就没有 pcie x4 插槽了。总体�
 
 从[泄露](https://www.4gamers.com.tw/news/detail/64969/gigabyte-x870e-aorus-master-ppt-leaks-amd-ryzen-9000-spec)的x870e aorus master看，它的USB4似乎是挂在PCH上面（不清楚），但是可以确定的是没有DP IN，这样它会多一个PCIE 5.0 M.2，但是这个对于我来说并不重要。
 
+![stand](/images/2025/B650E-USB4-stand.JPEG)
+装在我一个简易的开放式机箱上面。
+
 ![Untitled](/images/2025/b650e-usb4-control-pannel.png)
 5K正常，两个DP IN，加上后置面板的HDMI和板载HDMI，所有接口引出了。两个USB4口如果先接LG 5K，再接便携显示器，便携显示器没有信号，因为总共才两个DP IN。如果先接便携显示器，再5K，都有信号，但是5K显示器分辨率不够，因为这个LG 5K显示器需要两个DP。
 
