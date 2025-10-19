@@ -64,6 +64,8 @@ ca:00.6 USB controller: Advanced Micro Devices, Inc. [AMD] Pink Sardine USB4/Thu
 
 拆机[视频](https://post.smzdm.com/talk/p/a305x3m7/)。从面板的后部排风口看，涡轮风扇距离面板很近，所以并不能靠两侧的孔网进风。但是因为是涡轮风扇，感觉上面板盖住问题也不大，只要不是全封闭。
 
+两种3D打印支架（[1](https://makerworld.com/zh/models/1454909-zeroke-gtr7-vertical-stand)，[2](https://www.thingiverse.com/thing:6479714)），都没有灰色金属的有质感。
+
 ### Change boot order
 
 Set Linux as default boot OS. In Linux, run command `sudo efibootmgr -n 0000` to set EFI BootNext var which will boot to Windows only next time. The boot order is not changed.
