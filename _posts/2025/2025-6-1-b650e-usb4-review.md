@@ -7,7 +7,7 @@ categories:
 typora-root-url: ../../../blog
 ---
 
-[B650E AORUS PRO X USB4 leak](https://unikoshardware.com/2024/06/gigabyte-b650e-aorus-and-x870e-leak.html)，[拆解报告](https://post.smzdm.com/p/am3px0zz/)。Hub 连在 CPU 上面据说很少见，记录下：`USB2.0 hub, GL850G. USB3.2 hub, RTS5411S`. 这样作好处是更多USB接口？确实和下面[规格](https://www.aorus.com/zh-tw/motherboards/b650e-aorus-pro-x-usb4-rev-10/Specification)里面的一样。
+[B650E AORUS PRO X USB4 leak](https://unikoshardware.com/2024/06/gigabyte-b650e-aorus-and-x870e-leak.html)，[拆解报告](https://post.smzdm.com/p/am3px0zz/)。Hub 连在 CPU 上面据说很少见，记录下：`USB2.0 hub: GL850G. USB3.2 hub: RTS5411S`. 确实和下面[规格](https://www.aorus.com/zh-tw/motherboards/b650e-aorus-pro-x-usb4-rev-10/Specification)里面的一样。这样作好处大概是键鼠外设延迟更低，但是机箱背部的USB口一般也很少用到吧。
 
 ![block](/images/2025/b650e-usb4.png)
 
