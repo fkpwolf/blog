@@ -14,9 +14,8 @@ Windows HiDPI 支持是最好的：
 
 对于 27 寸 5K 显示器：
 * Windows 下面 250% 的放大比例最为完美，此时 web page DevTools 显示 width 为 2048px。
-* Gnome 下面 5K 200% 放大比在 4k 下表现好很多，虽然整体有些偏小，而 300% 放大又明显过大。4k 下 200% 放大会让窗口组件过大而显得不够精细， 而 [Linux Fractional Scaling](https://wiki.archlinux.org/title/HiDPI#Fractional_scaling) 还不成熟（现在已经支持 250% 放大比例）。作为折中办法，我把浏览器统一放大到125%。Gnome 在 200% 放大比例下，最好显示效果是32寸4k。
-* Gnome 现在已经支持Fractional Scaling。我现在设置 Gnome 为 225% 放大，浏览器 110% 放大。
-* MacOS 下面 200% 放大字体偏小，没有 4k 显示效果好。系统没有其他放大比例。
+* Gnome 下面 5K 200% 放大比在 4k 下表现好很多，虽然整体有些偏小，而 300% 放大又明显过大。4k 下 200% 放大会让窗口组件过大而显得不够精细， 而 [Linux Fractional Scaling](https://wiki.archlinux.org/title/HiDPI#Fractional_scaling) 还不成熟（现在已经支持 250% 放大比例，但是Chrome 似乎有 bug）。作为折中办法，我把浏览器统一放大到125%。Gnome 在 200% 放大比例下，最好显示效果是32寸4k。
+* MacOS 下面默认字体对于我来说偏小，没有 4k 显示效果好。其他比例都会提示“使用缩放分辨率可能会影响性能”。我凑近看放大的时候字体有锯齿，感觉确实不是矢量缩放。
 
 ### 主板
 - [MEG Z590I UNIFY](https://www.msi.com/Motherboard/MEG-Z590I-UNIFY) 有两个 DP IN 接口，只支持 11 代CPU，不支持 MacOS。但是两个 DP IN 算是雷电主板里面最高规格了，[BIOS](https://www.chiphell.com/portal.php?mod=view&aid=25543&page=4) 里面也有雷电相关的详细配置。[MEG Z590 ACE](https://www.msi.com/Motherboard/MEG-Z590-ACE)也有两个 DP IN。MSI MEG Z690 ACE 雷电也是一样配置。这些主板都是通过PCIe子卡插到主板上，所以可能无法连通集显，也就是说雷电只能通过DP-IN来输出显示信号，效果和技嘉雷电卡一样。
