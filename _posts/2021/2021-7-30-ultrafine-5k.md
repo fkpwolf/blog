@@ -138,6 +138,8 @@ Fedora suspend 后 resume，雷电下的 USB 鼠标键盘无法工作，重新�
 
 但在Windows 11上面休眠正常，而Fedora在冥王峡谷上面也休眠正常。似乎是Linux对于AMD平台电源管理支持还不够完善。B650M AORUS ELITE AX, BIOS F3h，在Linux 6.1.6内核下终于休眠正常。
 
+因为这个显示器需要两个DP IN，所以启动时候会有左右两个屏幕显示加载动画的奇观，到登陆界面就正常了，过程中分辨率会反复调整，导致屏幕闪烁。Linux Flicker Free Boot 兼容性要需要改进，相比 Windows 体验就好了很多，
+
 显示器 Linux 下的亮度调节可以看[这里](https://www.feliciano.tech/blog/lg-ultrafine-brightness-linux/)，需要安装一个`ddcutil`的工具。其他平台参考 <https://www.chrisportela.com/garden/ddc/>。
 ```sh
 ddcutil getvcp 0x10 # Get brightness. Ref https://www.ddcutil.com/monitor_notes/#lg-27md5kl-ultrafine
