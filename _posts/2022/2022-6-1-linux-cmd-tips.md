@@ -78,6 +78,8 @@ Set it in client $HOME/.ssh/config file. Now all ssh connections will send a TCP
 Unable to negotiate with host: no matching key exchange method found. Their offer: diffie-hellman-group1-sha1
 --> `ssh -oKexAlgorithms=+diffie-hellman-group1-sha1 user@host`
 
+To kill a frozen SSH in GNOME Terminal: `~.`.
+
 ### File
 show details when copy file: `cp --verbose -rf /src/ /dsc/`
 
