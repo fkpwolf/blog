@@ -247,3 +247,6 @@ tuf z980, intel thb port
     </EventData>
     </Event>
 ```
+
+### Linux
+监控芯片为 Nuvoton NCT6701，`sudo modprobe nct6775` 即可查看风扇转速。
