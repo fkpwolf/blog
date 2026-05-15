@@ -9,7 +9,6 @@ typora-root-url: ../../../blog
 
 ### 链接
 
-* [Product page](https://www.bee-link.com.cn/catalog/product/index?id=681)。已失效。
 * [BIOS & Driver download](https://dr.bee-link.cn/?dir=uploads%2FGTR%2FGTR+7840+GTR+7940%2FBios%2F)
 * [零刻官方微博](https://weibo.com/u/7319305762)
 
