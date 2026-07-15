@@ -44,6 +44,7 @@ GC-TITAN-RIDGE-20的[规格书](https://download.gigabyte.com/FileList/Manual/mb
 USB4 扩展卡：
 * [微星啟動！MSI USB4 PD100W PCI-E 擴充卡開拓 USB 全新領域！](https://unikoshardware.com/2023/11/msi-usb4-pd100w-expansion-card.html)，看上去不错，但是兼容主板很少。
 * [ASUS USB4 PCIe Gen4 Card](https://www.asus.com/motherboards-components/motherboards/accessories/usb4-pcie-gen4-card/)兼容不少主板，文档一直在更新。
+* SUNIX UPB2430。从其手册上看需要在主板bios里面打开USB4支持，不需连接排线。这不只能asus主板用了么？
 这些扩展卡都使用ASM4242，但是尴尬的是这代主板不少都内置了雷电功能，所以如果不想浪费，最好用在中端的AMD主板。Intel因为 800 系列 CPU 已经内置了雷电控制器，自己加太多余。
 
 ### B550M AORUS 
