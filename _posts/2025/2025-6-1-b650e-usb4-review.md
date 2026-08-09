@@ -28,10 +28,10 @@ USB4如果挂在PCH下面那这个ATX板子就没有 pcie x4 插槽了。总体�
 ![Untitled](/images/2025/gtr7-usb4-control-pannel.png)
 上面是GTR7，有两个USB4 route，能同时驱动5k和4k便携屏幕。我的thinkpad p14s也是这样。这个GTR7有四个DP IN？但是后面接口还有DP+HDMI输出啊。
 
-[技嘉官网](https://www.gigabyte.com/Motherboard/B650E-AORUS-PRO-X-USB4-rev-10)没有雷电驱动和工具。BIOS里面没有类似原来Titan Ridge的配置菜单，可能后续更新会开放吧。
+[技嘉官网](https://www.gigabyte.com/Motherboard/B650E-AORUS-PRO-X-USB4-rev-10)没有雷电驱动和固件更新工具，技嘉这块做得有点简单。BIOS里面没有类似原来Titan Ridge的配置菜单，可能后续更新会开放吧。
 
-Windows 进去后一切正常。待机后恢复正常，可以用键盘鼠标唤醒。MT7925没有驱动，需要从技嘉官网安装。`UCM-UCSI ACPI Device` 设备无法启动，看上去是`ACPI\ITE8800 ITE USB Connector Client Device`. At Linux, I saw a device `Integrated Technology Express, Inc. RGB LED Controller`.
+Windows 进去后一切正常。待机后恢复正常，可以用键盘鼠标唤醒。MT7925没有驱动，需要从技嘉官网安装。`UCM-UCSI ACPI Device` 设备无法启动，看上去是`ACPI\ITE8800 ITE USB Connector Client Device`. Need to install driver from [https://www.catalog.update.microsoft.com/Search.aspx?q=acpi%5Cite8800]. At Linux, I saw a device `Integrated Technology Express, Inc. RGB LED Controller`.
 
-Linux 进入登录界面无法使用键盘鼠标，`ip addr`里面没有雷电hub的网卡。ASM4242[官网](https://www.asmedia.com.tw/product/e20zx49yU0SZBUH5/363Zx80yu6sY3XH2)说`Support inbox driver of Microsoft Windows 11 & various Linux kernels.` Just manually authorize Thunderbolt device then OK. 待机后可以用键盘鼠标唤醒，但是显示器没有输出，这个问题和Asus USB4 Card一样。
+Linux 进入登录界面无法使用键盘鼠标，`ip addr`里面没有雷电hub的网卡。ASM4242[官网](https://www.asmedia.com.tw/product/e20zx49yU0SZBUH5/363Zx80yu6sY3XH2)说`Support inbox driver of Microsoft Windows 11 & various Linux kernels.` Just manually authorize Thunderbolt device then OK. 待机后可以用键盘鼠标唤醒，但是显示器没有输出，这个问题和Asus USB4 Card一样。感觉是 Linux 驱动的问题，既然在 Windows 下面表现正常。
 
 主板带雷电 header，这个在这代主板里面算罕见了，加上支持 PCIe 拆分，技嘉 B650E USB4 可以称B650最后的经典。
