@@ -24,7 +24,7 @@ DDR5能到5600，非常不错。这个对于核显的发挥很重要。
 
 内部很精细，达到了NUC水平。BIOS很老土，但是可以改进，问题也不大。不得非要图形化BIOS，功能可用即可。CLR CMOS，这个按钮为什么放前面？
 
-指纹不错，Windows Hello 可以用。容易触碰，导致关机。Linux 下对这个指纹芯片还[不支持](https://linux-hardware.org/?id=usb:1c7a-0577)。
+指纹不错，Windows Hello 可以用。Linux 下这个设备显示为`LighTuning Technology Inc. Fingerprint Sensor`，现在还不支持，需要麻烦的[workaround](https://gist.github.com/AmulyaX/7d050daffe3429c409effe1111bb65ae)。
 
 外观色彩里面应该有个黑色。AMD贴纸在机器反面，好评。总体来说，体积还是大了点。
 
