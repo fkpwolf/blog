@@ -28,7 +28,13 @@ DDR5能到5600，非常不错。这个对于核显的发挥很重要。
 
 外观色彩里面应该有个黑色。AMD贴纸在机器反面，好评。总体来说，体积还是大了点。
 
-Windows 下面机器没法休眠，[我提的问题](https://tieba.baidu.com/p/8604777597)。Linux反而可以。
+Windows 下面机器没法休眠，[我提的问题](https://tieba.baidu.com/p/8604777597)，Linux反而可以。Linux suspend后无法用thunderbolt下面的键盘鼠标唤醒，需要修改：
+```bash
+sudo tee /etc/udev/rules.d/99-pci-wakeup.rules >/dev/null <<'EOF'
+ACTION=="add", SUBSYSTEM=="pci", KERNEL=="0000:00:08.3", ATTR{power/wakeup}="enabled"
+EOF
+```
+08.3这个设备是`PCI bridge: Advanced Micro Devices, Inc. [AMD] Phoenix/Phoenix2 Internal GPP Bridge to Bus [C:A]`。
 
 磁吸电源接口，拔插手感一般，没有苹果笔记本的顺畅。不过这个没带电池，拔掉就关机，平时也不像笔记本那样经常拔插，手感不好问题不大。但有这个创新意识就很好。贴吧认为联想拯救者C130和C140电源兼容性比较好，支持20Vx6A功率。雷电4电源，可以开机，但是过一会就自动关机了。客服说是开机峰值110W，PD最高只能100W。感觉这个峰值可以在BIOS里面微调，还是等待以后改进吧。其实这个使用场景更多是为笔记本服务的（反向充电），mini小主机并不会从中受益很多，主要是要占用一个雷电接口。总的来说，PD电源有不少兼容性问题，有的接入新设备电源还会重启。现在版本（GTR_P5C6V39）BIOS已经支持PD供电，我用Dell U3225QE，BIOS里面需设置为 Silent mode（默认为Balance mode），使用还算稳定。有时候会出现KVM网卡丢失和整个系统卡死的状态（无法强制关机，只能拔掉type-c PD）。但是杂乱的桌面上少根粗粗的电源线的诱惑还是很大。
 
@@ -73,6 +79,8 @@ ca:00.6 USB controller: Advanced Micro Devices, Inc. [AMD] Pink Sardine USB4/Thu
 
 Set Linux as default boot OS. In Linux, run command `sudo efibootmgr -n 0000` to set EFI BootNext var which will boot to Windows only next time. The boot order is not changed.
 
+Or use the thunderbolt port near 3.5mm headphone jack, which let you enter BIOS by keyboard during booting.
+
 ### 铭凡和其他品牌
 
 BD790i，7945HX，TYPE-C显示，无雷电。这个级别的CPU还是适合作为游戏笔记本，因为iGPU羸弱，加个独立显卡刚好。mini小主机加显卡就不能mini了，必须要有专门定制的机箱，类似NUC幽灵峡谷，否则和自己配ITX主板+显卡没啥优势。“银欣 ML12薄型ITX小机箱”这个还可以，因为这个mini主机散热只能用下压了。或者分形工艺 Ridge。[这里](https://www.chiphell.com/thread-2597430-1-1.html)看感觉小厂实力。[这里](https://minisforum.hk/products/bd770i)装机展示用的机箱是酷冷至尊NR200，评论里面有用XPROTO-Mini这种全开放式机箱。后来又出了BD795M M-ATX型号，感觉更适合DIY，可以自己选择CPU散热，但是没有TYPE-C显示输出，接口一般，也很奇怪用的是笔记本内存。
@@ -115,10 +123,6 @@ Asus NUC14 Pro+，双雷电口，这个型号更小，改进了进风，4299￥�
 机器进风会被很多原件遮挡，感觉不是很顺畅。
 
 总的来说，要么mini小主机，要么MoDT，中间形态都有些尴尬。显卡扩展坞对于笔记本还有一定需求，对于mini小主机来说有点尴尬，因为后者都是固定装置，合在一起就没有必要分开了。
-
-### Ryzen AI 300
-
-这个短时间内上 mini pc 有点难。
 
 ### thunderbolt 3 hub USB lost after suspend
 
