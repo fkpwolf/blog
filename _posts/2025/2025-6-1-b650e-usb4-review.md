@@ -15,7 +15,7 @@ USB4如果挂在PCH下面那这个ATX板子就没有 pcie x4 插槽了。总体�
 1. 南桥只有pcie x4带宽
 2. 对于CPU DP OUT走线方便
 
-当然挂在CPU上缺点就是浪费了条pcie gen5，而USB4控制器只能利用gen4的带宽。
+当然挂在 CPU 上缺点就是浪费了条 pcie gen5，而 USB4 控制器只能利用 gen4 的带宽。不过现在 refresh 的板子比如 X870E AERO X3D WOOD 都可以让控制器和一个 m.2 共享带宽，同时使用时都是 x2 带宽，虽然 m.2 pcie gen5 x2 的难找。对于ASM4242，x2的带宽并不影响dp alt的带宽，对于我这种后面不接m.2的玩家来说就很合适。
 
 从[泄露](https://www.4gamers.com.tw/news/detail/64969/gigabyte-x870e-aorus-master-ppt-leaks-amd-ryzen-9000-spec)的x870e aorus master看，它的USB4似乎是挂在PCH上面（不清楚），但是可以确定的是没有DP IN，这样它会多一个PCIE 5.0 M.2，但是这个对于我来说并不重要。
 
